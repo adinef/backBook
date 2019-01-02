@@ -3,19 +3,18 @@ package net.fp.backBook.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.util.List;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
 
     @Id
-    private int id;
+    private String id;
 
     private String name;
 
@@ -25,5 +24,6 @@ public class User {
 
     private String password;
 
+    @DBRef
     private List<Role> roles;
 }

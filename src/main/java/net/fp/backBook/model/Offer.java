@@ -4,18 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-@Entity //not neccessary for mongo
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Offer {
     @Id
-    private int id;
+    private String id;
 
     private String bookTitle;
 
@@ -25,6 +24,7 @@ public class Offer {
 
     private String offerName;
 
+    @DBRef
     private User offerOwner;
 
     @CreatedDate
