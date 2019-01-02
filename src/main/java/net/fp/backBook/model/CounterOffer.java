@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 
@@ -17,15 +18,16 @@ import java.time.LocalDateTime;
 public class CounterOffer implements Serializable {
 
     @Transient
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2679514265637395183L;
 
     @Id
-    private int id;
+    private String id;
 
     private Offer offer;
 
     private User user;
 
+    @CreatedDate
     private LocalDateTime createdAt;
 
     private LocalDateTime expires;
