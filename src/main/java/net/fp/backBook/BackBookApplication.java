@@ -1,7 +1,5 @@
 package net.fp.backBook;
 
-import net.fp.backBook.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
@@ -10,8 +8,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories
 public class BackBookApplication {
 
-	@Autowired
-	UserRepository repository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(BackBookApplication.class, args);
