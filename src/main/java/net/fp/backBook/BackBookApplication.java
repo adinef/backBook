@@ -9,10 +9,6 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication
 @EnableMongoRepositories
 public class BackBookApplication {
-
-	@Autowired
-	UserRepository repository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(BackBookApplication.class, args);
 	}
