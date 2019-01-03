@@ -1,13 +1,14 @@
 package net.fp.backBook.services;
 
+import net.fp.backBook.model.CounterOffer;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.Rental;
+import net.fp.backBook.model.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface RentalService {
@@ -22,7 +23,11 @@ public interface RentalService {
 
     void deleteRental(String id);
 
-    Rental getAllByOffer(Offer offer);
+    Rental getByOffer(Offer offer);
+
+    List<Rental> getAllByUser(User user);
+
+    Rental getByCounterOffer(CounterOffer counterOffer);
 
     List<Rental> getAllBetweenDates(LocalDateTime after, LocalDateTime before);
 }

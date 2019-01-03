@@ -26,6 +26,12 @@ public class Rental implements Serializable {
     @DBRef
     private Offer offer;
 
+    @DBRef
+    private User user;
+
+    @DBRef
+    private CounterOffer counterOffer;
+
     private LocalDateTime startDate;
 
     private LocalDateTime expires;
