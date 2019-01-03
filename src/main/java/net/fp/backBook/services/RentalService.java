@@ -17,7 +17,7 @@ public interface RentalService {
 
     Rental modifyRental(Rental rental);
 
-    List<Rental> getAllRentals(Sort sort);
+    List<Rental> getAllRentals();
 
     Rental getById(String id);
 

@@ -11,12 +11,13 @@ import net.fp.backBook.model.Rental;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.RentalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
+@Service
 public class RentalServiceImpl implements RentalService {
 
     private RentalRepository rentalRepository;
@@ -47,7 +48,7 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public List<Rental> getAllRentals(Sort sort) {
+    public List<Rental> getAllRentals() {
         try {
             return this.rentalRepository.findAll();
         } catch (Exception e) {
