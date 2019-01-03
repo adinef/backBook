@@ -17,6 +17,6 @@ public interface CounterOfferRepository extends MongoRepository<CounterOffer, St
 
     List<CounterOffer> findByUser(User user);
 
-    @Query(value = "{'expires': {$gte: ?0, $lte: ?1}}")
-    List<CounterOffer> findAllByExpiresBeetweenOrEquals(LocalDateTime after, LocalDateTime before);
+    @Query("{'expires' : { $gte: ?0} }")
+    List<CounterOffer> findAllByNotExpired(LocalDateTime startDate);
 }

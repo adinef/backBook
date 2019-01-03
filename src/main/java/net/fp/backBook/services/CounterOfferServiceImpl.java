@@ -98,9 +98,9 @@ public class CounterOfferServiceImpl implements CounterOfferService {
     }
 
     @Override
-    public List<CounterOffer> getAllBetweenDates(LocalDateTime after, LocalDateTime before) {
+    public List<CounterOffer> getAllByNotExpired(LocalDateTime startDate) {
         try {
-            return this.counterOfferRepository.findAllByExpiresBeetweenOrEquals(after, before);
+            return this.counterOfferRepository.findAllByNotExpired(startDate);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new GetException(e);

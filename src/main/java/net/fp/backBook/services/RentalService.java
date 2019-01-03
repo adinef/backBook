@@ -4,7 +4,6 @@ import net.fp.backBook.model.CounterOffer;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.Rental;
 import net.fp.backBook.model.User;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -29,5 +28,5 @@ public interface RentalService {
 
     Rental getByCounterOffer(CounterOffer counterOffer);
 
-    List<Rental> getAllBetweenDates(LocalDateTime after, LocalDateTime before);
+    List<Rental> getAllByNotExpired(LocalDateTime startDate);
 }

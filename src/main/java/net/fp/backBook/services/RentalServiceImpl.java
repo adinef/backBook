@@ -111,9 +111,9 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public List<Rental> getAllBetweenDates(LocalDateTime after, LocalDateTime before) {
+    public List<Rental> getAllByNotExpired(LocalDateTime startDate) {
         try {
-            return this.rentalRepository.findAllByExpiresBeetweenOrEquals(after, before);
+            return this.rentalRepository.findAllByNotExpired(startDate);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new GetException(e);
