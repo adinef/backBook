@@ -4,13 +4,18 @@ import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.CounterOfferDto;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.CounterOffer;
+import net.fp.backBook.model.Offer;
+import net.fp.backBook.model.User;
 import net.fp.backBook.services.CounterOfferService;
+import net.fp.backBook.services.OfferService;
+import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,11 +26,18 @@ public class CounterOfferController {
 
     private CounterOfferService counterOfferService;
 
+    private OfferService offerService;
+
+    private UserService userService;
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public CounterOfferController(CounterOfferService counterOfferService, ModelMapper modelMapper) {
+    public CounterOfferController(CounterOfferService counterOfferService, OfferService offerService,
+                                  UserService userService, ModelMapper modelMapper) {
         this.counterOfferService = counterOfferService;
+        this.offerService = offerService;
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
@@ -70,9 +82,7 @@ public class CounterOfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<CounterOfferDto> getAllCounterOffers() {
         List<CounterOffer> counterOffers = this.counterOfferService.getAllCounterOffers();
-        List<CounterOfferDto> counterOfferDtos = new LinkedList<>();
-        counterOffers.forEach(counterOffer -> counterOfferDtos.add(this.modelMapper.map(counterOffer, CounterOfferDto.class)));
-        return counterOfferDtos;
+        return this.getDtosList(counterOffers);
     }
 
     @DeleteMapping(
@@ -80,5 +90,41 @@ public class CounterOfferController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteCounterOffer(@PathVariable("id") String id) {
         this.counterOfferService.deleteCounterOffer(id);
+    }
+
+    @GetMapping(
+            value = "/offer/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<CounterOfferDto> getAllCounterOffersByOffer(@PathVariable("id") String id) {
+        Offer offer = this.offerService.getById(id);
+        List<CounterOffer> counterOffers = this.counterOfferService.getAllByOffer(offer);
+        return this.getDtosList(counterOffers);
+    }
+
+    @GetMapping(
+            value = "/user/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<CounterOfferDto> getAllCounterOffersByUser(@PathVariable("id") String id) {
+        User user = this.userService.getUserById(id);
+        List<CounterOffer> counterOffers = this.counterOfferService.getAllByUser(user);
+        return this.getDtosList(counterOffers);
+    }
+
+    @GetMapping(
+            value = "/notExpired/{dateString}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<CounterOfferDto> getAllCounterOffersByNotExpired(@PathVariable String dateString) {
+        LocalDateTime date = LocalDateTime.parse(dateString);
+        List<CounterOffer> counterOffers = this.counterOfferService.getAllByNotExpired(date);
+        return getDtosList(counterOffers);
+    }
+
+    private List<CounterOfferDto> getDtosList(List<CounterOffer> counterOffers) {
+        List<CounterOfferDto> counterOfferDtos = new LinkedList<>();
+        counterOffers.forEach(counterOffer -> counterOfferDtos.add(this.modelMapper.map(counterOffer, CounterOfferDto.class)));
+        return counterOfferDtos;
     }
 }

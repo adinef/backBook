@@ -25,5 +25,5 @@ public interface CounterOfferService {
 
     List<CounterOffer> getAllByUser(User user);
 
-    List<CounterOffer> getAllBetweenDates(LocalDateTime after, LocalDateTime before);
+    List<CounterOffer> getAllByNotExpired(LocalDateTime startDate);
 }
