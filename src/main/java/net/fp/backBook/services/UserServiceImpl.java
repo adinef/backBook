@@ -1,12 +1,20 @@
 package net.fp.backBook.services;
 
+import lombok.extern.slf4j.Slf4j;
+import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
+import net.fp.backBook.exceptions.GetException;
+import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.expression.ExpressionException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Slf4j
+@Service
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
@@ -19,24 +27,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserById(String id) {
         try {
-            //THROW CUSTOM EXCEPTION HERE
-            return userRepository.findById(id).orElseThrow( () -> new Exception("Cannot find user by id.") );
+            return userRepository.findById(id).orElseThrow( () -> new GetException("Cannot find user by id.") );
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
-            return null;
+            log.error("Error during getting User object by id, {}", e);
+            throw new GetException("Error occurred", e);
         }
     }
 
     @Override
     public List<User> getAllUsers() {
         try {
-            //THROW CUSTOM EXCEPTION HERE
             return userRepository.findAll();
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
-            return null;
+            log.error("Error during getting User objects, {}", e);
+            throw new GetException("Error occurred", e);
         }
     }
 
@@ -46,19 +50,18 @@ public class UserServiceImpl implements UserService {
             //THROW CUSTOM EXCEPTION HERE
             userRepository.deleteById(id);
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
+            log.error("Error during deleting User object, {}", e);
+            throw new DeleteException("Error occurred", e);
         }
     }
 
     @Override
     public User addUser(User user) {
         try {
-            //THROW CUSTOM EXCEPTION HERE
             userRepository.insert(user);
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
+            log.error("Error during inserting User object, {}", e);
+            throw new AddException("Error occurred", e);
         }
         return user;
     }
@@ -66,11 +69,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         try {
-            //THROW CUSTOM EXCEPTION HERE
             userRepository.save(user);
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
+            log.error("Error during saving User object, {}", e);
+            throw new ModifyException("Error occurred", e);
         }
         return user;
     }
@@ -81,11 +83,10 @@ public class UserServiceImpl implements UserService {
             //THROW CUSTOM EXCEPTION HERE
             return userRepository
                     .findByLogin(login)
-                    .orElseThrow( ()-> new Exception("Cannot find user by login."));
+                    .orElseThrow( ()-> new GetException("Cannot find user by login."));
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
-            return null;
+            log.error("Error during getting User objects by Login, {}", e);
+            throw new GetException("Error occurred", e);
         }
     }
 
@@ -95,11 +96,10 @@ public class UserServiceImpl implements UserService {
             //THROW CUSTOM EXCEPTION HERE
             return userRepository
                     .findByLoginAndPassword(login, password)
-                    .orElseThrow( () -> new Exception("Cannot find user by login and password."));
+                    .orElseThrow( () -> new GetException("Cannot find user by login and password."));
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
-            return null;
+            log.error("Error during getting User objects by Login and Password, {}", e);
+            throw new GetException("Error occurred", e);
         }
     }
 
@@ -109,11 +109,10 @@ public class UserServiceImpl implements UserService {
             //THROW CUSTOM EXCEPTION HERE
             return userRepository
                     .findByEmail(email)
-                    .orElseThrow( () -> new Exception("Cannot find user by email."));
+                    .orElseThrow( () -> new GetException("Cannot find user by email."));
         } catch (final Exception e) {
-            //THROW CUSTOM EXCEPTION HERE
-            e.printStackTrace();
-            return null;
+            log.error("Error during getting User objects by e-mail, {}", e);
+            throw new GetException("Error occurred", e);
         }
     }
 }

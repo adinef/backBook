@@ -20,4 +20,5 @@ public interface OfferService {
     List<Offer> getAllByOfferOwner(User user);
     List<Offer> getAllByCity(String city);
     List<Offer> getAllByVoivodeship(String voivodeship);
+    List<Offer> getByFilter(Offer offer);
 }
