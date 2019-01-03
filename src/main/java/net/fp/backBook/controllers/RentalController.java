@@ -59,7 +59,7 @@ public class RentalController {
             value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public RentalDto getById(@PathVariable("id") String id) {
+    public RentalDto getRentalById(@PathVariable("id") String id) {
         Rental rental = this.rentalService.getById(id);
         return this.modelMapper.map(rental, RentalDto.class);
     }
