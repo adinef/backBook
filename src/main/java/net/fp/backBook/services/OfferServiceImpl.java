@@ -146,23 +146,13 @@ public class OfferServiceImpl implements OfferService {
     public List<Offer> getByFilter(Offer offer) {
         ExampleMatcher exampleMatcher = ExampleMatcher
                 .matching()
-                .withMatcher("city", startsWith())
-                .withMatcher("bookTitle", regex());
-
-        Offer query = new Offer(
-                null,
-                "example",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                true,
-                "Andrespol",
-                null
-        );
-        Example<Offer> offerExample = Example.of(query, exampleMatcher);
+                .withMatcher("city", regex().ignoreCase())
+                .withMatcher("voivodeship", regex().ignoreCase())
+                .withMatcher("offerName", startsWith().ignoreCase())
+                .withMatcher("bookTitle", regex().ignoreCase())
+                .withMatcher("bookPublisher", regex().ignoreCase())
+                .withMatcher("bookReleaseYear", startsWith());
+        Example<Offer> offerExample = Example.of(offer, exampleMatcher);
         return offerRepository.findAll(offerExample);
     }
 }

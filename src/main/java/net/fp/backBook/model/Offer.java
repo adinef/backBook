@@ -38,7 +38,7 @@ public class Offer implements Serializable {
 
     private LocalDateTime expires;
 
-    private boolean active;
+    private Boolean active;
 
     private String city;
 
