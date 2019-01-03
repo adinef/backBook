@@ -23,9 +23,7 @@ public class OfferDto {
 
     private String offerName;
 
-    private String offerOwnerName;
-
-    private String offerOwnerLastName;
+    private UserDto offerOwner;
 
     private LocalDateTime createdAt;
 
