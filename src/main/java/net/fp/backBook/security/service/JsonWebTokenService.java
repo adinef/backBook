@@ -3,6 +3,7 @@ package net.fp.backBook.security.service;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,7 @@ public class JsonWebTokenService implements TokenService {
         if (username == null || password == null) {
             return null;
         }
-        final User user = (User) userDetailsService.loadUserByUsername(username);
+        User user = (User) userDetailsService.loadUserByUsername(username);
         Map<String, Object> tokenData = new HashMap<>();
         if (password.equals(user.getPassword())) {
             tokenData.put("clientType", "user");
@@ -50,7 +51,7 @@ public class JsonWebTokenService implements TokenService {
             return jwtBuilder.signWith(SignatureAlgorithm.HS512, tokenKey).compact();
 
         } else {
-            throw new RuntimeException("Authentication error");
+            throw new AuthenticationException("Authentication error");
         }
     }
 

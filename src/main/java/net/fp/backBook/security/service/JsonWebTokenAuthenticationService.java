@@ -1,7 +1,7 @@
 package net.fp.backBook.security.service;
 
 import io.jsonwebtoken.*;
-import net.fp.backBook.security.constants.SecurityConstants;
+import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.model.User;
 import net.fp.backBook.model.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @Service
 public class JsonWebTokenAuthenticationService implements TokenAuthenticationService {
 
@@ -20,6 +21,8 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
 
     private UserDetailsService userDetailsService;
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+
     @Autowired
     public JsonWebTokenAuthenticationService(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -27,8 +30,8 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
 
     @Override
     public Authentication authenticate(HttpServletRequest request) {
-        final String token = request.getHeader(SecurityConstants.AUTH_HEADER_NAME);
-        final Jws<Claims> tokenData = parseToken(token);
+        String token = this.resolveToken(request);
+        Jws<Claims> tokenData = parseToken(token);
         if (tokenData != null) {
             User user = getUserFromToken(tokenData);
             if (user != null) {
@@ -42,9 +45,18 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
         if (token != null) {
             try {
                 return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException
-                    | SignatureException | IllegalArgumentException e) {
-                return null;
+            } catch (SecurityException | MalformedJwtException e) {
+                log.info("Invalid JWT signature.");
+                log.trace("Invalid JWT signature trace: {}", e);
+            } catch (ExpiredJwtException e) {
+                log.info("Expired JWT token.");
+                log.trace("Expired JWT token trace: {}", e);
+            } catch (UnsupportedJwtException e) {
+                log.info("Unsupported JWT token.");
+                log.trace("Unsupported JWT token trace: {}", e);
+            } catch (IllegalArgumentException e) {
+                log.info("JWT token compact of handler are invalid.");
+                log.trace("JWT token compact of handler are invalid trace: {}", e);
             }
         }
         return null;
@@ -53,5 +65,13 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
     private User getUserFromToken(Jws<Claims> tokenData) {
         return (User) userDetailsService
                 .loadUserByUsername(tokenData.getBody().get("username").toString());
+    }
+
+    private String resolveToken(HttpServletRequest request){
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

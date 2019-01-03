@@ -6,10 +6,7 @@ import net.fp.backBook.security.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,15 +15,17 @@ public class AuthenticationController {
     private final TokenService tokenService;
 
     @Autowired
-    public AuthenticationController(final TokenService tokenService) {
+    public AuthenticationController(TokenService tokenService) {
         this.tokenService = tokenService;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @PostMapping(
+            value = ""
+    )
     public ResponseEntity<?> authenticate(@RequestBody Credentials credentials) {
-        final String token = tokenService.getToken(credentials.getLogin(), credentials.getPassword());
+        String token = tokenService.getToken(credentials.getLogin(), credentials.getPassword());
         if (token != null) {
-            final TokenDto response = new TokenDto();
+            TokenDto response = new TokenDto();
             response.setToken(token);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {

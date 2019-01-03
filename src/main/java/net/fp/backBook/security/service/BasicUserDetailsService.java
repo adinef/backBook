@@ -1,7 +1,5 @@
 package net.fp.backBook.security.service;
 
-import net.fp.backBook.exceptions.GetException;
-import net.fp.backBook.model.User;
 import net.fp.backBook.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -26,7 +24,11 @@ public class BasicUserDetailsService implements UserDetailsService {
         try {
             return userService.getUserByLogin(username);
         } catch (Exception e) {
-            throw new UsernameNotFoundException("User with username:" + username + " not found");
+            String message = new StringBuilder()
+                    .append("User with username: ")
+                    .append(username)
+                    .append(" not found").toString();
+            throw new UsernameNotFoundException(message);
         }
     }
 }
