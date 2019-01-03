@@ -8,11 +8,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RentalRepository extends MongoRepository<Rental, String> {
 
-    Rental findByOffer(Offer offer);
+    Optional<Rental> findByOffer(Offer offer);
 
     @Query(value = "{'expires': {$gte: ?0, $lte: ?1}}")
     List<Rental> findAllByExpiresBeetweenOrEquals(LocalDateTime after, LocalDateTime before);

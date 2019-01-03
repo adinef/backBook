@@ -18,11 +18,11 @@ public interface RentalService {
 
     List<Rental> getAllRentals(Sort sort);
 
-    Optional<Rental> getById(String id);
+    Rental getById(String id);
 
     void deleteRental(String id);
 
-    List<Rental> getAllByOffer(Offer offer);
+    Rental getAllByOffer(Offer offer);
 
     List<Rental> getAllBetweenDates(LocalDateTime after, LocalDateTime before);
 }

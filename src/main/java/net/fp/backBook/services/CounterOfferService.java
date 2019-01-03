@@ -3,11 +3,8 @@ package net.fp.backBook.services;
 import net.fp.backBook.model.CounterOffer;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
-import org.springframework.data.domain.Sort;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 public interface CounterOfferService {
 
@@ -15,9 +12,9 @@ public interface CounterOfferService {
 
     CounterOffer modifyCounterOffer(CounterOffer counterOffer);
 
-    List<CounterOffer> getAllCounterOffers(Sort sort);
+    List<CounterOffer> getAllCounterOffers();
 
-    Optional<CounterOffer> getById(String id);
+    CounterOffer getById(String id);
 
     void deleteCounterOffer(String id);
 

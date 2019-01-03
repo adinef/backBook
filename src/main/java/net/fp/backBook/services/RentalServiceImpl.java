@@ -1,6 +1,10 @@
 package net.fp.backBook.services;
 
 import lombok.extern.slf4j.Slf4j;
+import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
+import net.fp.backBook.exceptions.GetException;
+import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.Rental;
 import net.fp.backBook.repositories.RentalRepository;
@@ -9,7 +13,6 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 public class RentalServiceImpl implements RentalService {
@@ -23,36 +26,73 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public Rental addRental(Rental rental) {
-        return null;
+        try {
+            return this.rentalRepository.insert(rental);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new AddException(e);
+        }
     }
 
     @Override
     public Rental modifyRental(Rental rental) {
-        return null;
+        try {
+            return this.rentalRepository.save(rental);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new ModifyException(e);
+        }
     }
 
     @Override
     public List<Rental> getAllRentals(Sort sort) {
-        return null;
+        try {
+            return this.rentalRepository.findAll();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new GetException(e);
+        }
     }
 
     @Override
-    public Optional<Rental> getById(String id) {
-        return Optional.empty();
+    public Rental getById(String id) {
+        try {
+            return this.rentalRepository.findById(id)
+                    .orElseThrow(() -> new GetException("Cannot find rental by id."));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new GetException(e);
+        }
     }
 
     @Override
     public void deleteRental(String id) {
-
+        try {
+            this.rentalRepository.deleteById(id);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new DeleteException(e);
+        }
     }
 
     @Override
-    public List<Rental> getAllByOffer(Offer offer) {
-        return null;
+    public Rental getAllByOffer(Offer offer) {
+        try {
+            return this.rentalRepository.findByOffer(offer)
+                    .orElseThrow(() -> new GetException("Cannot find rental by offer."));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new GetException(e);
+        }
     }
 
     @Override
     public List<Rental> getAllBetweenDates(LocalDateTime after, LocalDateTime before) {
-        return null;
+        try {
+            return this.rentalRepository.findAllByExpiresBeetweenOrEquals(after, before);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new GetException(e);
+        }
     }
 }
