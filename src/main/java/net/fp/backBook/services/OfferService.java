@@ -16,7 +16,8 @@ public interface OfferService {
     Offer modifyOffer(Offer offer);
     List<Offer> getAllByBookTitle(String title);
     List<Offer> getAllByBookPublisher(String bookPublisher);
-    List<Offer> getAllBetweenDates(LocalDateTime startDate, LocalDateTime endDate);
+    List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate);
+    List<Offer> getAllNotExpired(LocalDateTime startDate);
     List<Offer> getAllByOfferOwner(User user);
     List<Offer> getAllByCity(String city);
     List<Offer> getAllByVoivodeship(String voivodeship);
