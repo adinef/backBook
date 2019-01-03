@@ -1,10 +1,7 @@
 package net.fp.backBook.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import net.fp.backBook.dtos.DatePairDto;
-import net.fp.backBook.dtos.OfferDto;
-import net.fp.backBook.dtos.OfferSearchFilter;
-import net.fp.backBook.dtos.UserDto;
+import net.fp.backBook.dtos.*;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
@@ -16,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.Media;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +53,36 @@ public class UserController {
         return MapSingleToDto(user);
     }
 
+    @GetMapping(value = "/login/{login}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getUserByLogin(@PathVariable String login) {
+        User user = this.userService.getUserByLogin(login);
+        return MapSingleToDto(user);
+    }
+
+    @GetMapping(value = "/email/{email}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getUserByEmail(@PathVariable String email) {
+        User user = this.userService.getUserByLogin(email);
+        return MapSingleToDto(user);
+    }
+
+    @PostMapping(value = "/credentials",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public UserDto getUserByCredentials(@RequestBody Credentials credentials) {
+        User user = this.userService.getUserByLoginAndPassword(credentials.getLogin(), credentials.getPassword());
+        return MapSingleToDto(user);
+    }
+
     @PostMapping(value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto addUser(@RequestBody UserDto userDto) {
-
         User user = this.modelMapper.map(userDto, User.class);
         // set user from context here
         user = this.userService.addUser(user);
