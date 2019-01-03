@@ -104,7 +104,17 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<Offer> getAllBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<Offer> getAllNotExpired(LocalDateTime startDate) {
+        try {
+            return offerRepository.findAllByNotExpired(startDate);
+        } catch (final Exception e) {
+            log.error("Error during getting Offer objects before expiration, {}", e);
+            throw new GetException("Error occurred", e);
+        }
+    }
+
+    @Override
+    public List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
         try {
             return offerRepository.findAllByCreatedAtBetween(startDate, endDate);
         } catch (final Exception e) {

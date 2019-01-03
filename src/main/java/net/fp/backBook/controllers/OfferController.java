@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class OfferController {
         return MapSingleToDto(offer);
     }
 
-    @GetMapping(value = "/{title}",
+    @GetMapping(value = "/title/{title}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByBookTitle(@PathVariable String title) {
@@ -78,7 +79,7 @@ public class OfferController {
         return MapToDto(offers);
     }
 
-    @GetMapping(value = "/{publisher}",
+    @GetMapping(value = "/publisher/{publisher}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByBookPublisher(@PathVariable String publisher) {
@@ -95,7 +96,7 @@ public class OfferController {
         return MapToDto(offers);
     }
 
-    @GetMapping(value = "/{city}",
+    @GetMapping(value = "/city/{city}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByCity(@PathVariable String city) {
@@ -103,7 +104,7 @@ public class OfferController {
         return MapToDto(offers);
     }
 
-    @GetMapping(value = "/{voivodeship}",
+    @GetMapping(value = "/voivodeship/{voivodeship}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByVoivodeship(@PathVariable String voivodeship) {
@@ -116,7 +117,16 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersBetweenDates(@RequestBody DatePairDto dates) {
-        List<Offer> offers = this.offerService.getAllBetweenDates(dates.getStartDate(), dates.getEndDate());
+        List<Offer> offers = this.offerService.getAllCreatedBetweenDates(dates.getStartDate(), dates.getEndDate());
+        return MapToDto(offers);
+    }
+
+    @GetMapping(value = "/notexpired/{dateString}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferDto> getOffersNotExpired(@PathVariable String dateString) {
+        LocalDateTime date = LocalDateTime.parse(dateString);
+        List<Offer> offers = this.offerService.getAllNotExpired(date);
         return MapToDto(offers);
     }
 
