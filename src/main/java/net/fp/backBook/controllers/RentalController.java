@@ -2,7 +2,7 @@ package net.fp.backBook.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.RentalDto;
-import net.fp.backBook.exceptions.GetException;
+import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Rental;
 import net.fp.backBook.services.RentalService;
 import org.modelmapper.ModelMapper;
@@ -40,19 +40,45 @@ public class RentalController {
         return this.modelMapper.map(rental, RentalDto.class);
     }
 
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public RentalDto modifyRental(@PathVariable("id") String id, @RequestBody RentalDto rentalDto) {
+        if (!rentalDto.getId().equals(id)) {
+            throw new ModifyException("Ids are not the same");
+        } else {
+            Rental rental = this.modelMapper.map(rentalDto, Rental.class);
+            rental = this.rentalService.modifyRental(rental);
+            return this.modelMapper.map(rental, RentalDto.class);
+        }
+    }
+
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public RentalDto getById(@PathVariable("id") String id) {
+        Rental rental = this.rentalService.getById(id);
+        return this.modelMapper.map(rental, RentalDto.class);
+    }
+
     @GetMapping(
             value = "",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<RentalDto> getAllRentals() {
         List<Rental> rentals = this.rentalService.getAllRentals();
-        if (rentals.isEmpty()) {
-            throw new GetException("Cannot find rentals.");
-        } else {
-            List<RentalDto> rentalDtos = new LinkedList<>();
-            rentals.forEach(rental -> rentalDtos.add(this.modelMapper.map(rental, RentalDto.class)));
-            return rentalDtos;
-        }
+        List<RentalDto> rentalDtos = new LinkedList<>();
+        rentals.forEach(rental -> rentalDtos.add(this.modelMapper.map(rental, RentalDto.class)));
+        return rentalDtos;
+    }
+
+    @DeleteMapping(
+            value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteRental(@PathVariable("id") String id) {
+        this.rentalService.deleteRental(id);
     }
 }
