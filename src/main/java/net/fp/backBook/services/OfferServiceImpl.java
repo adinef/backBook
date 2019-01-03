@@ -63,6 +63,7 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Offer addOffer(Offer offer) {
         try {
+            offer.setCreatedAt(LocalDateTime.now());
             offerRepository.insert(offer);
         } catch (final Exception e) {
             log.error("Error during inserting Offer object, {}", e);
