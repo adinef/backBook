@@ -21,6 +21,6 @@ public interface RentalRepository extends MongoRepository<Rental, String> {
 
     Optional<Rental> findByCounterOffer(CounterOffer counterOffer);
 
-    @Query(value = "{'expires': {$gte: ?0, $lte: ?1}}")
-    List<Rental> findAllByExpiresBeetweenOrEquals(LocalDateTime after, LocalDateTime before);
+    @Query("{'expires' : { $gte: ?0} }")
+    List<Rental> findAllByNotExpired(LocalDateTime startDate);
 }

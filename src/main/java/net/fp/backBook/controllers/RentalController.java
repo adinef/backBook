@@ -3,14 +3,21 @@ package net.fp.backBook.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.RentalDto;
 import net.fp.backBook.exceptions.ModifyException;
+import net.fp.backBook.model.CounterOffer;
+import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.Rental;
+import net.fp.backBook.model.User;
+import net.fp.backBook.services.CounterOfferService;
+import net.fp.backBook.services.OfferService;
 import net.fp.backBook.services.RentalService;
+import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,11 +28,21 @@ public class RentalController {
 
     private RentalService rentalService;
 
+    private OfferService offerService;
+
+    private UserService userService;
+
+    private CounterOfferService counterOfferService;
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public RentalController(RentalService rentalService, ModelMapper modelMapper) {
+    public RentalController(RentalService rentalService, OfferService offerService, UserService userService,
+                            CounterOfferService counterOfferService, ModelMapper modelMapper) {
         this.rentalService = rentalService;
+        this.offerService = offerService;
+        this.userService = userService;
+        this.counterOfferService = counterOfferService;
         this.modelMapper = modelMapper;
     }
 
@@ -70,9 +87,7 @@ public class RentalController {
     @ResponseStatus(HttpStatus.OK)
     public List<RentalDto> getAllRentals() {
         List<Rental> rentals = this.rentalService.getAllRentals();
-        List<RentalDto> rentalDtos = new LinkedList<>();
-        rentals.forEach(rental -> rentalDtos.add(this.modelMapper.map(rental, RentalDto.class)));
-        return rentalDtos;
+        return this.getDtosList(rentals);
     }
 
     @DeleteMapping(
@@ -80,5 +95,51 @@ public class RentalController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteRental(@PathVariable("id") String id) {
         this.rentalService.deleteRental(id);
+    }
+
+    @GetMapping(
+            value = "/offer/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public RentalDto getRentalByOffer(@PathVariable("id") String id) {
+        Offer offer = this.offerService.getById(id);
+        Rental rental = this.rentalService.getByOffer(offer);
+        return this.modelMapper.map(rental, RentalDto.class);
+    }
+
+    @GetMapping(
+            value = "/user/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<RentalDto> getAllRentalsByUser(@PathVariable("id") String id) {
+        User user = this.userService.getUserById(id);
+        List<Rental> rentals = this.rentalService.getAllByUser(user);
+        return this.getDtosList(rentals);
+    }
+
+    @GetMapping(
+            value = "/counterOffer/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public RentalDto getRentalByCounterOffer(@PathVariable("id") String id) {
+        CounterOffer counterOffer = this.counterOfferService.getById(id);
+        Rental rental = this.rentalService.getByCounterOffer(counterOffer);
+        return this.modelMapper.map(rental, RentalDto.class);
+    }
+
+    @GetMapping(
+            value = "/notExpired/{dateString}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<RentalDto> getAllRentalsByNotExpired(@PathVariable String dateString) {
+        LocalDateTime date = LocalDateTime.parse(dateString);
+        List<Rental> rentals = this.rentalService.getAllByNotExpired(date);
+        return getDtosList(rentals);
+    }
+
+    private List<RentalDto> getDtosList(List<Rental> rentals) {
+        List<RentalDto> rentalDtos = new LinkedList<>();
+        rentals.forEach(rental -> rentalDtos.add(this.modelMapper.map(rental, RentalDto.class)));
+        return rentalDtos;
     }
 }
