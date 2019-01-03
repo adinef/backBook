@@ -23,15 +23,15 @@ public class OfferDto {
 
     private String offerName;
 
-    //private String offerOwnerName;
+    private String offerOwnerName;
 
-    //private String offerOwnerLastName;
+    private String offerOwnerLastName;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime expires;
 
-    private boolean active;
+    private Boolean active;
 
     private String city;
 

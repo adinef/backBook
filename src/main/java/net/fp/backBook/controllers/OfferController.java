@@ -42,9 +42,7 @@ public class OfferController {
     public List<OfferDto> getOffersOnFilter(@RequestBody OfferSearchFilter filter) {
         try {
             Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
-            log.info("Mapped object: city: " + searchCriteriaOffer.getCity() );
             List<Offer> offers =  offerService.getByFilter(searchCriteriaOffer);
-            log.info("Offers retrieved by city: " + offers.size());
             Type listType = new TypeToken< List<OfferDto> >() {}.getType();
             List<OfferDto> list = modelMapper.map(offers, listType);
             return list;
