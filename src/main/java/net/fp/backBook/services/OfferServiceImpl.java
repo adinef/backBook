@@ -36,7 +36,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findById(id).orElseThrow( () -> new GetException("Cannot find offer by id."));
         } catch (final Exception e) {
             log.error("Error during getting Offer object, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -46,7 +46,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAll();
         } catch (final Exception e) {
             log.error("Error during getting Offer objects, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -56,7 +56,7 @@ public class OfferServiceImpl implements OfferService {
             offerRepository.deleteById(id);
         } catch (final Exception e) {
             log.error("Error during deleting Offer object by id, {}", e);
-            throw new DeleteException("Error occurred", e);
+            throw new DeleteException(e.getMessage());
         }
     }
 
@@ -67,7 +67,7 @@ public class OfferServiceImpl implements OfferService {
             offerRepository.insert(offer);
         } catch (final Exception e) {
             log.error("Error during inserting Offer object, {}", e);
-            throw new AddException("Error occurred", e);
+            throw new AddException(e.getMessage());
         }
         return offer;
     }
@@ -78,7 +78,7 @@ public class OfferServiceImpl implements OfferService {
             offerRepository.save(offer);
         } catch (final Exception e) {
             log.error("Error during saving Offer object, {}", e);
-            throw new ModifyException("Error occurred", e);
+            throw new ModifyException(e.getMessage());
         }
         return offer;
     }
@@ -89,7 +89,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByBookTitle(bookTitle);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects by title, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -99,7 +99,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByBookPublisher(bookPublisher);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects by publisher, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -109,7 +109,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByNotExpired(startDate);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects before expiration, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByCreatedAtBetween(startDate, endDate);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects between dates, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -129,7 +129,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByOfferOwner(user);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects by owner, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -139,7 +139,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByCity(city);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects by city, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -149,7 +149,7 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByVoivodeship(voivodeship);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects by voivodeship, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 

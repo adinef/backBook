@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.findById(id).orElseThrow( () -> new GetException("Cannot find user by id.") );
         } catch (final Exception e) {
             log.error("Error during getting User object by id, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             return userRepository.findAll();
         } catch (final Exception e) {
             log.error("Error during getting User objects, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
             userRepository.deleteById(id);
         } catch (final Exception e) {
             log.error("Error during deleting User object, {}", e);
-            throw new DeleteException("Error occurred", e);
+            throw new DeleteException(e.getMessage());
         }
     }
 
@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             userRepository.insert(user);
         } catch (final Exception e) {
             log.error("Error during inserting User object, {}", e);
-            throw new AddException("Error occurred", e);
+            throw new AddException(e.getMessage());
         }
         return user;
     }
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         } catch (final Exception e) {
             log.error("Error during saving User object, {}", e);
-            throw new ModifyException("Error occurred", e);
+            throw new ModifyException(e.getMessage());
         }
         return user;
     }
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow( ()-> new GetException("Cannot find user by login."));
         } catch (final Exception e) {
             log.error("Error during getting User objects by Login, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow( () -> new GetException("Cannot find user by login and password."));
         } catch (final Exception e) {
             log.error("Error during getting User objects by Login and Password, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow( () -> new GetException("Cannot find user by email."));
         } catch (final Exception e) {
             log.error("Error during getting User objects by e-mail, {}", e);
-            throw new GetException("Error occurred", e);
+            throw new GetException(e.getMessage());
         }
     }
 }

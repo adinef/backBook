@@ -65,7 +65,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public UserDto getUserByEmail(@PathVariable String email) {
-        User user = this.userService.getUserByLogin(email);
+        User user = this.userService.getUserByEmail(email);
         return MapSingleToDto(user);
     }
 
