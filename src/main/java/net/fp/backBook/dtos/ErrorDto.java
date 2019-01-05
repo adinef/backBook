@@ -1,4 +1,4 @@
-package net.fp.backBook.model;
+package net.fp.backBook.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
