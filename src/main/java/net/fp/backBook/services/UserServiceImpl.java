@@ -47,7 +47,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(String id) {
         try {
-            //THROW CUSTOM EXCEPTION HERE
             userRepository.deleteById(id);
         } catch (final Exception e) {
             log.error("Error during deleting User object, {}", e);
@@ -80,7 +79,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByLogin(String login) {
         try {
-            //THROW CUSTOM EXCEPTION HERE
             return userRepository
                     .findByLogin(login)
                     .orElseThrow( ()-> new GetException("Cannot find user by login."));
@@ -93,7 +91,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByLoginAndPassword(String login, String password) {
         try {
-            //THROW CUSTOM EXCEPTION HERE
             return userRepository
                     .findByLoginAndPassword(login, password)
                     .orElseThrow( () -> new GetException("Cannot find user by login and password."));
@@ -106,7 +103,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByEmail(String email) {
         try {
-            //THROW CUSTOM EXCEPTION HERE
             return userRepository
                     .findByEmail(email)
                     .orElseThrow( () -> new GetException("Cannot find user by email."));

@@ -3,9 +3,7 @@ package net.fp.backBook.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.*;
 import net.fp.backBook.exceptions.ModifyException;
-import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
-import net.fp.backBook.services.OfferService;
 import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.Media;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
