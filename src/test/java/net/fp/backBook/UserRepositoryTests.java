@@ -6,36 +6,28 @@ import de.bwaldvogel.mongo.MongoServer;
 import net.fp.backBook.configuration.TestMongoConfiguration;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.UserRepository;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
-
 @RunWith(SpringRunner.class)
+@EnableAutoConfiguration
 @SpringBootTest(classes = {TestMongoConfiguration.class})
+@ComponentScan(basePackageClasses = {UserRepository.class})
 public class UserRepositoryTests {
 
-    private MongoCollection<User> ussersColl;
+    @Autowired
     private MongoClient client;
+    @Autowired
     private MongoServer server;
 
-    private UserRepository userRepository;
-
     @Autowired
-    public UserRepositoryTests(
-            final UserRepository userRepository,
-            final MongoClient mongoClient,
-            final MongoServer mongoServer
-    ) {
-        this.userRepository = userRepository;
-        this.client = mongoClient;
-        this.server = mongoServer;
-    }
+    private UserRepository userRepository;
 
     @Before
     public void setUp() {
@@ -50,4 +42,20 @@ public class UserRepositoryTests {
         assert fetched.getLogin().equals("test");
     }
 
+    @Test
+    public void testFindByEmail() {
+        userRepository.insert( User.builder().email("hello@world.com").build() );
+        User fetched = userRepository.findByEmail("hello@world.com").get();
+        assert fetched != null;
+        assert fetched.getEmail().equals("hello@world.com");
+    }
+
+    @Test
+    public void testFindByLoginAndPassword() {
+        userRepository.insert( User.builder().login("test").password("pass").build() );
+        User fetched = userRepository.findByLoginAndPassword("test", "pass").get();
+        assert fetched != null;
+        assert fetched.getLogin().equals("test");
+        assert fetched.getPassword().equals("pass");
+    }
 }

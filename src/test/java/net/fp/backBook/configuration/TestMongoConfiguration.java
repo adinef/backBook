@@ -7,6 +7,7 @@ import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import net.fp.backBook.repositories.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -29,6 +30,7 @@ public class TestMongoConfiguration {
     }
 
     @Bean(destroyMethod = "close")
+    @Primary
     public MongoClient mongoClient(MongoServer mongoServer) {
         return new MongoClient(new ServerAddress(mongoServer.getLocalAddress()));
     }
