@@ -1,6 +1,7 @@
 package net.fp.backBook;
 
 import net.fp.backBook.exceptions.GetException;
+import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.OfferRepository;
@@ -96,14 +97,14 @@ public class OfferServiceTests {
     @Test
     public void testGetById() {
         Offer offer = offersList.get(0);
-        Offer offerFetched = offerService.getById(offer.getId());
+        Offer offerFetched = offerService.getOfferById(offer.getId());
         Assert.assertNotNull(offerFetched);
         Assert.assertEquals(offer.getOfferName(), offerFetched.getOfferName());
     }
 
     @Test(expected = GetException.class)
     public void testGetByIdThrows() {
-        offerService.getById("-1");
+        offerService.getOfferById("-1");
     }
 
     @Test
@@ -215,6 +216,37 @@ public class OfferServiceTests {
                         .getByFilter(filterOffer)
                         .size();
         Assert.assertEquals(offersByFilter, offersFetchedByFilter);
+    }
+
+    @Test
+    public void testAddOffer() {
+        Offer newOffer = Offer.builder().offerName("newOffer").build();
+        newOffer = offerService.addOffer(newOffer);
+        Assert.assertNotNull(newOffer.getId());
+    }
+
+    @Test(expected = GetException.class)
+    public void testDeleteOffer() {
+        Offer newOffer = Offer.builder().offerName("newOffer").build();
+        newOffer = offerService.addOffer(newOffer);
+        Assert.assertNotNull(newOffer.getId());
+        offerService.deleteOffer(newOffer.getId());
+        offerService.getOfferById(newOffer.getId());
+    }
+
+    @Test
+    public void testModifyOffer() {
+        Offer fetchedOffer = offerService.getAllOffers().get(0);
+        fetchedOffer.setCity("NEW NAME");
+        offerService.modifyOffer(fetchedOffer);
+        Offer fetchedAgainOffer = offerService.getOfferById(fetchedOffer.getId());
+        Assert.assertEquals(fetchedOffer.getCity(), fetchedAgainOffer.getCity());
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testModifyOfferThrowsOnDetached() {
+        Offer newOffer = Offer.builder().build();
+        offerService.modifyOffer(newOffer);
     }
 
 }

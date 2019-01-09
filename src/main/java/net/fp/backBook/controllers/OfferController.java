@@ -67,7 +67,7 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public OfferDto getOffer(@PathVariable String id) {
-        Offer offer = this.offerService.getById(id);
+        Offer offer = this.offerService.getOfferById(id);
         return MapSingleToDto(offer);
     }
 

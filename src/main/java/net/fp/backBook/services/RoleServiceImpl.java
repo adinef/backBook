@@ -55,6 +55,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role updateRole(Role role) {
+        if(role.getId() == null)
+            throw new ModifyException("Id cannot be null for role to be modified.");
         try {
             return this.roleRepository.save(role);
         } catch (Exception e) {

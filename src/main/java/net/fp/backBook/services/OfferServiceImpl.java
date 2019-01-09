@@ -31,7 +31,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer getById(String id) {
+    public Offer getOfferById(String id) {
         try {
             return offerRepository.findById(id).orElseThrow( () -> new GetException("Cannot find offer by id."));
         } catch (final Exception e) {
@@ -74,6 +74,8 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public Offer modifyOffer(Offer offer) {
+        if(offer.getId() == null)
+            throw new ModifyException("Id cannot be null for offer to be modified.");
         try {
             offerRepository.save(offer);
         } catch (final Exception e) {

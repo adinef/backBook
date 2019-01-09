@@ -67,6 +67,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
+        if(user.getId() == null)
+            throw new ModifyException("Id cannot be null for user to be modified.");
         try {
             userRepository.save(user);
         } catch (final Exception e) {

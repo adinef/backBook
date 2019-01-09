@@ -9,7 +9,7 @@ import java.util.List;
 
 @Service
 public interface OfferService {
-    Offer getById(String id);
+    Offer getOfferById(String id);
     List<Offer> getAllOffers();
     void deleteOffer(String id);
     Offer addOffer(Offer offer);

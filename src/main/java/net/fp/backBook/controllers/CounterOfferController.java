@@ -97,7 +97,7 @@ public class CounterOfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<CounterOfferDto> getAllCounterOffersByOffer(@PathVariable("id") String id) {
-        Offer offer = this.offerService.getById(id);
+        Offer offer = this.offerService.getOfferById(id);
         List<CounterOffer> counterOffers = this.counterOfferService.getAllByOffer(offer);
         return this.getDtosList(counterOffers);
     }
