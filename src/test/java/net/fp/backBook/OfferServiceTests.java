@@ -131,7 +131,7 @@ public class OfferServiceTests {
         Assert.assertEquals(
                 1, offerService.getAllNotExpired(topDate).size());
         Assert.assertEquals(
-               0, offerService.getAllNotExpired(topDate.plusDays(2)).size());
+               0, offerService.getAllNotExpired(topDate.plusDays(3)).size());
     }
 
     @Test
