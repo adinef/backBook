@@ -1,4 +1,4 @@
-package net.fp.backBook;
+package net.fp.backBook.repositories;
 
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;

@@ -85,12 +85,6 @@
             <scope>test</scope>
             <version>2.1.1.RELEASE</version>
         </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>RELEASE</version>
-            <scope>test</scope>
-        </dependency>
         <!-- SWAGGER -->
         <dependency>
             <groupId>io.springfox</groupId>

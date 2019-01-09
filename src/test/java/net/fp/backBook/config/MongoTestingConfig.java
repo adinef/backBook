@@ -1,4 +1,4 @@
-package net.fp.backBook;
+package net.fp.backBook.config;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;

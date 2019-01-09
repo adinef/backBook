@@ -1,4 +1,4 @@
-package net.fp.backBook;
+package net.fp.backBook.services;
 
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.model.User;
