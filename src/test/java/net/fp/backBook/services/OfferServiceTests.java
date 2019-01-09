@@ -1,5 +1,6 @@
 package net.fp.backBook.services;
 
+import net.bytebuddy.dynamic.scaffold.MethodGraph;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
@@ -7,15 +8,30 @@ import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.OfferRepository;
 import net.fp.backBook.repositories.UserRepository;
 import net.fp.backBook.services.OfferService;
+import org.apache.tomcat.jni.Local;
 import org.junit.*;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.regex;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ComponentScan(basePackages = {"net.fp.backBook.repositories",
@@ -23,201 +39,158 @@ import java.util.ArrayList;
 @SpringBootTest
 public class OfferServiceTests {
 
+    /*
     @Autowired
     private OfferRepository offerRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private OfferService offerService;
 
-    private ArrayList<Offer> offersList;
-    private User globalTestUser;
+    @Autowired
+    private UserRepository userRepository;
 
-    @Before
-    public void setUp() {
-        userRepository.deleteAll();
+*/
+    @Mock
+    private OfferRepository offerRepository;
 
-        User testUser = User.builder().name("name").lastName("lastName").build();
-        User testUser2 = User.builder().name("name1").lastName("lastName1").build();
-        User testUser3 = User.builder().name("name2").lastName("lastName2").build();
-        globalTestUser = testUser;
-        userRepository.insert(testUser);
-        userRepository.insert(testUser2);
-        userRepository.insert(testUser3);
+    @Mock
+    private UserRepository userRepository;
 
-        offerRepository.deleteAll();
-        Offer test1 = Offer
-                .builder()
-                .offerName("test1")
-                .createdAt(LocalDateTime.now().minusDays(3))
-                .expires(LocalDateTime.now().plusDays(3))
-                .offerOwner(testUser)
-                .city("Lodz")
-                .voivodeship("lodzkie")
-                .bookPublisher("pub")
-                .bookTitle("book1")
-                .build();
-        Offer test2 = Offer
-                .builder()
-                .offerName("test2")
-                .createdAt(LocalDateTime.now().minusDays(1))
-                .expires(LocalDateTime.now().plusDays(6))
-                .offerOwner(testUser2)
-                .city("Warszawa")
-                .voivodeship("mazowieckie")
-                .bookPublisher("pub")
-                .bookTitle("book2")
-                .build();
-        Offer test3 = Offer
-                .builder()
-                .offerName("test3")
-                .createdAt(LocalDateTime.now().minusDays(4))
-                .expires(LocalDateTime.now().plusDays(1))
-                .offerOwner(testUser)
-                .city("Andrespol")
-                .voivodeship("lodzkie")
-                .bookPublisher("pub")
-                .bookTitle("book1")
-                .build();
-        offersList = new ArrayList<>();
-        offersList.add(test1);
-        offersList.add(test2);
-        offersList.add(test3);
-        offerRepository.insert(offersList);
-    }
-
-    @After
-    public void tearDown() {
-        userRepository.deleteAll();
-        offerRepository.deleteAll();
-    }
+    @InjectMocks
+    private OfferServiceImpl offerService;
 
     @Test
     public void testGetById() {
-        Offer offer = offersList.get(0);
-        Offer offerFetched = offerService.getById(offer.getId());
+        Offer offer = mock(Offer.class);
+        when(this.offerRepository.findById(anyString())).thenReturn(Optional.of(offer));
+        Offer offerFetched = offerService.getById(anyString());
         Assert.assertNotNull(offerFetched);
         Assert.assertEquals(offer.getOfferName(), offerFetched.getOfferName());
+        verify(this.offerRepository, times(1)).findById(anyString());
     }
 
     @Test(expected = GetException.class)
-    public void testGetByIdThrows() {
-        offerService.getById("-1");
+    public void testGetByIdThrowsOnNotPresent() {
+        when(this.offerRepository.findById(anyString())).thenReturn(Optional.empty());
+        this.offerService.getById(anyString());
     }
 
     @Test
     public void testGetAllOffers() {
-        int offersSize = offersList.size();
-        int fetechedOffersSize = offerService.getAll().size();
-        Assert.assertNotNull(fetechedOffersSize);
-        Assert.assertEquals(offersSize, fetechedOffersSize);
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        when(this.offerRepository.findAll()).thenReturn(offers);
+        Assert.assertEquals(offers, this.offerService.getAll());
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllOffersThrowsOnRuntimeException() {
+        when(this.offerRepository.findAll()).thenThrow(RuntimeException.class);
+        this.offerService.getAll();
     }
 
     @Test
     public void testGetAllByBookTitle() {
-        long offersByBookTitleSize = offersList
-                .stream()
-                .filter(n -> n.getBookTitle()
-                        .equals("book1")).count();
-        long offersFetchedByBookTitleSize = offerService.getAllByBookTitle("book1").size();
-        Assert.assertEquals(offersByBookTitleSize, offersFetchedByBookTitleSize);
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        String title = anyString();
+        when(this.offerRepository.findAllByBookTitle(title)).thenReturn(offers);
+        Assert.assertEquals(offers, this.offerService.getAllByBookTitle(title));
+        verify(this.offerRepository, times(1)).findAllByBookTitle(title);
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllByBookTitleThrowsOnRuntimeException() {
+        when(this.offerRepository.findAllByBookTitle(anyString())).thenThrow(RuntimeException.class);
+        this.offerService.getAllByBookTitle(anyString());
     }
 
     @Test
     public void testGetAllNotExpired() {
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
         LocalDateTime topDate = LocalDateTime.now().plusDays(4);
-        Assert.assertEquals(
-                1, offerService.getAllNotExpired(topDate).size());
-        Assert.assertEquals(
-               0, offerService.getAllNotExpired(topDate.plusDays(3)).size());
+        when(this.offerRepository.findAllByNotExpired(topDate)).thenReturn(offers);
+        Assert.assertEquals(offers, offerService.getAllNotExpired(topDate));
     }
+
+    @Test(expected = GetException.class)
+    public void testGetAllNotExpiredThrowsOnRuntimeException() {
+        LocalDateTime ldt = LocalDateTime.now();
+        when(this.offerRepository.findAllByNotExpired(ldt)).thenThrow(RuntimeException.class);
+        offerService.getAllNotExpired(ldt);
+    }
+
 
     @Test
     public void testGetAllCreatedBetween() {
         LocalDateTime createdStartTime = LocalDateTime.now().minusDays(5);
         LocalDateTime createdTopTime = LocalDateTime.now().minusDays(3);
-        Assert.assertEquals(
-                2, offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime).size());
-        Assert.assertEquals(
-                0, offerService.getAllCreatedBetweenDates(createdStartTime.plusDays(5), createdTopTime.plusDays(6)).size());
+        LocalDateTime createdTopTime2 = LocalDateTime.now().minusDays(1);
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime))
+                .thenReturn(offers);
+        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime2))
+                .thenReturn(new ArrayList<>());
+
+        Assert.assertEquals(offers,
+                this.offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime));
+        Assert.assertEquals(new ArrayList<>(),
+                this.offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime2));
     }
+
 
     @Test(expected = GetException.class)
     public void testGetAllCreatedBetweenThrowsOnStartBiggerThanEnd() {
         LocalDateTime createdStartTime = LocalDateTime.now();
         LocalDateTime createdTopTime = LocalDateTime.now().minusDays(3);
+        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime))
+                .thenThrow(GetException.class);
         offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime);
     }
 
     @Test
     public void testGetAllByOfferOwner() {
-        long offersByOwnerSize =
-                offersList
-                .stream()
-                .filter( n -> n.getOfferOwner().equals(globalTestUser))
-                .count();
-        long offersFetchedByOwnerSize =
-                offerService
-                .getAllByOfferOwner(globalTestUser)
-                .size();
-        Assert.assertEquals(offersByOwnerSize, offersFetchedByOwnerSize);
+        User user = mock(User.class);
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        when(this.offerRepository.findAllByOfferOwner(user)).thenReturn(offers);
+        Assert.assertEquals(offers, this.offerService.getAllByOfferOwner(user));
+        verify(this.offerRepository, times(1)).findAllByOfferOwner(user);
     }
-/*
-    @Test(expected = GetException.class)
-    public void testGetAllByOfferOwnerThrowsOnNull() {
-        offerService.getAllByOfferOwner(null);
-    }
-*/
+
     @Test(expected = GetException.class)
     public void testGetAllByOfferOwnerThrowsOnNonConnected() {
-        offerService.getAllByOfferOwner(User.builder().name("non-existing").build());
+        User user = mock(User.class);
+        when(this.offerRepository.findAllByOfferOwner(user)).thenThrow(RuntimeException.class);
+        offerService.getAllByOfferOwner(user);
     }
 
     @Test
     public void testGetAllByCity() {
-        long offersByCitySize =
-                offersList
-                .stream()
-                .filter( n -> n.getCity().equals("Lodz"))
-                .count();
-        long offersFetchedByCitySize =
-                offerService
-                .getAllByCity("Lodz")
-                .size();
-        Assert.assertEquals(offersByCitySize, offersFetchedByCitySize);
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        when(this.offerRepository.findAllByCity(anyString())).thenReturn(offers);
+        Assert.assertEquals(offers, this.offerService.getAllByCity(anyString()));
+        verify(this.offerRepository, times(1)).findAllByCity(anyString());
     }
 
     @Test
     public void testGetAllByVoivodeship() {
-        long offersByVoivodeshipSize =
-                offersList
-                        .stream()
-                        .filter( n -> n.getVoivodeship().equals("lodzkie"))
-                        .count();
-        long offersFetchedByVoivodeshipSize =
-                offerService
-                        .getAllByVoivodeship("lodzkie")
-                        .size();
-        Assert.assertEquals(offersByVoivodeshipSize, offersFetchedByVoivodeshipSize);
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        when(this.offerRepository.findAllByVoivodeship(anyString())).thenReturn(offers);
+        Assert.assertEquals(offers, this.offerService.getAllByVoivodeship(anyString()));
+        verify(this.offerRepository, times(1)).findAllByVoivodeship(anyString());
+    }
+
+
+    private Example<Offer> testFilter(Offer offer) {
+        return Example.of(offer);
     }
 
     @Test
     public void testGetByFilter() {
-        long offersByFilter =
-                offersList
-                        .stream()
-                        .filter( n -> n.getVoivodeship().equals("lodzkie") && n.getCity().equals("Lodz"))
-                        .count();
-        Offer filterOffer = Offer.builder().city("Lodz").voivodeship("lodzkie").build();
-        long offersFetchedByFilter =
-                offerService
-                        .getByFilter(filterOffer)
-                        .size();
-        Assert.assertEquals(offersByFilter, offersFetchedByFilter);
+        Offer filterOffer = mock(Offer.class);
+        when(this.offerRepository.findAll(testFilter(filterOffer))).thenReturn(new ArrayList<>());
+        Assert.assertEquals(new ArrayList<>(), this.offerService.getByFilter(filterOffer));
+        verify(this.offerRepository, times(1)).findAll(testFilter(filterOffer));
     }
-
+/*
     @Test
     public void testAddOffer() {
         Offer newOffer = Offer.builder().offerName("newOffer").build();
@@ -249,4 +222,5 @@ public class OfferServiceTests {
         offerService.modify(newOffer);
     }
 
+*/
 }
