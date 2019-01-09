@@ -53,7 +53,7 @@ public class RentalController {
     @ResponseStatus(HttpStatus.CREATED)
     public RentalDto addRental(@RequestBody RentalDto rentalDto) {
         Rental rental = this.modelMapper.map(rentalDto, Rental.class);
-        rental = this.rentalService.addRental(rental);
+        rental = this.rentalService.add(rental);
         return this.modelMapper.map(rental, RentalDto.class);
     }
 
@@ -67,7 +67,7 @@ public class RentalController {
             throw new ModifyException("Ids are not the same");
         } else {
             Rental rental = this.modelMapper.map(rentalDto, Rental.class);
-            rental = this.rentalService.modifyRental(rental);
+            rental = this.rentalService.modify(rental);
             return this.modelMapper.map(rental, RentalDto.class);
         }
     }
@@ -86,7 +86,7 @@ public class RentalController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<RentalDto> getAllRentals() {
-        List<Rental> rentals = this.rentalService.getAllRentals();
+        List<Rental> rentals = this.rentalService.getAll();
         return this.getDtosList(rentals);
     }
 
@@ -94,7 +94,7 @@ public class RentalController {
             value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteRental(@PathVariable("id") String id) {
-        this.rentalService.deleteRental(id);
+        this.rentalService.delete(id);
     }
 
     @GetMapping(
@@ -102,7 +102,7 @@ public class RentalController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public RentalDto getRentalByOffer(@PathVariable("id") String id) {
-        Offer offer = this.offerService.getOfferById(id);
+        Offer offer = this.offerService.getById(id);
         Rental rental = this.rentalService.getByOffer(offer);
         return this.modelMapper.map(rental, RentalDto.class);
     }
@@ -112,7 +112,7 @@ public class RentalController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<RentalDto> getAllRentalsByUser(@PathVariable("id") String id) {
-        User user = this.userService.getUserById(id);
+        User user = this.userService.getById(id);
         List<Rental> rentals = this.rentalService.getAllByUser(user);
         return this.getDtosList(rentals);
     }

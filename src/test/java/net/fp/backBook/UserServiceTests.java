@@ -1,11 +1,8 @@
 package net.fp.backBook;
 
 import net.fp.backBook.exceptions.GetException;
-import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
-import net.fp.backBook.repositories.OfferRepository;
 import net.fp.backBook.repositories.UserRepository;
-import net.fp.backBook.services.OfferService;
 import net.fp.backBook.services.UserService;
 import org.junit.After;
 import org.junit.Assert;
@@ -17,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -56,20 +52,20 @@ public class UserServiceTests {
     @Test
     public void testGetById() {
         User user = usersList.get(0);
-        User userFetched = userService.getUserById(user.getId());
+        User userFetched = userService.getById(user.getId());
         Assert.assertNotNull(userFetched);
         Assert.assertEquals(user.getName(), userFetched.getName());
     }
 
     @Test(expected = GetException.class)
     public void testGetByIdThrows() {
-        userService.getUserById("-1");
+        userService.getById("-1");
     }
 
     @Test
     public void testGetAllOffers() {
         int usersSize = usersList.size();
-        int fetechedUsersSize = userService.getAllUsers().size();
+        int fetechedUsersSize = userService.getAll().size();
         Assert.assertNotNull(fetechedUsersSize);
         Assert.assertEquals(usersSize, fetechedUsersSize);
     }

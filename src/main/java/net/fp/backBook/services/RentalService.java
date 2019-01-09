@@ -10,17 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public interface RentalService {
-
-    Rental addRental(Rental rental);
-
-    Rental modifyRental(Rental rental);
-
-    List<Rental> getAllRentals();
-
-    Rental getById(String id);
-
-    void deleteRental(String id);
+public interface RentalService extends BasicCrudService<Rental, String> {
 
     Rental getByOffer(Offer offer);
 

@@ -9,17 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public interface CounterOfferService {
-
-    CounterOffer addCounterOffer(CounterOffer counterOffer);
-
-    CounterOffer modifyCounterOffer(CounterOffer counterOffer);
-
-    List<CounterOffer> getAllCounterOffers();
-
-    CounterOffer getById(String id);
-
-    void deleteCounterOffer(String id);
+public interface CounterOfferService extends BasicCrudService<CounterOffer, String> {
 
     List<CounterOffer> getAllByOffer(Offer offer);
 

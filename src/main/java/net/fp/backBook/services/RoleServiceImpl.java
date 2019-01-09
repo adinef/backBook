@@ -24,7 +24,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getAllRoles() {
+    public List<Role> getAll() {
         try {
             return this.roleRepository.findAll();
         } catch (Exception e) {
@@ -34,7 +34,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role getRole(String id) {
+    public Role getById(String id) {
         try {
             return this.roleRepository.findById(id).orElseThrow( () -> new GetException("No role with specified id"));
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role addRole(Role role) {
+    public Role add(Role role) {
         try {
             return this.roleRepository.insert(role);
         } catch (Exception e) {
@@ -54,7 +54,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Role updateRole(Role role) {
+    public Role modify(Role role) {
         if(role.getId() == null)
             throw new ModifyException("Id cannot be null for role to be modified.");
         try {
@@ -66,7 +66,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void deleteRole(String id) {
+    public void delete(String id) {
         try {
             this.roleRepository.deleteById(id);
         } catch (Exception e) {

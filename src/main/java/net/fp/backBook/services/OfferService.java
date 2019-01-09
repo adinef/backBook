@@ -8,12 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public interface OfferService {
-    Offer getOfferById(String id);
-    List<Offer> getAllOffers();
-    void deleteOffer(String id);
-    Offer addOffer(Offer offer);
-    Offer modifyOffer(Offer offer);
+public interface OfferService extends BasicCrudService<Offer, String> {
     List<Offer> getAllByBookTitle(String title);
     List<Offer> getAllByOfferName(String title);
     List<Offer> getAllByBookPublisher(String bookPublisher);

@@ -37,7 +37,7 @@ public class UserController {
     )
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getUsers() {
-        List<User> users =  userService.getAllUsers();
+        List<User> users =  userService.getAll();
         List<UserDto> list = MapToDto(users);
         return list;
     }
@@ -45,7 +45,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public UserDto getUser(@PathVariable String id) {
-        User user = this.userService.getUserById(id);
+        User user = this.userService.getById(id);
         return MapSingleToDto(user);
     }
 
@@ -81,7 +81,7 @@ public class UserController {
     public UserDto addUser(@RequestBody UserDto userDto) {
         User user = this.modelMapper.map(userDto, User.class);
         // set user from context here
-        user = this.userService.addUser(user);
+        user = this.userService.add(user);
         return MapSingleToDto(user);
     }
 
@@ -95,7 +95,7 @@ public class UserController {
         }
         User user = this.modelMapper.map(userDto, User.class);
         // set user from context here
-        user = this.userService.updateUser(user);
+        user = this.userService.modify(user);
         return MapSingleToDto(user);
     }
 
@@ -103,7 +103,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
+        userService.delete(id);
     }
 
     private UserDto MapSingleToDto(User offer) {

@@ -97,20 +97,20 @@ public class OfferServiceTests {
     @Test
     public void testGetById() {
         Offer offer = offersList.get(0);
-        Offer offerFetched = offerService.getOfferById(offer.getId());
+        Offer offerFetched = offerService.getById(offer.getId());
         Assert.assertNotNull(offerFetched);
         Assert.assertEquals(offer.getOfferName(), offerFetched.getOfferName());
     }
 
     @Test(expected = GetException.class)
     public void testGetByIdThrows() {
-        offerService.getOfferById("-1");
+        offerService.getById("-1");
     }
 
     @Test
     public void testGetAllOffers() {
         int offersSize = offersList.size();
-        int fetechedOffersSize = offerService.getAllOffers().size();
+        int fetechedOffersSize = offerService.getAll().size();
         Assert.assertNotNull(fetechedOffersSize);
         Assert.assertEquals(offersSize, fetechedOffersSize);
     }
@@ -221,32 +221,32 @@ public class OfferServiceTests {
     @Test
     public void testAddOffer() {
         Offer newOffer = Offer.builder().offerName("newOffer").build();
-        newOffer = offerService.addOffer(newOffer);
+        newOffer = offerService.add(newOffer);
         Assert.assertNotNull(newOffer.getId());
     }
 
     @Test(expected = GetException.class)
     public void testDeleteOffer() {
         Offer newOffer = Offer.builder().offerName("newOffer").build();
-        newOffer = offerService.addOffer(newOffer);
+        newOffer = offerService.add(newOffer);
         Assert.assertNotNull(newOffer.getId());
-        offerService.deleteOffer(newOffer.getId());
-        offerService.getOfferById(newOffer.getId());
+        offerService.delete(newOffer.getId());
+        offerService.getById(newOffer.getId());
     }
 
     @Test
     public void testModifyOffer() {
-        Offer fetchedOffer = offerService.getAllOffers().get(0);
+        Offer fetchedOffer = offerService.getAll().get(0);
         fetchedOffer.setCity("NEW NAME");
-        offerService.modifyOffer(fetchedOffer);
-        Offer fetchedAgainOffer = offerService.getOfferById(fetchedOffer.getId());
+        offerService.modify(fetchedOffer);
+        Offer fetchedAgainOffer = offerService.getById(fetchedOffer.getId());
         Assert.assertEquals(fetchedOffer.getCity(), fetchedAgainOffer.getCity());
     }
 
     @Test(expected = ModifyException.class)
     public void testModifyOfferThrowsOnDetached() {
         Offer newOffer = Offer.builder().build();
-        offerService.modifyOffer(newOffer);
+        offerService.modify(newOffer);
     }
 
 }

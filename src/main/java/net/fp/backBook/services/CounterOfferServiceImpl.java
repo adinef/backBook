@@ -27,7 +27,7 @@ public class CounterOfferServiceImpl implements CounterOfferService {
     }
 
     @Override
-    public CounterOffer addCounterOffer(CounterOffer counterOffer) {
+    public CounterOffer add(CounterOffer counterOffer) {
         try {
             return this.counterOfferRepository.insert(counterOffer);
         } catch (Exception e) {
@@ -37,7 +37,9 @@ public class CounterOfferServiceImpl implements CounterOfferService {
     }
 
     @Override
-    public CounterOffer modifyCounterOffer(CounterOffer counterOffer) {
+    public CounterOffer modify(CounterOffer counterOffer) {
+        if(counterOffer.getId() == null)
+            throw new ModifyException("Id cannot be null for a counterOffer to be modified.");
         try {
             return this.counterOfferRepository.save(counterOffer);
         } catch (Exception e) {
@@ -47,7 +49,7 @@ public class CounterOfferServiceImpl implements CounterOfferService {
     }
 
     @Override
-    public List<CounterOffer> getAllCounterOffers() {
+    public List<CounterOffer> getAll() {
         try {
             return this.counterOfferRepository.findAll();
         } catch (Exception e) {
@@ -68,7 +70,7 @@ public class CounterOfferServiceImpl implements CounterOfferService {
     }
 
     @Override
-    public void deleteCounterOffer(String id) {
+    public void delete(String id) {
         try {
             this.counterOfferRepository.deleteById(id);
         } catch (Exception e) {

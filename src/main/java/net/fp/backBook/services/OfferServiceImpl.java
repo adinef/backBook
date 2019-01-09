@@ -31,7 +31,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer getOfferById(String id) {
+    public Offer getById(String id) {
         try {
             return offerRepository.findById(id).orElseThrow( () -> new GetException("Cannot find offer by id."));
         } catch (final Exception e) {
@@ -41,7 +41,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public List<Offer> getAllOffers() {
+    public List<Offer> getAll() {
         try {
             return offerRepository.findAll();
         } catch (final Exception e) {
@@ -51,7 +51,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public void deleteOffer(String id) {
+    public void delete(String id) {
         try {
             offerRepository.deleteById(id);
         } catch (final Exception e) {
@@ -61,7 +61,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer addOffer(Offer offer) {
+    public Offer add(Offer offer) {
         try {
             offer.setCreatedAt(LocalDateTime.now());
             offerRepository.insert(offer);
@@ -73,7 +73,7 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
-    public Offer modifyOffer(Offer offer) {
+    public Offer modify(Offer offer) {
         if(offer.getId() == null)
             throw new ModifyException("Id cannot be null for offer to be modified.");
         try {

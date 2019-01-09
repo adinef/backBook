@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(String id) {
+    public User getById(String id) {
         try {
             return userRepository.findById(id).orElseThrow( () -> new GetException("Cannot find user by id.") );
         } catch (final Exception e) {
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         try {
             return userRepository.findAll();
         } catch (final Exception e) {
@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String id) {
+    public void delete(String id) {
         try {
             userRepository.deleteById(id);
         } catch (final Exception e) {
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) {
+    public User add(User user) {
         try {
             userRepository.insert(user);
         } catch (final Exception e) {
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(User user) {
+    public User modify(User user) {
         if(user.getId() == null)
             throw new ModifyException("Id cannot be null for user to be modified.");
         try {

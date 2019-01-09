@@ -45,7 +45,7 @@ public class OfferController {
     )
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffers() {
-        List<Offer> offers =  offerService.getAllOffers();
+        List<Offer> offers =  offerService.getAll();
         List<OfferDto> list = MapToDto(offers);
         return list;
     }
@@ -67,7 +67,7 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public OfferDto getOffer(@PathVariable String id) {
-        Offer offer = this.offerService.getOfferById(id);
+        Offer offer = this.offerService.getById(id);
         return MapSingleToDto(offer);
     }
 
@@ -91,7 +91,7 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByOfferOwner(@PathVariable String id) {
-        User user = userService.getUserById(id);
+        User user = userService.getById(id);
         List<Offer> offers = this.offerService.getAllByOfferOwner(user);
         return MapToDto(offers);
     }
@@ -146,7 +146,7 @@ public class OfferController {
 
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
-        offer = this.offerService.addOffer(offer);
+        offer = this.offerService.add(offer);
         return MapSingleToDto(offer);
     }
 
@@ -160,7 +160,7 @@ public class OfferController {
         }
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
-        offer = this.offerService.modifyOffer(offer);
+        offer = this.offerService.modify(offer);
         return MapSingleToDto(offer);
     }
 
@@ -168,7 +168,7 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteOffer(@PathVariable String id) {
-        offerService.deleteOffer(id);
+        offerService.delete(id);
     }
 
     private OfferDto MapSingleToDto(Offer offer) {

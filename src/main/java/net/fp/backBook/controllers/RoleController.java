@@ -34,7 +34,7 @@ public class RoleController {
     )
     @ResponseStatus(HttpStatus.OK)
     public List<RoleDto> getAllRoles() {
-        List<Role> roles = this.roleService.getAllRoles();
+        List<Role> roles = this.roleService.getAll();
         return MapToDto(roles);
     }
 
@@ -44,7 +44,7 @@ public class RoleController {
     )
     @ResponseStatus(HttpStatus.OK)
     public RoleDto getRole(@PathVariable String id) {
-        Role role = this.roleService.getRole(id);
+        Role role = this.roleService.getById(id);
         return MapSingleToDto(role);
     }
 
@@ -57,7 +57,7 @@ public class RoleController {
     public RoleDto addRole(@RequestBody RoleDto roleDto) {
         Role role = this.modelMapper.map(roleDto, Role.class);
         //TO DO EXCEPTION HANDLING
-        return MapSingleToDto(roleService.addRole(role));
+        return MapSingleToDto(roleService.add(role));
     }
 
     @PutMapping(
@@ -72,7 +72,7 @@ public class RoleController {
         }
         Role role = this.modelMapper.map(roleDto, Role.class);
         //TO DO EXCEPTION HANDLING
-        return MapSingleToDto(roleService.updateRole(role));
+        return MapSingleToDto(roleService.modify(role));
     }
 
     @DeleteMapping(
@@ -81,7 +81,7 @@ public class RoleController {
     )
     @ResponseStatus(HttpStatus.OK)
     public void deleteRole(@PathVariable String id) {
-        this.roleService.deleteRole(id);
+        this.roleService.delete(id);
     }
 
     private RoleDto MapSingleToDto(Role role) {

@@ -28,7 +28,7 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public Rental addRental(Rental rental) {
+    public Rental add(Rental rental) {
         try {
             return this.rentalRepository.insert(rental);
         } catch (Exception e) {
@@ -38,7 +38,9 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public Rental modifyRental(Rental rental) {
+    public Rental modify(Rental rental) {
+        if(rental.getId() == null)
+            throw new ModifyException("Id cannot be null for a rental to be modified.");
         try {
             return this.rentalRepository.save(rental);
         } catch (Exception e) {
@@ -48,7 +50,7 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public List<Rental> getAllRentals() {
+    public List<Rental> getAll() {
         try {
             return this.rentalRepository.findAll();
         } catch (Exception e) {
@@ -69,7 +71,7 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public void deleteRental(String id) {
+    public void delete(String id) {
         try {
             this.rentalRepository.deleteById(id);
         } catch (Exception e) {

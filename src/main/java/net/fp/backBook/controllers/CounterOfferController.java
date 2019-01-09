@@ -48,7 +48,7 @@ public class CounterOfferController {
     @ResponseStatus(HttpStatus.CREATED)
     public CounterOfferDto addCounterOffer(@RequestBody CounterOfferDto counterOfferDto) {
         CounterOffer counterOffer = this.modelMapper.map(counterOfferDto, CounterOffer.class);
-        counterOffer = this.counterOfferService.addCounterOffer(counterOffer);
+        counterOffer = this.counterOfferService.add(counterOffer);
         return this.modelMapper.map(counterOffer, CounterOfferDto.class);
     }
 
@@ -62,7 +62,7 @@ public class CounterOfferController {
             throw new ModifyException("Ids are not the same");
         } else {
             CounterOffer counterOffer = this.modelMapper.map(counterOfferDto, CounterOffer.class);
-            counterOffer = this.counterOfferService.modifyCounterOffer(counterOffer);
+            counterOffer = this.counterOfferService.modify(counterOffer);
             return this.modelMapper.map(counterOffer, CounterOfferDto.class);
         }
     }
@@ -81,7 +81,7 @@ public class CounterOfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<CounterOfferDto> getAllCounterOffers() {
-        List<CounterOffer> counterOffers = this.counterOfferService.getAllCounterOffers();
+        List<CounterOffer> counterOffers = this.counterOfferService.getAll();
         return this.getDtosList(counterOffers);
     }
 
@@ -89,7 +89,7 @@ public class CounterOfferController {
             value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteCounterOffer(@PathVariable("id") String id) {
-        this.counterOfferService.deleteCounterOffer(id);
+        this.counterOfferService.delete(id);
     }
 
     @GetMapping(
@@ -97,7 +97,7 @@ public class CounterOfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<CounterOfferDto> getAllCounterOffersByOffer(@PathVariable("id") String id) {
-        Offer offer = this.offerService.getOfferById(id);
+        Offer offer = this.offerService.getById(id);
         List<CounterOffer> counterOffers = this.counterOfferService.getAllByOffer(offer);
         return this.getDtosList(counterOffers);
     }
@@ -107,7 +107,7 @@ public class CounterOfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<CounterOfferDto> getAllCounterOffersByUser(@PathVariable("id") String id) {
-        User user = this.userService.getUserById(id);
+        User user = this.userService.getById(id);
         List<CounterOffer> counterOffers = this.counterOfferService.getAllByUser(user);
         return this.getDtosList(counterOffers);
     }
