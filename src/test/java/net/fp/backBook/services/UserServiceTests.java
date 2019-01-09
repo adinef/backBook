@@ -1,6 +1,9 @@
 package net.fp.backBook.services;
 
+import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
+import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.UserRepository;
 import net.fp.backBook.services.UserService;
@@ -112,4 +115,54 @@ public class UserServiceTests {
         this.userService.getUserByLoginAndPassword(anyString(), anyString());
     }
 
+    @Test
+    public void testAddUser() {
+        User user = mock(User.class);
+        when(this.userRepository.insert(user)).thenReturn(user);
+        Assert.assertEquals(user, this.userService.add(user));
+        verify(this.userRepository, times(1)).insert(user);
+    }
+
+    @Test(expected = AddException.class)
+    public void testAddUserThrowsGetOnRuntimeException() {
+        User user = mock(User.class);
+        when(this.userRepository.insert(user)).thenThrow(RuntimeException.class);
+        this.userService.add(user);
+    }
+
+    @Test
+    public void testDeleteUser() {
+        User user = User.builder().id("1").build();
+        doNothing().when(this.userRepository).deleteById(user.getId());
+        this.userService.delete(user.getId());
+        verify(this.userRepository, times(1)).deleteById(user.getId());
+    }
+
+    @Test(expected = DeleteException.class)
+    public void testDeleteUserThrowsOnRuntimeException() {
+        User user = User.builder().id("1").build();
+        doThrow(RuntimeException.class).when(this.userRepository).deleteById(user.getId());
+        this.userService.delete(user.getId());
+    }
+
+    @Test
+    public void testModifyUser() {
+        User user = User.builder().id("1").build();
+        when(this.userRepository.save(user)).thenReturn(user);
+        Assert.assertEquals(user, this.userService.modify(user));
+        verify(this.userRepository, times(1)).save(user);
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testModifyUserThrowsOnIdNull() {
+        User user = User.builder().build();
+        Assert.assertEquals(user, this.userService.modify(user));
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testModifyUserThrowsOnRuntimeException() {
+        User user = mock(User.class);
+        when(userRepository.insert(user)).thenThrow(RuntimeException.class);
+        this.userService.modify(user);
+    }
 }
