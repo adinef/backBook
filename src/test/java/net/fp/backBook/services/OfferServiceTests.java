@@ -1,6 +1,8 @@
 package net.fp.backBook.services;
 
 import net.bytebuddy.dynamic.scaffold.MethodGraph;
+import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
@@ -39,17 +41,6 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 @SpringBootTest
 public class OfferServiceTests {
 
-    /*
-    @Autowired
-    private OfferRepository offerRepository;
-
-    @Autowired
-    private OfferService offerService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-*/
     @Mock
     private OfferRepository offerRepository;
 
@@ -180,47 +171,77 @@ public class OfferServiceTests {
 
 
     private Example<Offer> testFilter(Offer offer) {
-        return Example.of(offer);
+        ExampleMatcher exampleMatcher = offerService.offerExampleMatcher();
+        return Example.of(offer, exampleMatcher);
     }
 
     @Test
-    public void testGetByFilter() {
+    public void testGetByFilterRetrievesNothing() {
         Offer filterOffer = mock(Offer.class);
         when(this.offerRepository.findAll(testFilter(filterOffer))).thenReturn(new ArrayList<>());
         Assert.assertEquals(new ArrayList<>(), this.offerService.getByFilter(filterOffer));
         verify(this.offerRepository, times(1)).findAll(testFilter(filterOffer));
     }
-/*
+
     @Test
-    public void testAddOffer() {
-        Offer newOffer = Offer.builder().offerName("newOffer").build();
-        newOffer = offerService.add(newOffer);
-        Assert.assertNotNull(newOffer.getId());
+    public void testGetByFilterRetrievesData() {
+        Offer filterOffer = Offer.builder().offerName("test").build();
+        Offer offer = Offer.builder().offerName("test").build();
+        when(this.offerRepository.findAll(testFilter(filterOffer))).thenReturn(Arrays.asList(offer));
+        Assert.assertEquals(Arrays.asList(offer), this.offerService.getByFilter(filterOffer));
+        verify(this.offerRepository, times(1)).findAll(testFilter(filterOffer));
     }
 
-    @Test(expected = GetException.class)
+    @Test
+    public void testAddOffer() {
+        Offer offer = mock(Offer.class);
+        when(this.offerRepository.insert(offer)).thenReturn(offer);
+        Assert.assertEquals(offer, this.offerService.add(offer));
+        verify(this.offerRepository, times(1)).insert(offer);
+    }
+
+    @Test(expected = AddException.class)
+    public void testAddOfferThrowsGetOnRuntimeException() {
+        Offer offer = mock(Offer.class);
+        when(this.offerRepository.insert(offer)).thenThrow(RuntimeException.class);
+        this.offerService.add(offer);
+    }
+
+
+    @Test
     public void testDeleteOffer() {
-        Offer newOffer = Offer.builder().offerName("newOffer").build();
-        newOffer = offerService.add(newOffer);
-        Assert.assertNotNull(newOffer.getId());
-        offerService.delete(newOffer.getId());
-        offerService.getById(newOffer.getId());
+        Offer offer = Offer.builder().id("1").build();
+        doNothing().when(this.offerRepository).deleteById(offer.getId());
+        this.offerService.delete(offer.getId());
+        verify(this.offerRepository, times(1)).deleteById(offer.getId());
+    }
+
+    @Test(expected = DeleteException.class)
+    public void testDeleteOfferThrowsOnRuntimeException() {
+        Offer offer = Offer.builder().id("1").build();
+        doThrow(RuntimeException.class).when(this.offerRepository).deleteById(offer.getId());
+        this.offerService.delete(offer.getId());
     }
 
     @Test
     public void testModifyOffer() {
-        Offer fetchedOffer = offerService.getAll().get(0);
-        fetchedOffer.setCity("NEW NAME");
-        offerService.modify(fetchedOffer);
-        Offer fetchedAgainOffer = offerService.getById(fetchedOffer.getId());
-        Assert.assertEquals(fetchedOffer.getCity(), fetchedAgainOffer.getCity());
+        Offer offer = Offer.builder().id("1").build();
+        when(this.offerRepository.save(offer)).thenReturn(offer);
+        Assert.assertEquals(offer, this.offerService.modify(offer));
+        verify(this.offerRepository, times(1)).save(offer);
     }
 
     @Test(expected = ModifyException.class)
-    public void testModifyOfferThrowsOnDetached() {
-        Offer newOffer = Offer.builder().build();
-        offerService.modify(newOffer);
+    public void testModifyOfferThrowsOnIdNull() {
+        Offer offer = Offer.builder().build();
+        Assert.assertEquals(offer, this.offerService.modify(offer));
     }
 
-*/
+    @Test(expected = ModifyException.class)
+    public void testModifyOfferThrowsOnRuntimeException() {
+        Offer offer = mock(Offer.class);
+        when(offerRepository.insert(offer)).thenThrow(RuntimeException.class);
+        this.offerService.modify(offer);
+    }
+
 }

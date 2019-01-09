@@ -9,6 +9,7 @@ import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.OfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
@@ -169,6 +170,12 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<Offer> getByFilter(Offer offer) {
+        Example<Offer> offerExample = Example.of(offer, offerExampleMatcher());
+        return offerRepository.findAll(offerExample);
+    }
+
+    @Bean
+    public ExampleMatcher offerExampleMatcher() {
         ExampleMatcher exampleMatcher = ExampleMatcher
                 .matching()
                 .withMatcher("city", regex().ignoreCase())
@@ -177,7 +184,6 @@ public class OfferServiceImpl implements OfferService {
                 .withMatcher("bookTitle", regex().ignoreCase())
                 .withMatcher("bookPublisher", regex().ignoreCase())
                 .withMatcher("bookReleaseYear", startsWith());
-        Example<Offer> offerExample = Example.of(offer, exampleMatcher);
-        return offerRepository.findAll(offerExample);
+        return exampleMatcher;
     }
 }

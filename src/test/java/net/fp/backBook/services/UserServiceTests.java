@@ -9,12 +9,17 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
+import java.util.*;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ComponentScan(basePackages = {"net.fp.backBook.repositories",
@@ -22,57 +27,89 @@ import java.util.ArrayList;
 @SpringBootTest
 public class UserServiceTests {
 
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
-    private UserService userService;
-
-    private ArrayList<User> usersList;
-
-    @Before
-    public void setUp() {
-        userRepository.deleteAll();
-
-        User testUser = User.builder().name("name").lastName("lastName").password("test").build();
-        User testUser2 = User.builder().name("name1").lastName("lastName1").password("test2").build();
-        User testUser3 = User.builder().name("name2").lastName("lastName2").password("test").build();
-        usersList = new ArrayList<>();
-        usersList.add(testUser);
-        usersList.add(testUser2);
-        usersList.add(testUser3);
-        userRepository.insert(usersList);
-    }
-
-    @After
-    public void tearDown() {
-        userRepository.deleteAll();
-    }
+    @InjectMocks
+    private UserServiceImpl userService;
 
     @Test
     public void testGetById() {
-        User user = usersList.get(0);
-        User userFetched = userService.getById(user.getId());
-        Assert.assertNotNull(userFetched);
-        Assert.assertEquals(user.getName(), userFetched.getName());
+        User user = mock(User.class);
+        when(this.userRepository.findById(anyString())).thenReturn(Optional.of(user));
+        Assert.assertEquals(user, this.userService.getById(anyString()));
+        verify(this.userRepository, times(1)).findById(anyString());
     }
 
     @Test(expected = GetException.class)
-    public void testGetByIdThrows() {
-        userService.getById("-1");
+    public void testGetByIdThrowsOnRuntimeException() {
+        when(this.userRepository.findById(anyString())).thenThrow(RuntimeException.class);
+        this.userService.getById(anyString());
     }
 
     @Test
-    public void testGetAllOffers() {
-        int usersSize = usersList.size();
-        int fetechedUsersSize = userService.getAll().size();
-        Assert.assertNotNull(fetechedUsersSize);
-        Assert.assertEquals(usersSize, fetechedUsersSize);
+    public void testGetAllUsers() {
+        List<User> users = Arrays.asList(mock(User.class), mock(User.class));
+        when(this.userRepository.findAll()).thenReturn(users);
+        Assert.assertEquals(users, this.userService.getAll());
+        verify(this.userRepository, times(1)).findAll();
     }
 
-    /*
     @Test
-    public void
-*/
+    public void testGetAllUsersReturnEmpty() {
+        List<User> users = Collections.emptyList();
+        when(this.userRepository.findAll()).thenReturn(users);
+        Assert.assertEquals(users, this.userService.getAll());
+        verify(this.userRepository, times(1)).findAll();
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllUsersThrowsOnRuntimeException() {
+        when(this.userRepository.findAll()).thenThrow(RuntimeException.class);
+        this.userService.getAll();
+    }
+
+
+    @Test
+    public void testGetByLogin() {
+        User user = mock(User.class);
+        when(this.userRepository.findByLogin(anyString())).thenReturn(Optional.of(user));
+        Assert.assertEquals(user, this.userService.getUserByLogin(anyString()));
+        verify(this.userRepository, times(1)).findByLogin(anyString());
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetByLoginThrowsOnRuntimeException() {
+        when(this.userRepository.findByLogin(anyString())).thenThrow(RuntimeException.class);
+        this.userService.getUserByLogin(anyString());
+    }
+
+    @Test
+    public void testGetByEmail() {
+        User user = mock(User.class);
+        when(this.userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+        Assert.assertEquals(user, this.userService.getUserByEmail(anyString()));
+        verify(this.userRepository, times(1)).findByEmail(anyString());
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetByEmailThrowsOnRuntimeException() {
+        when(this.userRepository.findByEmail(anyString())).thenThrow(RuntimeException.class);
+        this.userService.getUserByEmail(anyString());
+    }
+
+    @Test
+    public void testGetByLoginAndPassword() {
+        User user = mock(User.class);
+        when(this.userRepository.findByLoginAndPassword(anyString(), anyString())).thenReturn(Optional.of(user));
+        Assert.assertEquals(user, this.userService.getUserByLoginAndPassword(anyString(), anyString()));
+        verify(this.userRepository, times(1)).findByLoginAndPassword(anyString(), anyString());
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetByLoginAndPasswordThrowsOnRuntimeException() {
+        when(this.userRepository.findByLoginAndPassword(anyString(), anyString())).thenThrow(RuntimeException.class);
+        this.userService.getUserByLoginAndPassword(anyString(), anyString());
+    }
 
 }
