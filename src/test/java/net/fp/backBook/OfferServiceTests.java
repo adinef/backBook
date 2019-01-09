@@ -9,7 +9,6 @@ import net.fp.backBook.services.OfferService;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -127,28 +126,28 @@ public class OfferServiceTests {
 
     @Test
     public void testGetAllNotExpired() {
-        LocalDateTime topDate = LocalDateTime.now();
+        LocalDateTime topDate = LocalDateTime.now().plusDays(4);
         Assert.assertEquals(
-                0, offerRepository.findAllByNotExpired(topDate).size());
-        Assert.assertNotEquals(
-               0, offerRepository.findAllByNotExpired(topDate.plusDays(6)).size());
+                1, offerService.getAllNotExpired(topDate).size());
+        Assert.assertEquals(
+               0, offerService.getAllNotExpired(topDate.plusDays(2)).size());
     }
 
     @Test
     public void testGetAllCreatedBetween() {
-        LocalDateTime createdStartTime = LocalDateTime.now().minusDays(3);
-        LocalDateTime createdTopTime = LocalDateTime.now();
+        LocalDateTime createdStartTime = LocalDateTime.now().minusDays(5);
+        LocalDateTime createdTopTime = LocalDateTime.now().minusDays(3);
         Assert.assertEquals(
-                0, offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime).size());
-        Assert.assertNotEquals(
-                0, offerRepository.findAllByCreatedAtBetween(createdStartTime.plusDays(3), createdTopTime).size());
+                2, offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime).size());
+        Assert.assertEquals(
+                0, offerService.getAllCreatedBetweenDates(createdStartTime.plusDays(5), createdTopTime.plusDays(6)).size());
     }
 
     @Test(expected = GetException.class)
     public void testGetAllCreatedBetweenThrowsOnStartBiggerThanEnd() {
         LocalDateTime createdStartTime = LocalDateTime.now();
         LocalDateTime createdTopTime = LocalDateTime.now().minusDays(3);
-        offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime);
+        offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime);
     }
 
     @Test

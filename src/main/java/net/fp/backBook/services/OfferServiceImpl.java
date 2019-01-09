@@ -125,7 +125,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
-        if(startDate.compareTo(endDate) > 0)
+        if(!startDate.isBefore(endDate))
             throw new GetException("Start date smaller than end date");
         try {
             return offerRepository.findAllByCreatedAtBetween(startDate, endDate);
