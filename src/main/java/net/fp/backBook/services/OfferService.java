@@ -15,6 +15,7 @@ public interface OfferService {
     Offer addOffer(Offer offer);
     Offer modifyOffer(Offer offer);
     List<Offer> getAllByBookTitle(String title);
+    List<Offer> getAllByOfferName(String title);
     List<Offer> getAllByBookPublisher(String bookPublisher);
     List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate);
     List<Offer> getAllNotExpired(LocalDateTime startDate);

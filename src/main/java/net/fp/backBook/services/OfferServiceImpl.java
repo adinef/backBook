@@ -94,6 +94,16 @@ public class OfferServiceImpl implements OfferService {
     }
 
     @Override
+    public List<Offer> getAllByOfferName(String name) {
+        try {
+            return offerRepository.findAllByOfferName(name);
+        } catch (final Exception e) {
+            log.error("Error during getting Offer objects by offer name, {}", e);
+            throw new GetException(e.getMessage());
+        }
+    }
+
+    @Override
     public List<Offer> getAllByBookPublisher(String bookPublisher) {
         try {
             return offerRepository.findAllByBookPublisher(bookPublisher);
@@ -115,6 +125,8 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
+        if(startDate.compareTo(endDate) > 0)
+            throw new GetException("Start date smaller than end date");
         try {
             return offerRepository.findAllByCreatedAtBetween(startDate, endDate);
         } catch (final Exception e) {

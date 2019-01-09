@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 public interface OfferRepository extends MongoRepository<Offer, String> {
-    Optional<Offer> findByOfferName(String name);
+    List<Offer> findAllByOfferName(String name);
     List<Offer> findAllByOfferOwner(User offerOwner);
     @Query("{'expires' : { $gte: ?0, $lte: ?1 } }")
     List<Offer> findAllByExpiresBetween(LocalDateTime starteDate, LocalDateTime endDate);

@@ -1,35 +1,26 @@
 package net.fp.backBook;
 
-import com.mongodb.MongoClient;
-import com.mongodb.client.MongoCollection;
-import de.bwaldvogel.mongo.MongoServer;
-import net.fp.backBook.configuration.TestMongoConfiguration;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.OfferRepository;
 import net.fp.backBook.repositories.UserRepository;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@RunWith(SpringRunner.class)
-@EnableAutoConfiguration
-@SpringBootTest(classes = {TestMongoConfiguration.class})
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringBootTest
 @ComponentScan(basePackageClasses = {OfferRepository.class, UserRepository.class})
 public class OfferRepositoryTests {
-
-    @Autowired
-    private MongoClient client;
-    @Autowired
-    private MongoServer server;
 
     @Autowired
     private OfferRepository offerRepository;
@@ -40,14 +31,21 @@ public class OfferRepositoryTests {
     @Before
     public void setUp() {
         offerRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @After
+    public void tearDown() {
+        offerRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     @Test
     public void testFindByName() {
         offerRepository.insert( Offer.builder().offerName("test").build() );
-        Offer offer = offerRepository.findByOfferName("test").get();
-        assert offer != null;
-        assert offer.getOfferName().equals("test");
+        Offer offer = offerRepository.findAllByOfferName("test").get(0);
+        Assert.assertNotNull(offer);
+        Assert.assertEquals(offer.getOfferName(), "test");
     }
 
     @Test
@@ -55,10 +53,9 @@ public class OfferRepositoryTests {
         User testUser = User.builder().lastName("name").build();
         userRepository.insert(testUser);
         offerRepository.insert( Offer.builder().offerName("test").offerOwner(testUser).build() );
-        Offer offer = offerRepository.findByOfferName("test").get();
-        assert offer != null;
-        assert offer.getOfferName().equals("test");
-        assert offer.getOfferOwner().equals(testUser);
+        Offer offer = offerRepository.findAllByOfferName("test").get(0);
+        Assert.assertNotNull(offer);
+        Assert.assertEquals(offer.getOfferOwner(), testUser);
     }
 
     @Test
@@ -69,8 +66,10 @@ public class OfferRepositoryTests {
         LocalDateTime expiresStartTime = LocalDateTime.now().minusDays(5);
         LocalDateTime expiresTopTime = LocalDateTime.now();
         offerRepository.insert(testOffer);
-        assert offerRepository.findAllByExpiresBetween(expiresStartTime, expiresTopTime).size() == 0;
-        assert offerRepository.findAllByExpiresBetween(expiresStartTime, expiresTopTime.plusDays(7)).size() != 0;
+        Assert.assertEquals(
+                0, offerRepository.findAllByExpiresBetween(expiresStartTime, expiresTopTime).size());
+        Assert.assertNotEquals(
+                0, offerRepository.findAllByExpiresBetween(expiresStartTime, expiresTopTime.plusDays(7)).size());
     }
 
     @Test
@@ -81,8 +80,10 @@ public class OfferRepositoryTests {
         LocalDateTime createdStartTime = LocalDateTime.now().minusDays(3);
         LocalDateTime createdTopTime = LocalDateTime.now();
         offerRepository.insert(testOffer);
-        assert offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime).size() != 0;
-        assert offerRepository.findAllByCreatedAtBetween(createdStartTime.plusDays(3), createdTopTime).size() == 0;
+        Assert.assertEquals(
+                1, offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime).size());
+        Assert.assertNotEquals(
+                0, offerRepository.findAllByCreatedAtBetween(createdStartTime.plusDays(3), createdTopTime).size());
     }
 
     @Test
@@ -92,8 +93,10 @@ public class OfferRepositoryTests {
                 .createdAt(LocalDateTime.now().minusDays(2)).build();
         LocalDateTime topDate = LocalDateTime.now();
         offerRepository.insert(testOffer);
-        assert offerRepository.findAllByNotExpired(topDate).size() != 0;
-        assert offerRepository.findAllByNotExpired(topDate.plusDays(6)).size() == 0;
+        Assert.assertEquals(
+                0, offerRepository.findAllByNotExpired(topDate).size());
+        Assert.assertNotEquals(
+                0, offerRepository.findAllByNotExpired(topDate.plusDays(6)).size());
     }
 
     @Test
@@ -103,7 +106,7 @@ public class OfferRepositoryTests {
         offerRepository.insert(testOffer);
         offerRepository.insert(testOffer2);
         List<Offer> fetched = offerRepository.findAllByBookTitle("title");
-        assert fetched.size() == 2;
+        Assert.assertEquals(2, fetched.size());
     }
 
     @Test
@@ -113,7 +116,7 @@ public class OfferRepositoryTests {
         offerRepository.insert(testOffer);
         offerRepository.insert(testOffer2);
         List<Offer> fetched = offerRepository.findAllByBookPublisher("pub");
-        assert fetched.size() == 2;
+        Assert.assertEquals(2, fetched.size());
     }
 
     @Test
@@ -123,7 +126,7 @@ public class OfferRepositoryTests {
         offerRepository.insert(testOffer);
         offerRepository.insert(testOffer2);
         List<Offer> fetched = offerRepository.findAllByCity("city");
-        assert fetched.size() == 2;
+        Assert.assertEquals(2, fetched.size());
     }
     @Test
     public void testFindAllByVoivodeship() {
@@ -132,6 +135,6 @@ public class OfferRepositoryTests {
         offerRepository.insert(testOffer);
         offerRepository.insert(testOffer2);
         List<Offer> fetched = offerRepository.findAllByVoivodeship("voi");
-        assert fetched.size() == 2;
+        Assert.assertEquals(2, fetched.size());
     }
 }

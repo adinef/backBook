@@ -112,6 +112,14 @@ public class OfferController {
         return MapToDto(offers);
     }
 
+    @GetMapping(value = "/name/{name}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferDto> getOffersByName(@PathVariable String name) {
+        List<Offer> offers = this.offerService.getAllByOfferName(name);
+        return MapToDto(offers);
+    }
+
     @GetMapping(value = "/between",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

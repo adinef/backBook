@@ -79,9 +79,10 @@
 		</dependency>
 		<!-- TEST -->
 		<dependency>
-			<groupId>de.bwaldvogel</groupId>
-			<artifactId>mongo-java-server</artifactId>
-			<version>1.11.1</version>
+			<groupId>de.flapdoodle.embed</groupId>
+			<artifactId>de.flapdoodle.embed.mongo</artifactId>
+			<version>1.50.2</version>
+			<scope>runtime</scope>
 		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -89,6 +90,18 @@
             <scope>test</scope>
             <version>2.0.4.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>RELEASE</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 
