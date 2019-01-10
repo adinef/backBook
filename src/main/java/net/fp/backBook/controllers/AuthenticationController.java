@@ -24,7 +24,7 @@ public class AuthenticationController {
             value = ""
     )
     public ResponseEntity<?> authenticate(@RequestBody Credentials credentials) {
-        String token = null;
+        String token;
         try {
             token = tokenService.getToken(credentials.getLogin(), credentials.getPassword());
         } catch (Exception e) {

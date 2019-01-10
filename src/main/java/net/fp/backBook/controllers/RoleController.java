@@ -85,8 +85,7 @@ public class RoleController {
     }
 
     private RoleDto MapSingleToDto(Role role) {
-        RoleDto mappedRoleDto = modelMapper.map(role, RoleDto.class);
-        return mappedRoleDto;
+        return modelMapper.map(role, RoleDto.class);
     }
 
     private List<RoleDto> MapToDto(List<Role> roleList) {

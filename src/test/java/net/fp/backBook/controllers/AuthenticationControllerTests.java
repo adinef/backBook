@@ -43,7 +43,7 @@ public class AuthenticationControllerTests {
     public void testTokenOnLoginReturned() {
         when(this.tokenService.getToken(anyString(), anyString())).thenReturn("1");
         Assert.assertEquals(
-                new ResponseEntity<TokenDto>(new TokenDto("1"), HttpStatus.OK),
+                new ResponseEntity<>(new TokenDto("1"), HttpStatus.OK),
                 this.authenticationController.authenticate(Credentials.builder()
                         .login(anyString())
                         .password(anyString())
@@ -55,7 +55,7 @@ public class AuthenticationControllerTests {
     public void testTokenOnWrongDataBadRequest() {
         when(this.tokenService.getToken(anyString(), anyString())).thenThrow(RuntimeException.class);
         Assert.assertEquals(
-                new ResponseEntity<TokenDto>(HttpStatus.BAD_REQUEST).getStatusCode(),
+                new ResponseEntity<>(HttpStatus.BAD_REQUEST).getStatusCode(),
                 this.authenticationController.authenticate(Credentials.builder()
                         .login(anyString())
                         .password(anyString())

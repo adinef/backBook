@@ -176,7 +176,7 @@ public class OfferServiceImpl implements OfferService {
 
     @Bean
     public ExampleMatcher offerExampleMatcher() {
-        ExampleMatcher exampleMatcher = ExampleMatcher
+        return ExampleMatcher
                 .matching()
                 .withMatcher("city", regex().ignoreCase())
                 .withMatcher("voivodeship", regex().ignoreCase())
@@ -184,6 +184,5 @@ public class OfferServiceImpl implements OfferService {
                 .withMatcher("bookTitle", regex().ignoreCase())
                 .withMatcher("bookPublisher", regex().ignoreCase())
                 .withMatcher("bookReleaseYear", startsWith());
-        return exampleMatcher;
     }
 }

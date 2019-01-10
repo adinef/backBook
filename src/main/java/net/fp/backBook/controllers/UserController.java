@@ -38,8 +38,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public List<UserDto> getUsers() {
         List<User> users =  userService.getAll();
-        List<UserDto> list = MapToDto(users);
-        return list;
+        return MapToDto(users);
     }
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -107,8 +106,7 @@ public class UserController {
     }
 
     private UserDto MapSingleToDto(User offer) {
-        UserDto mappedUserDto = modelMapper.map(offer, UserDto.class);
-        return mappedUserDto;
+        return modelMapper.map(offer, UserDto.class);
     }
 
     private List<UserDto> MapToDto(List<User> userList) {

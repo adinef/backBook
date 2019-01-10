@@ -46,8 +46,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffers() {
         List<Offer> offers =  offerService.getAll();
-        List<OfferDto> list = MapToDto(offers);
-        return list;
+        return MapToDto(offers);
     }
 
     @GetMapping(
@@ -59,8 +58,7 @@ public class OfferController {
     public List<OfferDto> getOffersOnFilter(@RequestBody OfferSearchFilter filter) {
         Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
         List<Offer> offers =  offerService.getByFilter(searchCriteriaOffer);
-        List<OfferDto> list = MapToDto(offers);
-        return list;
+        return MapToDto(offers);
     }
 
     @GetMapping(value = "/{id}",
@@ -172,8 +170,7 @@ public class OfferController {
     }
 
     private OfferDto MapSingleToDto(Offer offer) {
-        OfferDto mappedOfferDto = modelMapper.map(offer, OfferDto.class);
-        return mappedOfferDto;
+        return modelMapper.map(offer, OfferDto.class);
     }
 
     private List<OfferDto> MapToDto(List<Offer> offerList) {
