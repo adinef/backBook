@@ -45,4 +45,6 @@ public class Offer implements Serializable {
     private String city;
 
     private String voivodeship;
+
+    private String fileId;
 }
