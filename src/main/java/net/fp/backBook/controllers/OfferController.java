@@ -8,12 +8,16 @@ import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.OfferService;
+import net.fp.backBook.services.StorageService;
 import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,17 +30,20 @@ public class OfferController {
 
     private OfferService offerService;
     private UserService userService;
+    private StorageService storageService;
     private ModelMapper modelMapper;
 
     @Autowired
     public OfferController(
             final OfferService offerService,
             final ModelMapper modelMapper,
-            final UserService userService
+            final UserService userService,
+            final StorageService storageService
     ) {
         this.offerService = offerService;
         this.modelMapper = modelMapper;
         this.userService = userService;
+        this.storageService = storageService;
     }
 
     @GetMapping(
@@ -171,6 +178,39 @@ public class OfferController {
 
     private OfferDto MapSingleToDto(Offer offer) {
         return modelMapper.map(offer, OfferDto.class);
+    }
+
+    @PostMapping(
+            value = "/{id}/file",
+            consumes = MediaType.IMAGE_PNG_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public void uploadFile(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+        Offer offer = this.offerService.getById(id);
+        this.storageService.delete(offer.getFileId());
+        String fileId = this.storageService.store(file);
+        offer.setFileId(fileId);
+        this.offerService.modify(offer);
+    }
+
+    @GetMapping(
+            value = "/{id}/file",
+            produces = MediaType.IMAGE_PNG_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public Resource uploadFile(@PathVariable("id") String id) {
+        return this.storageService.load(id);
+    }
+
+    @DeleteMapping(
+            value = "/{id}/file"
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteFile(@PathVariable("id") String id) {
+        Offer offer = this.offerService.getById(id);
+        this.storageService.delete(offer.getFileId());
+        offer.setFileId(null);
+        this.offerService.modify(offer);
     }
 
     private List<OfferDto> MapToDto(List<Offer> offerList) {
