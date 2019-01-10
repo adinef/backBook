@@ -31,6 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -73,6 +74,9 @@ public class CounterOfferControllerTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         this.mockMvc = MockMvcBuilders.standaloneSetup(counterOfferController).build();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        this.objectMapper.setDateFormat(simpleDateFormat);
     }
 
     @Test
@@ -110,6 +114,6 @@ public class CounterOfferControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(objectMapper.writeValueAsString(counterOfferDto) ,content);
+        Assert.assertEquals(this.objectMapper.writeValueAsString(counterOfferDto) ,content);
     }
 }

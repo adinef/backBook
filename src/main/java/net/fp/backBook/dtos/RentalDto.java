@@ -1,6 +1,7 @@
 package net.fp.backBook.dtos;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,9 @@ public class RentalDto {
 
     private CounterOfferDto counterOffer;
 
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime startDate;
 
+    @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime expires;
 }
