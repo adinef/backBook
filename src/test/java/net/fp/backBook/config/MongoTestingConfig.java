@@ -12,6 +12,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
+/*
+ * @author Adrian Fijalkowski
+ */
+
 @Configuration
 public class MongoTestingConfig {
 

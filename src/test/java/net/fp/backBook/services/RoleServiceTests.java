@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,10 +26,11 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan(basePackages = {"net.fp.backBook.repositories",
-        "net.fp.backBook.services"})
-@SpringBootTest
+/*
+* @author Adrian Fijalkowski
+*/
+
+@RunWith(MockitoJUnitRunner.class)
 public class RoleServiceTests {
 
     @Mock
@@ -42,7 +44,7 @@ public class RoleServiceTests {
         Role role = mock(Role.class);
         when(this.roleRepository.findById(anyString())).thenReturn(Optional.of(role));
         Assert.assertEquals(role, this.roleService.getById(anyString()));
-        verify(this.roleRepository, times(1)).findById(anyString());
+        verify(this.roleRepository).findById(anyString());
     }
 
     @Test(expected = GetException.class)
@@ -56,7 +58,7 @@ public class RoleServiceTests {
         List<Role> roles = Arrays.asList(mock(Role.class), mock(Role.class));
         when(this.roleRepository.findAll()).thenReturn(roles);
         Assert.assertEquals(roles, this.roleService.getAll());
-        verify(this.roleRepository, times(1)).findAll();
+        verify(this.roleRepository).findAll();
     }
 
     @Test
@@ -64,7 +66,7 @@ public class RoleServiceTests {
         List<Role> roles = Collections.emptyList();
         when(this.roleRepository.findAll()).thenReturn(roles);
         Assert.assertEquals(roles, this.roleService.getAll());
-        verify(this.roleRepository, times(1)).findAll();
+        verify(this.roleRepository).findAll();
     }
 
     @Test(expected = GetException.class)
@@ -78,7 +80,7 @@ public class RoleServiceTests {
         Role role = mock(Role.class);
         when(this.roleRepository.insert(role)).thenReturn(role);
         Assert.assertEquals(role, this.roleService.add(role));
-        verify(this.roleRepository, times(1)).insert(role);
+        verify(this.roleRepository).insert(role);
     }
 
     @Test(expected = AddException.class)
@@ -95,7 +97,7 @@ public class RoleServiceTests {
         role.setId("1");
         doNothing().when(this.roleRepository).deleteById(role.getId());
         this.roleService.delete(role.getId());
-        verify(this.roleRepository, times(1)).deleteById(role.getId());
+        verify(this.roleRepository).deleteById(role.getId());
     }
 
     @Test(expected = DeleteException.class)
@@ -112,7 +114,7 @@ public class RoleServiceTests {
         role.setId("1");
         when(this.roleRepository.save(role)).thenReturn(role);
         Assert.assertEquals(role, this.roleService.modify(role));
-        verify(this.roleRepository, times(1)).save(role);
+        verify(this.roleRepository).save(role);
     }
 
     @Test(expected = ModifyException.class)
@@ -123,8 +125,9 @@ public class RoleServiceTests {
 
     @Test(expected = ModifyException.class)
     public void testModifyRoleThrowsOnRuntimeException() {
-        Role role = mock(Role.class);
-        when(roleRepository.insert(role)).thenThrow(RuntimeException.class);
+        Role role = new Role("1", "role");
+        when(roleRepository.save(any(Role.class))).thenThrow(RuntimeException.class);
         this.roleService.modify(role);
+        verify(this.roleRepository).save(role);
     }
 }

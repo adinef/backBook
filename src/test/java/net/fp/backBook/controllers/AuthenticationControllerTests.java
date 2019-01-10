@@ -7,19 +7,17 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan(basePackages = {"net.fp.backBook.repositories",
-        "net.fp.backBook.services", "net.fp.backBook.controllers",
-        "net.fp.backBook.security.service"})
-@SpringBootTest
+/*
+ * @author Adrian Fijalkowski
+ */
+
+@RunWith(MockitoJUnitRunner.class)
 public class AuthenticationControllerTests {
 
     @InjectMocks

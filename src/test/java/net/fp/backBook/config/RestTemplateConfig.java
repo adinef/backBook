@@ -4,6 +4,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/*
+ * @author Adrian Fijalkowski
+ */
+
 @Configuration
 public class RestTemplateConfig {
     @Bean

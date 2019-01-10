@@ -12,11 +12,11 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,17 +27,15 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan(basePackages = {"net.fp.backBook.repositories",
-        "net.fp.backBook.services"})
-@SpringBootTest
+/*
+ * @author Adrian Fijalkowski
+ */
+
+@RunWith(MockitoJUnitRunner.class)
 public class OfferServiceTests {
 
     @Mock
     private OfferRepository offerRepository;
-
-    @Mock
-    private UserRepository userRepository;
 
     @InjectMocks
     private OfferServiceImpl offerService;
@@ -124,9 +122,8 @@ public class OfferServiceTests {
     public void testGetAllCreatedBetweenThrowsOnStartBiggerThanEnd() {
         LocalDateTime createdStartTime = LocalDateTime.now();
         LocalDateTime createdTopTime = LocalDateTime.now().minusDays(3);
-        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime))
-                .thenThrow(GetException.class);
         offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime);
+        verify(this.offerRepository).findAllByCreatedAtBetween(createdStartTime, createdTopTime);
     }
 
     @Test
@@ -231,9 +228,9 @@ public class OfferServiceTests {
 
     @Test(expected = ModifyException.class)
     public void testModifyOfferThrowsOnRuntimeException() {
-        Offer offer = mock(Offer.class);
-        when(offerRepository.insert(offer)).thenThrow(RuntimeException.class);
+        Offer offer = Offer.builder().id("1").build();
+        when(offerRepository.save(any(Offer.class))).thenThrow(RuntimeException.class);
         this.offerService.modify(offer);
+        verify(this.offerRepository).save(offer);
     }
-
 }
