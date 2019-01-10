@@ -51,13 +51,15 @@ public class AuthenticationControllerTests {
         );
     }
 
-    @Test(expected = AuthenticationException.class)
-    public void testTokenOnWrongDataThrow() {
+    @Test
+    public void testTokenOnWrongDataBadRequest() {
         when(this.tokenService.getToken(anyString(), anyString())).thenThrow(RuntimeException.class);
-
-        this.authenticationController.authenticate(Credentials.builder()
-                .login(anyString())
-                .password(anyString())
-                .build());
+        Assert.assertEquals(
+                new ResponseEntity<TokenDto>(HttpStatus.BAD_REQUEST).getStatusCode(),
+                this.authenticationController.authenticate(Credentials.builder()
+                        .login(anyString())
+                        .password(anyString())
+                        .build()).getStatusCode()
+        );
     }
 }
