@@ -3,6 +3,7 @@ package net.fp.backBook.security.service;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +12,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class JsonWebTokenService implements TokenService {
 
@@ -41,12 +46,13 @@ public class JsonWebTokenService implements TokenService {
             tokenData.put("clientType", "user");
             tokenData.put("userID", user.getId());
             tokenData.put("username", user.getUsername());
-            tokenData.put("token_create_date", LocalDateTime.now());
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, tokenExpirationTime);
-            tokenData.put("token_expiration_date", calendar.getTime());
+            tokenData.put("authorities", user.getAuthorities());
+            LocalDateTime createDate = LocalDateTime.now();
+            tokenData.put("token_create_date", createDate);
+            LocalDateTime expirationDate = createDate.plusMinutes(tokenExpirationTime);
+            tokenData.put("token_expiration_date", expirationDate.format(DateTimeFormatter.ISO_DATE_TIME));
             JwtBuilder jwtBuilder = Jwts.builder();
-            jwtBuilder.setExpiration(calendar.getTime());
+            jwtBuilder.setExpiration(Date.from(expirationDate.atZone(ZoneId.systemDefault()).toInstant()));
             jwtBuilder.setClaims(tokenData);
             return jwtBuilder.signWith(SignatureAlgorithm.HS512, tokenKey).compact();
 
