@@ -1,6 +1,5 @@
 package net.fp.backBook.services;
 
-import net.bytebuddy.dynamic.scaffold.MethodGraph;
 import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
@@ -9,21 +8,16 @@ import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.OfferRepository;
 import net.fp.backBook.repositories.UserRepository;
-import net.fp.backBook.services.OfferService;
-import org.apache.tomcat.jni.Local;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,8 +26,6 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.regex;
-import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ComponentScan(basePackages = {"net.fp.backBook.repositories",
