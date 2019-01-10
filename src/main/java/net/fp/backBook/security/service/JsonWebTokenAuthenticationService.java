@@ -2,15 +2,19 @@ package net.fp.backBook.security.service;
 
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import net.fp.backBook.exceptions.TokenExpiredException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.model.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Service
@@ -33,9 +37,16 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
         String token = this.resolveToken(request);
         Jws<Claims> tokenData = parseToken(token);
         if (tokenData != null) {
-            User user = getUserFromToken(tokenData);
-            if (user != null) {
+            if (this.getExpirationTimeFromToken(tokenData).isBefore(LocalDateTime.now())) {
+                log.info("Token expired");
+                throw new TokenExpiredException("Token expired");
+            }
+            try {
+                User user = getUserFromToken(tokenData);
                 return new UserAuthentication(user);
+            } catch (UsernameNotFoundException e) {
+                log.trace(e.getMessage(), e);
+                return null;
             }
         }
         return null;
@@ -65,6 +76,10 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
     private User getUserFromToken(Jws<Claims> tokenData) {
         return (User) userDetailsService
                 .loadUserByUsername(tokenData.getBody().get("username").toString());
+    }
+
+    private LocalDateTime getExpirationTimeFromToken(Jws<Claims> tokenData) {
+        return LocalDateTime.parse(tokenData.getBody().get("token_expiration_date").toString(), DateTimeFormatter.ISO_DATE_TIME);
     }
 
     private String resolveToken(HttpServletRequest request){
