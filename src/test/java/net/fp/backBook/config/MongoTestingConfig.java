@@ -12,22 +12,24 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 
+/*
+ * @author Adrian Fijalkowski
+ */
+
 @Configuration
 public class MongoTestingConfig {
 
     @Bean
     public MongoClient mongoClient() {
         MongoClientOptions mongoClientOptions = MongoClientOptions.builder().connectTimeout(20000).build();
-        MongoClient mongoClient = new MongoClient(new ServerAddress("localhost", 7070), mongoClientOptions);
-        return mongoClient;
+        return new MongoClient(new ServerAddress("localhost", 7070), mongoClientOptions);
     }
 
     @Bean
     public IMongodConfig mongodConfig() throws IOException {
-        IMongodConfig config = new MongodConfigBuilder()
+        return new MongodConfigBuilder()
                 .net(new Net(7070, false))
                 .version(Version.V3_2_20)
                 .build();
-        return config;
     }
 }

@@ -2,6 +2,7 @@ package net.fp.backBook.controllers;
 
 import net.fp.backBook.dtos.Credentials;
 import net.fp.backBook.dtos.TokenDto;
+import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.security.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,7 +24,12 @@ public class AuthenticationController {
             value = ""
     )
     public ResponseEntity<?> authenticate(@RequestBody Credentials credentials) {
-        String token = tokenService.getToken(credentials.getLogin(), credentials.getPassword());
+        String token;
+        try {
+            token = tokenService.getToken(credentials.getLogin(), credentials.getPassword());
+        } catch (Exception e) {
+            return new ResponseEntity<>("Authentication failed. " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         if (token != null) {
             TokenDto response = new TokenDto();
             response.setToken(token);

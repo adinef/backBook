@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,10 +25,11 @@ import java.util.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ComponentScan(basePackages = {"net.fp.backBook.repositories",
-        "net.fp.backBook.services"})
-@SpringBootTest
+/*
+ * @author Adrian Fijalkowski
+ */
+
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceTests {
 
     @Mock
@@ -161,8 +163,8 @@ public class UserServiceTests {
 
     @Test(expected = ModifyException.class)
     public void testModifyUserThrowsOnRuntimeException() {
-        User user = mock(User.class);
-        when(userRepository.insert(user)).thenThrow(RuntimeException.class);
+        User user = User.builder().id("1").build();
+        when(userRepository.save(any(User.class))).thenThrow(RuntimeException.class);
         this.userService.modify(user);
     }
 }
