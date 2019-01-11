@@ -1,5 +1,6 @@
 package net.fp.backBook.controllers;
 
+import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.Credentials;
 import net.fp.backBook.dtos.UserDto;
 import net.fp.backBook.exceptions.GetException;
@@ -12,7 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
@@ -33,7 +38,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author Adrian Fijalkowski
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
+@ActiveProfiles("test")
+@SpringBootTest
 public class UserControllerTests {
 
     @InjectMocks
@@ -45,12 +52,16 @@ public class UserControllerTests {
     @Mock
     private ModelMapper modelMapper;
 
+    @Autowired
+    private RestResponseExceptionHandler restResponseExceptionHandler;
+
     private MockMvc mockMvc;
 
     @Before
     public void setServerAddress() {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(userController)
+                .setControllerAdvice(restResponseExceptionHandler)
                 .build();
     }
 
@@ -79,15 +90,11 @@ public class UserControllerTests {
     @Test
     public void testGetUsersBadRequestOnGetException() throws Exception {
         when(userService.getAll()).thenThrow(GetException.class);
-        try {
-            mockMvc.perform(get("/users"))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                    .andExpect(jsonPath("$.error").isNotEmpty());
-            verify(userService).getAll();
-        } catch (Exception e) {
-
-        }
+        mockMvc.perform(get("/users"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+        verify(userService).getAll();
     }
 
     @Test
@@ -106,16 +113,12 @@ public class UserControllerTests {
     @Test
     public void testGetUserByIdBadRequestOnGetException() throws Exception {
         when(userService.getById(anyString())).thenThrow(GetException.class);
-        try {
-            String path = "/users/xxx";
-            mockMvc.perform(get(path))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                    .andExpect(jsonPath("$.error").isNotEmpty());
-            verify(userService).getById(anyString());
-        } catch (Exception e) {
-
-        }
+        String path = "/users/xxx";
+        mockMvc.perform(get(path))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+        verify(userService).getById(anyString());
     }
 
     @Test
@@ -134,16 +137,12 @@ public class UserControllerTests {
     @Test
     public void testGetByLoginBadRequestOnGetException() throws Exception {
         when(userService.getUserByLogin(anyString())).thenThrow(GetException.class);
-        try {
-            String path = "/users/login/xxx";
-            mockMvc.perform(get(path))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                    .andExpect(jsonPath("$.error").isNotEmpty());
-            verify(userService).getUserByLogin(anyString());
-        } catch (Exception e) {
-
-        }
+        String path = "/users/login/xxx";
+        mockMvc.perform(get(path))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+        verify(userService).getUserByLogin(anyString());
     }
 
     @Test
@@ -162,16 +161,12 @@ public class UserControllerTests {
     @Test
     public void testGetByEmailBadRequestOnGetException() throws Exception {
         when(userService.getUserByEmail(anyString())).thenThrow(GetException.class);
-        try {
-            String path = "/users/email/xxx";
-            mockMvc.perform(get(path))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                    .andExpect(jsonPath("$.error").isNotEmpty());
-            verify(userService).getUserByEmail(anyString());
-        } catch (Exception e) {
-
-        }
+        String path = "/users/email/xxx";
+        mockMvc.perform(get(path))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+        verify(userService).getUserByEmail(anyString());
     }
 
     @Test
@@ -193,17 +188,13 @@ public class UserControllerTests {
     @Test
     public void testGetByCredentialsBadRequestOnGetException() throws Exception {
         when(userService.getUserByLoginAndPassword(anyString(), anyString())).thenThrow(GetException.class);
-        try {
-            String path = "/users/credentials";
-            mockMvc.perform(post(path)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"login\": \"test\", \"password\": \"test\"}"))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                    .andExpect(jsonPath("$.error").isNotEmpty());
-            verify(userService).getUserByLoginAndPassword(anyString(), anyString());
-        } catch (Exception e) {
-
-        }
+        String path = "/users/credentials";
+        mockMvc.perform(post(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"login\": \"test\", \"password\": \"test\"}"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+        verify(userService).getUserByLoginAndPassword(anyString(), anyString());
     }
 }
