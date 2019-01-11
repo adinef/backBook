@@ -269,7 +269,7 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.login").value("login"))
                 .andExpect(jsonPath("$.lastName").value("lastName"))
-                .andExpect(jsonPath("$.name").value("login"))
+                .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.password").value("test"))
                 .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getUserByLoginAndPassword(anyString(), anyString());
