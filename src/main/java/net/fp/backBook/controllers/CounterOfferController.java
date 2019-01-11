@@ -77,14 +77,6 @@ public class CounterOfferController {
     }
 
     @GetMapping(
-            value = "/ping",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public String ping() {
-        return "Ping";
-    }
-
-    @GetMapping(
             value = "",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)

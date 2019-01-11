@@ -11,7 +11,7 @@ public class HttpResponsesConfig {
     @Bean
     public HttpHeaders getHttpHeaders() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
         return headers;
     }
 }

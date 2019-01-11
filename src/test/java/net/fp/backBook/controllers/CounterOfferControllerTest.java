@@ -1,7 +1,9 @@
 package net.fp.backBook.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.CounterOfferDto;
+import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.model.CounterOffer;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.Role;
@@ -22,6 +24,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -41,6 +45,7 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -54,6 +59,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CounterOfferControllerTest {
 
     private MockMvc mockMvc;
+
+    @Autowired
+    private RestResponseExceptionHandler restResponseExceptionHandler;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -73,7 +81,9 @@ public class CounterOfferControllerTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(counterOfferController).build();
+        this.mockMvc = MockMvcBuilders
+                .standaloneSetup(counterOfferController)
+                .setControllerAdvice(restResponseExceptionHandler).build();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
         this.objectMapper.setDateFormat(simpleDateFormat);
@@ -110,10 +120,26 @@ public class CounterOfferControllerTest {
         MvcResult result = this.mockMvc.perform(
                 get("/counterOffers/" + counterOffer.getId()))
                 .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
         Assert.assertEquals(this.objectMapper.writeValueAsString(counterOfferDto) ,content);
+    }
+
+    @Test
+    public void getCounterOfferByIdFailure() throws Exception {
+
+        String id = "1";
+
+        when(this.counterOfferService.getById(id)).thenThrow(GetException.class);
+
+        this.mockMvc.perform(
+                get("/counterOffers/" + id))
+                .andDo(print())
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andReturn();
     }
 }
