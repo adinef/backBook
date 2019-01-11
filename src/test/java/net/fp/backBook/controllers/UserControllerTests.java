@@ -1,9 +1,12 @@
 package net.fp.backBook.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
-import net.fp.backBook.dtos.Credentials;
 import net.fp.backBook.dtos.UserDto;
+import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
+import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.UserService;
 import org.junit.Before;
@@ -11,7 +14,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,19 +22,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /*
  * @author Adrian Fijalkowski
@@ -53,6 +54,9 @@ public class UserControllerTests {
     private ModelMapper modelMapper;
 
     @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
     private RestResponseExceptionHandler restResponseExceptionHandler;
 
     private MockMvc mockMvc;
@@ -63,6 +67,9 @@ public class UserControllerTests {
                 .standaloneSetup(userController)
                 .setControllerAdvice(restResponseExceptionHandler)
                 .build();
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        this.objectMapper.setDateFormat(simpleDateFormat);
     }
 
     @Test
@@ -99,14 +106,34 @@ public class UserControllerTests {
 
     @Test
     public void testGetByIdReturns() throws Exception {
-        User user = User.builder().name("test").build();
+        User user = User.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("password")
+                .email("email")
+                .build();
+        UserDto userDto = UserDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("password")
+                .email("email")
+                .build();
         when(userService.getById(anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(UserDto.builder().name("test").build());
+        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
         String path = "/users/xxx";
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.name").value("test"));
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.name").value("test"))
+                .andExpect(jsonPath("$.lastName").value("lastName"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.password").value("password"))
+                .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getById(anyString());
     }
 
@@ -123,14 +150,34 @@ public class UserControllerTests {
 
     @Test
     public void testGetByLoginReturns() throws Exception {
-        User user = User.builder().login("test").build();
+        User user = User.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("password")
+                .email("email")
+                .build();
+        UserDto userDto = UserDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("password")
+                .email("email")
+                .build();
         when(userService.getUserByLogin(anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(UserDto.builder().login("test").build());
+        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
         String path = "/users/login/xxx";
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.login").value("test"));
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.lastName").value("lastName"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.password").value("password"))
+                .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getUserByLogin(anyString());
     }
 
@@ -147,14 +194,34 @@ public class UserControllerTests {
 
     @Test
     public void testGetByEmailReturns() throws Exception {
-        User user = User.builder().email("test").build();
+        User user = User.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("password")
+                .email("email")
+                .build();
+        UserDto userDto = UserDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("password")
+                .email("email")
+                .build();
         when(userService.getUserByEmail(anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(UserDto.builder().email("test").build());
+        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
         String path = "/users/email/xxx";
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.email").value("test"));
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.lastName").value("lastName"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.password").value("password"))
+                .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getUserByEmail(anyString());
     }
 
@@ -171,17 +238,40 @@ public class UserControllerTests {
 
     @Test
     public void testGetByCredentialsReturns() throws Exception {
-        User user = User.builder().login("test").password("test").build();
+        User user = User.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("test")
+                .email("email")
+                .build();
+        UserDto userDto = UserDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("test")
+                .email("email")
+                .build();
         when(userService.getUserByLoginAndPassword(anyString(), anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(UserDto.builder().login("test").password("test").build());
+        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
         String path = "/users/credentials";
         mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"test\", \"password\": \"test\"}"))
+                .content(
+                        objectMapper.writeValueAsString(
+                                UserDto.builder().login("test").password("test").build()
+                        )
+                ))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.login").value("test"))
-                .andExpect(jsonPath("$.password").value("test"));
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.lastName").value("lastName"))
+                .andExpect(jsonPath("$.name").value("login"))
+                .andExpect(jsonPath("$.password").value("test"))
+                .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getUserByLoginAndPassword(anyString(), anyString());
     }
 
@@ -191,10 +281,143 @@ public class UserControllerTests {
         String path = "/users/credentials";
         mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"login\": \"test\", \"password\": \"test\"}"))
+                .content(objectMapper.writeValueAsString(
+                        UserDto.builder().login("x").password("x").build()
+                )))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.error").isNotEmpty());
         verify(userService).getUserByLoginAndPassword(anyString(), anyString());
+    }
+
+    @Test
+    public void testGetByCredentialsBadRequestOnNullValues() throws Exception {
+        when(userService.getUserByLoginAndPassword(null, null)).thenThrow(GetException.class);
+        String path = "/users/credentials";
+        mockMvc.perform(post(path)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        UserDto.builder().build()
+                )))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testAddUserReturns() throws Exception {
+        UserDto userDto = UserDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("test")
+                .email("email")
+                .build();
+        User user = User.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("test")
+                .email("email")
+                .build();
+        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(userDto, User.class)).thenReturn(user);
+        when(userService.add(user)).thenReturn(user);
+        String path = "/users";
+        mockMvc.perform(post(path)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(objectMapper.writeValueAsString(userDto)))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.lastName").value("lastName"))
+                .andExpect(jsonPath("$.name").value("test"))
+                .andExpect(jsonPath("$.password").value("test"))
+                .andExpect(jsonPath("$.email").value("email"));
+        verify(userService).add(user);
+    }
+
+    @Test
+    public void testAddUserIsNotAcceptableAddException() throws Exception {
+        when(userService.add(any(User.class))).thenThrow(AddException.class);
+        when(modelMapper.map(UserDto.builder().build(), User.class))
+                .thenReturn(User.builder().build());
+        String path = "/users";
+        mockMvc.perform(post(path)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(objectMapper.writeValueAsString(UserDto.builder().build())))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testModifyReturns() throws Exception {
+        UserDto userDto = UserDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("test")
+                .email("email")
+                .build();
+        User user = User.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .login("login")
+                .password("test")
+                .email("email")
+                .build();
+        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(userDto, User.class)).thenReturn(user);
+        when(userService.modify(any(User.class))).thenReturn(user);
+        String path = "/users/" + user.getId();
+        mockMvc.perform(put(path)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(objectMapper.writeValueAsString(userDto)))
+                .andDo(print())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.lastName").value("lastName"))
+                .andExpect(jsonPath("$.name").value("test"))
+                .andExpect(jsonPath("$.password").value("test"))
+                .andExpect(jsonPath("$.email").value("email"));
+        verify(userService).modify(user);
+    }
+
+    @Test
+    public void testAddUserIsConflictModifyException() throws Exception {
+        when(userService.modify(any(User.class))).thenThrow(ModifyException.class);
+        String path = "/users/1";
+        mockMvc.perform(put(path)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(objectMapper.writeValueAsString(UserDto.builder().build())))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteUserSuccess() throws Exception {
+        doNothing().when(userService).delete(anyString());
+        String path = "/users/1";
+        mockMvc.perform(delete(path))
+                .andDo(print())
+                .andExpect(status().isOk());
+        verify(userService).delete(anyString());
+    }
+
+    @Test
+    public void testDeleteUserIsBadRequestDeleteException() throws Exception {
+        doThrow(DeleteException.class).when(userService).delete(anyString());
+        String path = "/users/1";
+        mockMvc.perform(delete(path))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 }

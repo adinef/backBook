@@ -56,7 +56,7 @@ public class OfferController {
         return MapToDto(offers);
     }
 
-    @GetMapping(
+    @PostMapping(
             value = "/filter",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE

@@ -2,6 +2,7 @@ package net.fp.backBook.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.*;
+import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.UserService;
@@ -69,6 +70,8 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public UserDto getUserByCredentials(@RequestBody Credentials credentials) {
+        if(credentials.getLogin() == null || credentials.getPassword() == null)
+            throw new GetException("One or more of credentials are empty");
         User user = this.userService.getUserByLoginAndPassword(credentials.getLogin(), credentials.getPassword());
         return MapSingleToDto(user);
     }
