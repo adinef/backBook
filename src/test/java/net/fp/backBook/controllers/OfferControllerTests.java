@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.OfferDto;
+import net.fp.backBook.dtos.OfferSearchFilter;
 import net.fp.backBook.dtos.UserDto;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.model.Offer;
@@ -156,14 +157,14 @@ public class OfferControllerTests {
     }
     @Test
     public void testGetOffersOnFilterBadRequestOnGetException() throws Exception {
-        OfferDto offerDto = new OfferDto();
+        OfferSearchFilter offerSearchFilter = new OfferSearchFilter();
         Offer offer = new Offer();
         when(offerService.getByFilter(any(Offer.class))).thenThrow(GetException.class);
-        when(modelMapper.map(offerDto, Offer.class)).thenReturn(offer);
+        when(modelMapper.map(offerSearchFilter, Offer.class)).thenReturn(offer);
         String path = "/offers/filter/";
         mockMvc.perform(post(path)
                 .content(
-                    objectMapper.writeValueAsString(offerDto)
+                    objectMapper.writeValueAsString(offerSearchFilter)
                 )
                 .contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andDo(print())
