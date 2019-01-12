@@ -170,8 +170,13 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<Offer> getByFilter(Offer offer) {
-        Example<Offer> offerExample = Example.of(offer, offerExampleMatcher());
-        return offerRepository.findAll(offerExample);
+        try {
+            Example<Offer> offerExample = Example.of(offer, offerExampleMatcher());
+            return offerRepository.findAll(offerExample);
+        }catch (final Exception e) {
+            log.error("Error during getting Offer objects by filter, {}", e);
+            throw new GetException(e.getMessage());
+        }
     }
 
     @Bean

@@ -37,4 +37,6 @@ public class OfferDto {
     private String city;
 
     private String voivodeship;
+
+    private String url;
 }

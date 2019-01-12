@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.DatePairDto;
 import net.fp.backBook.dtos.OfferDto;
 import net.fp.backBook.dtos.OfferSearchFilter;
+import net.fp.backBook.dtos.UserDto;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
@@ -176,10 +177,6 @@ public class OfferController {
         offerService.delete(id);
     }
 
-    private OfferDto MapSingleToDto(Offer offer) {
-        return modelMapper.map(offer, OfferDto.class);
-    }
-
     @PostMapping(
             value = "/{id}/file",
             consumes = MediaType.IMAGE_PNG_VALUE
@@ -211,6 +208,14 @@ public class OfferController {
         this.storageService.delete(offer.getFileId());
         offer.setFileId(null);
         this.offerService.modify(offer);
+    }
+    private OfferDto MapSingleToDto(Offer offer) {
+        OfferDto offerDto = modelMapper.map(offer, OfferDto.class);
+        if(offer.getOfferOwner() != null) {
+            UserDto userDto = modelMapper.map(offer.getOfferOwner(), UserDto.class);
+            offerDto.setOfferOwner(userDto);
+        }
+        return offerDto;
     }
 
     private List<OfferDto> MapToDto(List<Offer> offerList) {

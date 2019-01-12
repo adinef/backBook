@@ -297,7 +297,7 @@ public class UserControllerTests {
         mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        UserDto.builder().build()
+                        new UserDto()
                 )))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -343,12 +343,12 @@ public class UserControllerTests {
     @Test
     public void testAddUserIsNotAcceptableAddException() throws Exception {
         when(userService.add(any(User.class))).thenThrow(AddException.class);
-        when(modelMapper.map(UserDto.builder().build(), User.class))
-                .thenReturn(User.builder().build());
+        when(modelMapper.map(new UserDto(), User.class))
+                .thenReturn(new User());
         String path = "/users";
         mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(objectMapper.writeValueAsString(UserDto.builder().build())))
+                .content(objectMapper.writeValueAsString(new UserDto())))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())
                 .andExpect(jsonPath("$.error").isNotEmpty());
@@ -395,7 +395,7 @@ public class UserControllerTests {
         String path = "/users/1";
         mockMvc.perform(put(path)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                .content(objectMapper.writeValueAsString(UserDto.builder().build())))
+                .content(objectMapper.writeValueAsString(new UserDto())))
                 .andDo(print())
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.error").isNotEmpty());
