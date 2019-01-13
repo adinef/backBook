@@ -31,6 +31,7 @@ import static org.mockito.Mockito.*;
 */
 
 @RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class RoleServiceTests {
 
     @Mock

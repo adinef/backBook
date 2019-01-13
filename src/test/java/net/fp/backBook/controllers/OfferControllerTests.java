@@ -70,7 +70,7 @@ public class OfferControllerTests {
     private MockMvc mockMvc;
 
     @Before
-    public void setServerAddress() {
+    public void setup() {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(offerController)
                 .setControllerAdvice(restResponseExceptionHandler)

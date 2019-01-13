@@ -1,26 +1,33 @@
 package net.fp.backBook.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.Credentials;
-import net.fp.backBook.dtos.TokenDto;
 import net.fp.backBook.security.service.TokenService;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /*
  * @author Adrian Fijalkowski
  */
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest
 public class AuthenticationControllerTests {
@@ -31,27 +38,44 @@ public class AuthenticationControllerTests {
     @Mock
     private TokenService tokenService;
 
-    @Test
-    public void testTokenOnLoginReturned() {
-        when(this.tokenService.getToken(anyString(), anyString())).thenReturn("1");
-        Assert.assertEquals(
-                new ResponseEntity<>(new TokenDto("1"), HttpStatus.OK),
-                this.authenticationController.authenticate(Credentials.builder()
-                        .login(anyString())
-                        .password(anyString())
-                        .build())
-        );
+    @Autowired
+    private RestResponseExceptionHandler restResponseExceptionHandler;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    private MockMvc mockMvc;
+
+    @Before
+    public void setup() {
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(authenticationController)
+                .setControllerAdvice(restResponseExceptionHandler)
+                .build();
     }
 
     @Test
-    public void testTokenOnWrongDataBadRequest() {
+    public void testTokenOnLoginReturned() throws Exception {
+        Credentials cred = Credentials.builder()
+                .login("test")
+                .password("test")
+                .build();
+        when(this.tokenService.getToken(anyString(), anyString())).thenReturn("1");
+        mockMvc.perform(post("/auth")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(cred)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").value("1"));
+    }
+
+    @Test
+    public void testTokenOnWrongDataBadRequest() throws Exception {
         when(this.tokenService.getToken(anyString(), anyString())).thenThrow(RuntimeException.class);
-        Assert.assertEquals(
-                new ResponseEntity<>(HttpStatus.BAD_REQUEST).getStatusCode(),
-                this.authenticationController.authenticate(Credentials.builder()
-                        .login(anyString())
-                        .password(anyString())
-                        .build()).getStatusCode()
-        );
+        mockMvc.perform(post("/auth")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(Credentials.builder().build())))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 }
