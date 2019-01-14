@@ -128,6 +128,9 @@ public class OfferServiceImpl implements OfferService {
 
     @Override
     public List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
+        if(startDate == null || endDate == null)
+            throw new GetException("None of dates can be null");
+
         if(!startDate.isBefore(endDate))
             throw new GetException("Start date smaller than end date");
         try {

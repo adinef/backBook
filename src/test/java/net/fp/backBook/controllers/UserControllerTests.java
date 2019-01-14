@@ -355,7 +355,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testModifyReturns() throws Exception {
+    public void testModifyUserReturns() throws Exception {
         UserDto userDto = UserDto.builder()
                 .id("1")
                 .name("test")
@@ -390,7 +390,7 @@ public class UserControllerTests {
     }
 
     @Test
-    public void testAddUserIsConflictModifyException() throws Exception {
+    public void testModifyUserIsConflictModifyException() throws Exception {
         when(userService.modify(any(User.class))).thenThrow(ModifyException.class);
         String path = "/users/1";
         mockMvc.perform(put(path)

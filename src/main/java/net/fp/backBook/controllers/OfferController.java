@@ -5,6 +5,8 @@ import net.fp.backBook.dtos.DatePairDto;
 import net.fp.backBook.dtos.OfferDto;
 import net.fp.backBook.dtos.OfferSearchFilter;
 import net.fp.backBook.dtos.UserDto;
+import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
@@ -126,11 +128,13 @@ public class OfferController {
         return MapToDto(offers);
     }
 
-    @GetMapping(value = "/between",
+    @PostMapping(value = "/between",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersBetweenDates(@RequestBody DatePairDto dates) {
+        if(dates == null)
+            throw new GetException("Date-pair can't be null!");
         List<Offer> offers = this.offerService.getAllCreatedBetweenDates(dates.getStartDate(), dates.getEndDate());
         return MapToDto(offers);
     }
@@ -139,6 +143,8 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersNotExpired(@PathVariable String dateString) {
+        if(dateString == null)
+            throw new GetException("Date string is null!");
         LocalDateTime date = LocalDateTime.parse(dateString);
         List<Offer> offers = this.offerService.getAllNotExpired(date);
         return MapToDto(offers);
@@ -149,7 +155,8 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public OfferDto addOffer(@RequestBody OfferDto offerDto) {
-
+        if(offerDto == null)
+            throw new AddException("Offer dto can't be null");
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
         offer = this.offerService.add(offer);
@@ -161,6 +168,8 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public OfferDto updateOffer(@PathVariable String id, @RequestBody OfferDto offerDto) {
+        if(offerDto == null)
+            throw new ModifyException("Offer dto can't be null");
         if(!id.equals(offerDto.getId())) {
             throw new ModifyException("Unmatching ids");
         }
@@ -210,12 +219,7 @@ public class OfferController {
         this.offerService.modify(offer);
     }
     private OfferDto MapSingleToDto(Offer offer) {
-        OfferDto offerDto = modelMapper.map(offer, OfferDto.class);
-        if(offer.getOfferOwner() != null) {
-            UserDto userDto = modelMapper.map(offer.getOfferOwner(), UserDto.class);
-            offerDto.setOfferOwner(userDto);
-        }
-        return offerDto;
+        return modelMapper.map(offer, OfferDto.class);
     }
 
     private List<OfferDto> MapToDto(List<Offer> offerList) {
