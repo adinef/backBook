@@ -1257,10 +1257,8 @@ public class OfferControllerTests {
                 .build();
         when(offerService.add(offer)).thenReturn(offer);
 
-        when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
-        when(modelMapper.map(offerDto, Offer.class)).thenReturn(offer);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
-        when(modelMapper.map(fakeUserDto, User.class)).thenReturn(fakeUser);
+        when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
+        when(modelMapper.map(any(OfferDto.class), eq(Offer.class))).thenReturn(offer);
         String path = "/offers";
         mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -1351,10 +1349,8 @@ public class OfferControllerTests {
                 .url("/2")
                 .build();
         when(offerService.modify(any(Offer.class))).thenReturn(offer);
-        when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
-        when(modelMapper.map(offerDto, Offer.class)).thenReturn(offer);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
-        when(modelMapper.map(fakeUserDto, User.class)).thenReturn(fakeUser);
+        when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
+        when(modelMapper.map(any(OfferDto.class), eq(Offer.class))).thenReturn(offer);
         String path = "/offers/" + offer.getId();
         mockMvc.perform(put(path)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
