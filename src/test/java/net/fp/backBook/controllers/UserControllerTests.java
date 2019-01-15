@@ -3,6 +3,7 @@ package net.fp.backBook.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.UserDto;
+import net.fp.backBook.dtos.UserViewDto;
 import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
@@ -117,16 +118,14 @@ public class UserControllerTests {
                 .password("password")
                 .email("email")
                 .build();
-        UserDto userDto = UserDto.builder()
+        UserViewDto userViewDto = UserViewDto.builder()
                 .id("1")
                 .name("test")
                 .lastName("lastName")
-                .login("login")
-                .password("password")
                 .email("email")
                 .build();
         when(userService.getById(anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(user, UserViewDto.class)).thenReturn(userViewDto);
         String path = "/users/xxx";
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
@@ -134,8 +133,6 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.id").value("1"))
                 .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.lastName").value("lastName"))
-                .andExpect(jsonPath("$.login").value("login"))
-                .andExpect(jsonPath("$.password").value("password"))
                 .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getById(anyString());
     }
@@ -161,25 +158,21 @@ public class UserControllerTests {
                 .password("password")
                 .email("email")
                 .build();
-        UserDto userDto = UserDto.builder()
+        UserViewDto userViewDto = UserViewDto.builder()
                 .id("1")
                 .name("test")
                 .lastName("lastName")
-                .login("login")
-                .password("password")
                 .email("email")
                 .build();
         when(userService.getUserByLogin(anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(user, UserViewDto.class)).thenReturn(userViewDto);
         String path = "/users/login/xxx";
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.lastName").value("lastName"))
-                .andExpect(jsonPath("$.login").value("login"))
-                .andExpect(jsonPath("$.password").value("password"))
                 .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getUserByLogin(anyString());
     }
@@ -205,25 +198,21 @@ public class UserControllerTests {
                 .password("password")
                 .email("email")
                 .build();
-        UserDto userDto = UserDto.builder()
+        UserViewDto userViewDto = UserViewDto.builder()
                 .id("1")
                 .name("test")
                 .lastName("lastName")
-                .login("login")
-                .password("password")
                 .email("email")
                 .build();
         when(userService.getUserByEmail(anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(user, UserViewDto.class)).thenReturn(userViewDto);
         String path = "/users/email/xxx";
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.login").value("login"))
+                .andExpect(jsonPath("$.name").value("test"))
                 .andExpect(jsonPath("$.lastName").value("lastName"))
-                .andExpect(jsonPath("$.login").value("login"))
-                .andExpect(jsonPath("$.password").value("password"))
                 .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getUserByEmail(anyString());
     }
@@ -249,16 +238,14 @@ public class UserControllerTests {
                 .password("test")
                 .email("email")
                 .build();
-        UserDto userDto = UserDto.builder()
+        UserViewDto userViewDto = UserViewDto.builder()
                 .id("1")
                 .name("test")
                 .lastName("lastName")
-                .login("login")
-                .password("test")
                 .email("email")
                 .build();
         when(userService.getUserByLoginAndPassword(anyString(), anyString())).thenReturn(user);
-        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(user, UserViewDto.class)).thenReturn(userViewDto);
         String path = "/users/credentials";
         mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -270,10 +257,8 @@ public class UserControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.login").value("login"))
                 .andExpect(jsonPath("$.lastName").value("lastName"))
                 .andExpect(jsonPath("$.name").value("test"))
-                .andExpect(jsonPath("$.password").value("test"))
                 .andExpect(jsonPath("$.email").value("email"));
         verify(userService).getUserByLoginAndPassword(anyString(), anyString());
     }
@@ -317,6 +302,12 @@ public class UserControllerTests {
                 .password("test")
                 .email("email")
                 .build();
+        UserViewDto userViewDto = UserViewDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .email("email")
+                .build();
         User user = User.builder()
                 .id("1")
                 .name("test")
@@ -325,7 +316,7 @@ public class UserControllerTests {
                 .password("test")
                 .email("email")
                 .build();
-        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(user, UserViewDto.class)).thenReturn(userViewDto);
         when(modelMapper.map(userDto, User.class)).thenReturn(user);
         when(userService.add(user)).thenReturn(user);
         String path = "/users";
@@ -335,10 +326,8 @@ public class UserControllerTests {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.login").value("login"))
                 .andExpect(jsonPath("$.lastName").value("lastName"))
                 .andExpect(jsonPath("$.name").value("test"))
-                .andExpect(jsonPath("$.password").value("test"))
                 .andExpect(jsonPath("$.email").value("email"));
         verify(userService).add(user);
     }
@@ -367,6 +356,12 @@ public class UserControllerTests {
                 .password("test")
                 .email("email")
                 .build();
+        UserViewDto userViewDto = UserViewDto.builder()
+                .id("1")
+                .name("test")
+                .lastName("lastName")
+                .email("email")
+                .build();
         User user = User.builder()
                 .id("1")
                 .name("test")
@@ -375,7 +370,7 @@ public class UserControllerTests {
                 .password("test")
                 .email("email")
                 .build();
-        when(modelMapper.map(user, UserDto.class)).thenReturn(userDto);
+        when(modelMapper.map(user, UserViewDto.class)).thenReturn(userViewDto);
         when(modelMapper.map(userDto, User.class)).thenReturn(user);
         when(userService.modify(any(User.class))).thenReturn(user);
         String path = "/users/" + user.getId();
@@ -384,10 +379,8 @@ public class UserControllerTests {
                 .content(objectMapper.writeValueAsString(userDto)))
                 .andDo(print())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.login").value("login"))
                 .andExpect(jsonPath("$.lastName").value("lastName"))
                 .andExpect(jsonPath("$.name").value("test"))
-                .andExpect(jsonPath("$.password").value("test"))
                 .andExpect(jsonPath("$.email").value("email"));
         verify(userService).modify(user);
     }

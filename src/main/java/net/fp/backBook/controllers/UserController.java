@@ -3,6 +3,7 @@ package net.fp.backBook.controllers;
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.Credentials;
 import net.fp.backBook.dtos.UserDto;
+import net.fp.backBook.dtos.UserViewDto;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
@@ -38,7 +39,7 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDto> getUsers() {
+    public List<UserViewDto> getUsers() {
         List<User> users =  userService.getAll();
         return MapToDto(users);
     }
@@ -46,7 +47,7 @@ public class UserController {
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUser(@PathVariable String id) {
+    public UserViewDto getUser(@PathVariable String id) {
         User user = this.userService.getById(id);
         return MapSingleToDto(user);
     }
@@ -54,7 +55,7 @@ public class UserController {
     @GetMapping(value = "/login/{login}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUserByLogin(@PathVariable String login) {
+    public UserViewDto getUserByLogin(@PathVariable String login) {
         User user = this.userService.getUserByLogin(login);
         return MapSingleToDto(user);
     }
@@ -62,7 +63,7 @@ public class UserController {
     @GetMapping(value = "/email/{email}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUserByEmail(@PathVariable String email) {
+    public UserViewDto getUserByEmail(@PathVariable String email) {
         User user = this.userService.getUserByEmail(email);
         return MapSingleToDto(user);
     }
@@ -71,7 +72,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUserByCredentials(@RequestBody Credentials credentials) {
+    public UserViewDto getUserByCredentials(@RequestBody Credentials credentials) {
         if(credentials.getLogin() == null || credentials.getPassword() == null)
             throw new GetException("One or more of credentials are empty");
         User user = this.userService.getUserByLoginAndPassword(credentials.getLogin(), credentials.getPassword());
@@ -82,7 +83,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@RequestBody UserDto userDto) {
+    public UserViewDto addUser(@RequestBody UserDto userDto) {
         User user = this.modelMapper.map(userDto, User.class);
         // set user from context here
         user = this.userService.add(user);
@@ -93,7 +94,7 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public UserDto updateUser(@PathVariable String id, @RequestBody UserDto userDto) {
+    public UserViewDto updateUser(@PathVariable String id, @RequestBody UserDto userDto) {
         if(!id.equals(userDto.getId())) {
             throw new ModifyException("Unmatching ids");
         }
@@ -110,14 +111,14 @@ public class UserController {
         userService.delete(id);
     }
 
-    private UserDto MapSingleToDto(User offer) {
-        return modelMapper.map(offer, UserDto.class);
+    private UserViewDto MapSingleToDto(User offer) {
+        return modelMapper.map(offer, UserViewDto.class);
     }
 
-    private List<UserDto> MapToDto(List<User> userList) {
-        List<UserDto> usersDto = new ArrayList<>();
+    private List<UserViewDto> MapToDto(List<User> userList) {
+        List<UserViewDto> usersDto = new ArrayList<>();
         for(User user : userList) {
-            UserDto mappedOfferDto = MapSingleToDto(user);
+            UserViewDto mappedOfferDto = MapSingleToDto(user);
             usersDto.add(mappedOfferDto);
         }
         return usersDto;
