@@ -1,10 +1,7 @@
 package net.fp.backBook.configuration;
 
 import net.fp.backBook.dtos.ErrorDto;
-import net.fp.backBook.exceptions.AddException;
-import net.fp.backBook.exceptions.DeleteException;
-import net.fp.backBook.exceptions.GetException;
-import net.fp.backBook.exceptions.ModifyException;
+import net.fp.backBook.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,5 +43,11 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleModifyConflict(RuntimeException e, WebRequest request) {
         ErrorDto responseString = new ErrorDto("Error during data persistence (PUT METHOD). " + e.getMessage());
         return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.CONFLICT, request);
+    }
+
+    @ExceptionHandler( value = {AuthenticationException.class})
+    protected ResponseEntity<Object> handleAuthenticationProblem(RuntimeException e, WebRequest request) {
+        ErrorDto responseString = new ErrorDto("Error during authentication (POST METHOD). " + e.getMessage());
+        return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.UNAUTHORIZED, request);
     }
 }
