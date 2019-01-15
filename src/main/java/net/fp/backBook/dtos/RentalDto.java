@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.fp.backBook.model.CounterOffer;
 
 import java.time.LocalDateTime;
 
