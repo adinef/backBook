@@ -175,6 +175,7 @@ public class OfferServiceTests {
     public void testGetByFilterRetrievesNothing() {
         Offer filterOffer = mock(Offer.class);
         when(this.offerRepository.findAll(any(Example.class))).thenReturn(new ArrayList<>());
+        when(this.offerFilter.getMatcher()).thenReturn(this.getMatcher());
         Assert.assertEquals(new ArrayList<>(), this.offerService.getByFilter(filterOffer));
         verify(this.offerRepository, times(1)).findAll(any(Example.class));
     }
