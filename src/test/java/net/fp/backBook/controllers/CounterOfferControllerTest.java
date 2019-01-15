@@ -160,8 +160,7 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$.offer.offerOwner.id").value("2"))
                 .andExpect(jsonPath("$.offer.offerOwner.name").value("name2"))
                 .andExpect(jsonPath("$.offer.offerOwner.lastName").value("lastName2"))
-                .andExpect(jsonPath("$.offer.offerOwner.email").value("email2"))
-                .andReturn();
+                .andExpect(jsonPath("$.offer.offerOwner.email").value("email2"));
     }
 
     @Test
@@ -219,8 +218,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -297,8 +295,7 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$.offer.offerOwner.id").value("2"))
                 .andExpect(jsonPath("$.offer.offerOwner.name").value("name2"))
                 .andExpect(jsonPath("$.offer.offerOwner.lastName").value("lastName2"))
-                .andExpect(jsonPath("$.offer.offerOwner.email").value("email2"))
-                .andReturn();
+                .andExpect(jsonPath("$.offer.offerOwner.email").value("email2"));
     }
 
     @Test
@@ -353,8 +350,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -412,8 +408,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -550,8 +545,7 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.offerOwner.id").value("4"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.name").value("name4"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.lastName").value("lastName4"))
-                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email4"))
-                .andReturn();
+                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email4"));
     }
 
     @Test
@@ -564,8 +558,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -639,8 +632,7 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$.offer.offerOwner.id").value("2"))
                 .andExpect(jsonPath("$.offer.offerOwner.name").value("name2"))
                 .andExpect(jsonPath("$.offer.offerOwner.lastName").value("lastName2"))
-                .andExpect(jsonPath("$.offer.offerOwner.email").value("email2"))
-                .andReturn();
+                .andExpect(jsonPath("$.offer.offerOwner.email").value("email2"));
     }
 
     @Test
@@ -655,8 +647,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -670,8 +661,7 @@ public class CounterOfferControllerTest {
                 delete("/counterOffers/" + id))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").doesNotExist())
-                .andReturn();
+                .andExpect(jsonPath("$").doesNotExist());
     }
 
     @Test
@@ -685,8 +675,7 @@ public class CounterOfferControllerTest {
                 delete("/counterOffers/" + id))
                 .andDo(print())
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -800,8 +789,7 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.offerOwner.id").value("2"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.name").value("name2"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.lastName").value("lastName2"))
-                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email2"))
-                .andReturn();
+                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email2"));
     }
 
     @Test
@@ -814,8 +802,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -831,8 +818,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -961,8 +947,7 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.offerOwner.id").value("4"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.name").value("name4"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.lastName").value("lastName4"))
-                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email4"))
-                .andReturn();
+                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email4"));
     }
 
     @Test
@@ -975,8 +960,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -992,8 +976,7 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 
     @Test
@@ -1133,8 +1116,7 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.offerOwner.id").value("4"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.name").value("name4"))
                 .andExpect(jsonPath("$[1].offer.offerOwner.lastName").value("lastName4"))
-                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email4"))
-                .andReturn();
+                .andExpect(jsonPath("$[1].offer.offerOwner.email").value("email4"));
     }
 
     @Test
@@ -1147,7 +1129,6 @@ public class CounterOfferControllerTest {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().is4xxClientError())
-                .andExpect(jsonPath("$.error").isNotEmpty())
-                .andReturn();
+                .andExpect(jsonPath("$.error").isNotEmpty());
     }
 }
