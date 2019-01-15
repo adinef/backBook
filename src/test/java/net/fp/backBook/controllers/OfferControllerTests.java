@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.fp.backBook.configuration.HttpResponsesConfig;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
-import net.fp.backBook.dtos.DatePairDto;
-import net.fp.backBook.dtos.OfferDto;
-import net.fp.backBook.dtos.OfferSearchFilter;
-import net.fp.backBook.dtos.UserDto;
+import net.fp.backBook.dtos.*;
 import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
@@ -198,11 +195,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -241,7 +236,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -255,7 +250,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -268,7 +263,7 @@ public class OfferControllerTests {
         when(offerService.getAllByBookTitle(anyString())).thenReturn(offers);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
         when(modelMapper.map(offer2, OfferDto.class)).thenReturn(offer2Dto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/title/xxx";
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -282,8 +277,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -301,8 +294,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerName").value("name"))
                 .andExpect(jsonPath("$[1].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[1].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[1].createdAt").value(
                         dtF.format(offer2Dto.getCreatedAt()))
@@ -337,11 +328,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -380,7 +369,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -394,7 +383,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -407,7 +396,7 @@ public class OfferControllerTests {
         when(offerService.getAllByBookPublisher(anyString())).thenReturn(offers);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
         when(modelMapper.map(offer2, OfferDto.class)).thenReturn(offer2Dto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/publisher/xxx";
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -421,8 +410,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -440,8 +427,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerName").value("name"))
                 .andExpect(jsonPath("$[1].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[1].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[1].createdAt").value(
                         dtF.format(offer2Dto.getCreatedAt()))
@@ -476,11 +461,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -519,7 +502,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -533,7 +516,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -546,7 +529,7 @@ public class OfferControllerTests {
         when(offerService.getAllByCity(anyString())).thenReturn(offers);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
         when(modelMapper.map(offer2, OfferDto.class)).thenReturn(offer2Dto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/city/xxx";
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -560,8 +543,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -579,8 +560,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerName").value("name"))
                 .andExpect(jsonPath("$[1].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[1].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[1].createdAt").value(
                         dtF.format(offer2Dto.getCreatedAt()))
@@ -615,11 +594,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -658,7 +635,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -672,7 +649,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -685,7 +662,7 @@ public class OfferControllerTests {
         when(offerService.getAllByVoivodeship(anyString())).thenReturn(offers);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
         when(modelMapper.map(offer2, OfferDto.class)).thenReturn(offer2Dto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/voivodeship/xxx";
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -699,8 +676,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                        dtF.format(offerDto.getCreatedAt()))
@@ -718,8 +693,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerName").value("name"))
                 .andExpect(jsonPath("$[1].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[1].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[1].createdAt").value(
                        dtF.format(offer2Dto.getCreatedAt()))
@@ -754,11 +727,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -797,7 +768,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -811,7 +782,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -824,7 +795,7 @@ public class OfferControllerTests {
         when(offerService.getAllByOfferName(anyString())).thenReturn(offers);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
         when(modelMapper.map(offer2, OfferDto.class)).thenReturn(offer2Dto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/name/xxx";
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -838,8 +809,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -857,8 +826,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerName").value("name"))
                 .andExpect(jsonPath("$[1].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[1].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[1].createdAt").value(
                         dtF.format(offer2Dto.getCreatedAt()))
@@ -893,11 +860,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -936,7 +901,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -950,7 +915,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -964,7 +929,7 @@ public class OfferControllerTests {
         when(userService.getById(anyString())).thenReturn(fakeUser);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
         when(modelMapper.map(offer2, OfferDto.class)).thenReturn(offer2Dto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/user/xxx";
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -978,8 +943,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -997,8 +960,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerName").value("name"))
                 .andExpect(jsonPath("$[1].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[1].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[1].createdAt").value(
                         dtF.format(offer2Dto.getCreatedAt()))
@@ -1034,11 +995,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -1062,7 +1021,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1076,7 +1035,7 @@ public class OfferControllerTests {
                 .thenReturn(Arrays.asList(offer));
         when(userService.getById(anyString())).thenReturn(fakeUser);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/between/";
         mockMvc.perform(post(path)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -1093,8 +1052,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -1134,11 +1091,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -1162,7 +1117,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1175,7 +1130,7 @@ public class OfferControllerTests {
                 .thenReturn(Arrays.asList(offer));
         when(userService.getById(anyString())).thenReturn(fakeUser);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
-        when(modelMapper.map(fakeUser, UserDto.class)).thenReturn(fakeUserDto);
+        when(modelMapper.map(fakeUser, UserViewDto.class)).thenReturn(fakeUserViewDto);
         String path = "/offers/notexpired/" + LocalDateTime.now();
         mockMvc.perform(get(path))
                 .andDo(print())
@@ -1189,8 +1144,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerName").value("name"))
                 .andExpect(jsonPath("$[0].offerOwner.id").value("1"))
                 .andExpect(jsonPath("$[0].offerOwner.email").value("email"))
-                .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
-                .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$[0].createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -1226,11 +1179,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -1254,7 +1205,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1279,8 +1230,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.offerName").value("name"))
                 .andExpect(jsonPath("$.offerOwner.id").value("1"))
                 .andExpect(jsonPath("$.offerOwner.email").value("email"))
-                .andExpect(jsonPath("$.offerOwner.password").value("password"))
-                .andExpect(jsonPath("$.offerOwner.login").value("login"))
                 .andExpect(jsonPath("$.offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$.createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))
@@ -1319,11 +1268,9 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        UserDto fakeUserDto = UserDto.builder()
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
                 .id("1")
                 .email("email")
-                .password("password")
-                .login("login")
                 .lastName("lastName")
                 .name("name")
                 .build();
@@ -1347,7 +1294,7 @@ public class OfferControllerTests {
                 .bookReleaseYear("1111")
                 .bookPublisher("publisher")
                 .offerName("name")
-                .offerOwner(fakeUserDto)
+                .offerOwner(fakeUserViewDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1371,8 +1318,6 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.offerName").value("name"))
                 .andExpect(jsonPath("$.offerOwner.id").value("1"))
                 .andExpect(jsonPath("$.offerOwner.email").value("email"))
-                .andExpect(jsonPath("$.offerOwner.password").value("password"))
-                .andExpect(jsonPath("$.offerOwner.login").value("login"))
                 .andExpect(jsonPath("$.offerOwner.lastName").value("lastName"))
                 .andExpect(jsonPath("$.createdAt").value(
                         dtF.format(offerDto.getCreatedAt()))

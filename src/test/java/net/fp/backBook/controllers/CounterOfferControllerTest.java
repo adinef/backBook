@@ -28,15 +28,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -58,6 +62,9 @@ public class CounterOfferControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private DateTimeFormatter dateTimeFormatter;
+
     @Mock
     private CounterOfferService counterOfferService;
 
@@ -70,9 +77,62 @@ public class CounterOfferControllerTest {
         this.mockMvc = MockMvcBuilders
                 .standaloneSetup(counterOfferController)
                 .setControllerAdvice(restResponseExceptionHandler).build();
+    }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
-        this.objectMapper.setDateFormat(simpleDateFormat);
+    @Test
+    public void addCounterOfferByIdSuccess() throws Exception {
+
+        User user = User.builder()
+                .id("1")
+                .login("login")
+                .password("password")
+                .email("email")
+                .name("name")
+                .lastName("lastName")
+                .roles(Collections.singletonList(new Role("1", "role"))).build();
+
+        Offer offer = Offer.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("2018")
+                .bookPublisher("publisher")
+                .offerName("offerName")
+                .offerOwner(user)
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voivodeship")
+                .fileId("1")
+                .build();
+
+        CounterOffer counterOffer = CounterOffer.builder()
+                .id("1")
+                .offer(offer)
+                .user(user)
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now()).build();
+
+        CounterOfferDto counterOfferDto = this.modelMapper.map(counterOffer, CounterOfferDto.class);
+
+        when(this.counterOfferService.add(counterOffer)).thenReturn(counterOffer);
+        when(this.modelMapperMock.map(any(CounterOfferDto.class), eq(CounterOffer.class))).thenReturn(counterOffer);
+        when(this.modelMapperMock.map(any(CounterOffer.class), eq(CounterOfferDto.class))).thenReturn(counterOfferDto);
+
+        this.mockMvc.perform(
+                post("/counterOffers")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
+                        .content(this.objectMapper.writeValueAsString(counterOfferDto)))
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.createdAt").value(dateTimeFormatter.format(counterOfferDto.getCreatedAt())))
+                .andExpect(jsonPath("$.expires").value(dateTimeFormatter.format(counterOfferDto.getExpires())))
+                .andExpect(jsonPath("$.user.id").value("1"))
+                .andExpect(jsonPath("$.user.name").value("name"))
+                .andExpect(jsonPath("$.user.lastName").value("lastName"))
+                .andReturn();
     }
 
     @Test
@@ -88,7 +148,17 @@ public class CounterOfferControllerTest {
 
         Offer offer = Offer.builder()
                 .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("2018")
+                .bookPublisher("publisher")
                 .offerName("offerName")
+                .offerOwner(user)
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voivodeship")
+                .fileId("1")
                 .build();
 
         CounterOffer counterOffer = CounterOffer.builder()
@@ -111,7 +181,7 @@ public class CounterOfferControllerTest {
                 .andReturn();
 
         String content = result.getResponse().getContentAsString();
-        Assert.assertEquals(this.objectMapper.writeValueAsString(counterOfferDto) ,content);
+        Assert.assertEquals(this.objectMapper.writeValueAsString(counterOfferDto), content);
     }
 
     @Test

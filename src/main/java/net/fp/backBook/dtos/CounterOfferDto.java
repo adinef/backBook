@@ -18,7 +18,7 @@ public class CounterOfferDto {
 
     private OfferDto offer;
 
-    private UserDto user;
+    private UserViewDto user;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;

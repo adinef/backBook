@@ -16,7 +16,6 @@ public class ModelMapperConfig {
 
     @Bean
     public DateTimeFormatter dateTimeFormatter() {
-        DateTimeFormatter dTF = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        return dTF;
+        return DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
     }
 }

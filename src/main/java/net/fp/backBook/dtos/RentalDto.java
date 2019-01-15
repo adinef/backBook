@@ -19,7 +19,7 @@ public class RentalDto {
 
     private OfferDto offer;
 
-    private UserDto user;
+    private UserViewDto user;
 
     private CounterOfferDto counterOffer;
 
