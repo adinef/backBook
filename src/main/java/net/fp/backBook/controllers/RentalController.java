@@ -13,6 +13,7 @@ import net.fp.backBook.services.RentalService;
 import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -128,11 +129,11 @@ public class RentalController {
     }
 
     @GetMapping(
-            value = "/notExpired/{dateString}",
+            value = "/notExpired/{date}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<RentalDto> getAllRentalsByNotExpired(@PathVariable String dateString) {
-        LocalDateTime date = LocalDateTime.parse(dateString);
+    public List<RentalDto> getAllRentalsByNotExpired(
+            @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm:ss") LocalDateTime date) {
         List<Rental> rentals = this.rentalService.getAllByNotExpired(date);
         return getDtosList(rentals);
     }
