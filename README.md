@@ -6,7 +6,7 @@ Front-End project: [a link](https://github.com/pomaranski/frontBook/blob/dev/REA
 ### Details
 
 This project is using Spring Framework libraries for simplicity. The database used in the system is MongoDB. The whole system is currently under early-stage development.
-Please feel free to overlook it and come back anytime for more updates. 
+Please feel free to overlook it and come back anytime for more updates :)
 
 #### Update #1
 We've just started with front-end side of the project. The link is in the description, in the title section.
