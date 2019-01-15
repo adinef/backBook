@@ -11,11 +11,13 @@ import net.fp.backBook.services.OfferService;
 import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -113,11 +115,11 @@ public class CounterOfferController {
     }
 
     @GetMapping(
-            value = "/notExpired/{dateString}",
+            value = "/notExpired/{date}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public List<CounterOfferDto> getAllCounterOffersByNotExpired(@PathVariable String dateString) {
-        LocalDateTime date = LocalDateTime.parse(dateString);
+    public List<CounterOfferDto> getAllCounterOffersByNotExpired(
+            @PathVariable @DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm:ss") LocalDateTime date) {
         List<CounterOffer> counterOffers = this.counterOfferService.getAllByNotExpired(date);
         return getDtosList(counterOffers);
     }
