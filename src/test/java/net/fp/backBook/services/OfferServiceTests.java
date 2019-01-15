@@ -6,6 +6,7 @@ import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
+import net.fp.backBook.model.filters.OfferFilter;
 import net.fp.backBook.repositories.OfferRepository;
 import net.fp.backBook.repositories.UserRepository;
 import org.junit.*;
@@ -16,7 +17,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 
@@ -43,6 +43,9 @@ public class OfferServiceTests {
 
     @InjectMocks
     private OfferServiceImpl offerService;
+
+    @Mock
+    private OfferFilter offerFilter;
 
     @Test
     public void testGetById() {
@@ -163,26 +166,27 @@ public class OfferServiceTests {
     }
 
 
-    private Example<Offer> testFilter(Offer offer) {
-        ExampleMatcher exampleMatcher = offerService.offerExampleMatcher();
-        return Example.of(offer, exampleMatcher);
+    private ExampleMatcher getMatcher() {
+        ExampleMatcher exampleMatcher = new OfferFilter().getMatcher();
+        return exampleMatcher;
     }
 
     @Test
     public void testGetByFilterRetrievesNothing() {
         Offer filterOffer = mock(Offer.class);
-        when(this.offerRepository.findAll(testFilter(filterOffer))).thenReturn(new ArrayList<>());
+        when(this.offerRepository.findAll(any(Example.class))).thenReturn(new ArrayList<>());
         Assert.assertEquals(new ArrayList<>(), this.offerService.getByFilter(filterOffer));
-        verify(this.offerRepository, times(1)).findAll(testFilter(filterOffer));
+        verify(this.offerRepository, times(1)).findAll(any(Example.class));
     }
 
     @Test
     public void testGetByFilterRetrievesData() {
         Offer filterOffer = Offer.builder().offerName("test").build();
         Offer offer = Offer.builder().offerName("test").build();
-        when(this.offerRepository.findAll(testFilter(filterOffer))).thenReturn(Arrays.asList(offer));
+        when(this.offerFilter.getMatcher()).thenReturn(this.getMatcher());
+        when(this.offerRepository.findAll(any(Example.class))).thenReturn(Arrays.asList(offer));
         Assert.assertEquals(Arrays.asList(offer), this.offerService.getByFilter(filterOffer));
-        verify(this.offerRepository, times(1)).findAll(testFilter(filterOffer));
+        verify(this.offerRepository, times(1)).findAll(any(Example.class));
     }
 
     @Test

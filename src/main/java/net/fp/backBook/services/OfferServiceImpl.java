@@ -7,6 +7,7 @@ import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
+import net.fp.backBook.model.filters.OfferFilter;
 import net.fp.backBook.repositories.OfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -25,10 +26,15 @@ import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatc
 public class OfferServiceImpl implements OfferService {
 
     private OfferRepository offerRepository;
+    private OfferFilter filter;
 
     @Autowired
-    public OfferServiceImpl(final OfferRepository offerRepository) {
+    public OfferServiceImpl(
+            final OfferRepository offerRepository,
+            final OfferFilter filter
+    ) {
         this.offerRepository = offerRepository;
+        this.filter = filter;
     }
 
     @Override
@@ -174,23 +180,11 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public List<Offer> getByFilter(Offer offer) {
         try {
-            Example<Offer> offerExample = Example.of(offer, offerExampleMatcher());
+            Example<Offer> offerExample = Example.of(offer, filter.getMatcher());
             return offerRepository.findAll(offerExample);
         }catch (final Exception e) {
             log.error("Error during getting Offer objects by filter, {}", e);
             throw new GetException(e.getMessage());
         }
-    }
-
-    @Bean
-    public ExampleMatcher offerExampleMatcher() {
-        return ExampleMatcher
-                .matching()
-                .withMatcher("city", regex().ignoreCase())
-                .withMatcher("voivodeship", regex().ignoreCase())
-                .withMatcher("offerName", startsWith().ignoreCase())
-                .withMatcher("bookTitle", regex().ignoreCase())
-                .withMatcher("bookPublisher", regex().ignoreCase())
-                .withMatcher("bookReleaseYear", startsWith());
     }
 }
