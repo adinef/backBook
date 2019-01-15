@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,6 +74,9 @@ public class OfferControllerTests {
 
     @Autowired
     private RestResponseExceptionHandler restResponseExceptionHandler;
+
+    @Autowired
+    private DateTimeFormatter dtF;
 
     private MockMvc mockMvc;
 
@@ -278,12 +282,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -297,12 +301,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[1].createdAt").value(
-                        objectMapper.writeValueAsString(offer2Dto.getCreatedAt()))
+                .andExpect(jsonPath("$[1].createdAt").value(
+                        dtF.format(offer2Dto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[1].expires").value(
-                        objectMapper.writeValueAsString(offer2Dto.getExpires()))
-                )*/
+                        dtF.format(offer2Dto.getExpires()))
+                )
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
@@ -417,12 +421,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -436,12 +440,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[1].createdAt").value(
-                        objectMapper.writeValueAsString(offer2Dto.getCreatedAt()))
+                .andExpect(jsonPath("$[1].createdAt").value(
+                        dtF.format(offer2Dto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[1].expires").value(
-                        objectMapper.writeValueAsString(offer2Dto.getExpires()))
-                )*/
+                        dtF.format(offer2Dto.getExpires()))
+                )
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
@@ -556,12 +560,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -575,12 +579,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[1].createdAt").value(
-                        objectMapper.writeValueAsString(offer2Dto.getCreatedAt()))
+                .andExpect(jsonPath("$[1].createdAt").value(
+                        dtF.format(offer2Dto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[1].expires").value(
-                        objectMapper.writeValueAsString(offer2Dto.getExpires()))
-                )*/
+                        dtF.format(offer2Dto.getExpires()))
+                )
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
@@ -695,12 +699,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                       dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                       dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -714,12 +718,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[1].createdAt").value(
-                        objectMapper.writeValueAsString(offer2Dto.getCreatedAt()))
+                .andExpect(jsonPath("$[1].createdAt").value(
+                       dtF.format(offer2Dto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[1].expires").value(
-                        objectMapper.writeValueAsString(offer2Dto.getExpires()))
-                )*/
+                        dtF.format(offer2Dto.getExpires()))
+                )
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
@@ -834,12 +838,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -853,12 +857,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[1].createdAt").value(
-                        objectMapper.writeValueAsString(offer2Dto.getCreatedAt()))
+                .andExpect(jsonPath("$[1].createdAt").value(
+                        dtF.format(offer2Dto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[1].expires").value(
-                        objectMapper.writeValueAsString(offer2Dto.getExpires()))
-                )*/
+                        dtF.format(offer2Dto.getExpires()))
+                )
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
@@ -974,12 +978,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -993,12 +997,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[1].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[1].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[1].createdAt").value(
-                        objectMapper.writeValueAsString(offer2Dto.getCreatedAt()))
+                .andExpect(jsonPath("$[1].createdAt").value(
+                        dtF.format(offer2Dto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[1].expires").value(
-                        objectMapper.writeValueAsString(offer2Dto.getExpires()))
-                )*/
+                        dtF.format(offer2Dto.getExpires()))
+                )
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
@@ -1089,12 +1093,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -1185,12 +1189,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].offerOwner.password").value("password"))
                 .andExpect(jsonPath("$[0].offerOwner.login").value("login"))
                 .andExpect(jsonPath("$[0].offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$[0].createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$[0].expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
@@ -1275,12 +1279,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.offerOwner.password").value("password"))
                 .andExpect(jsonPath("$.offerOwner.login").value("login"))
                 .andExpect(jsonPath("$.offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$.createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$.createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$.expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$.active").value("true"))
                 .andExpect(jsonPath("$.city").value("city"))
                 .andExpect(jsonPath("$.voivodeship").value("voiv"))
@@ -1367,12 +1371,12 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.offerOwner.password").value("password"))
                 .andExpect(jsonPath("$.offerOwner.login").value("login"))
                 .andExpect(jsonPath("$.offerOwner.lastName").value("lastName"))
-                /*.andExpect(jsonPath("$.createdAt").value(
-                        objectMapper.writeValueAsString(offerDto.getCreatedAt()))
+                .andExpect(jsonPath("$.createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
                 )
                 .andExpect(jsonPath("$.expires").value(
-                        objectMapper.writeValueAsString(offerDto.getExpires()))
-                )*/
+                        dtF.format(offerDto.getExpires()))
+                )
                 .andExpect(jsonPath("$.active").value("true"))
                 .andExpect(jsonPath("$.city").value("city"))
                 .andExpect(jsonPath("$.voivodeship").value("voiv"))
