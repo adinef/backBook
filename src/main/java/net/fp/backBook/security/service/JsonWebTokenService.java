@@ -39,7 +39,12 @@ public class JsonWebTokenService implements TokenService {
         if (username == null || password == null) {
             return null;
         }
-        User user = (User) userDetailsService.loadUserByUsername(username);
+        User user;
+        try {
+            user = (User) userDetailsService.loadUserByUsername(username);
+        } catch (Exception e) {
+            throw new AuthenticationException("Error during user details loading. " + e.getMessage());
+        }
         Map<String, Object> tokenData = new HashMap<>();
         if (password.equals(user.getPassword())) {
             tokenData.put("clientType", "user");
@@ -62,5 +67,9 @@ public class JsonWebTokenService implements TokenService {
 
     public static void setTokenExpirationTime(int tokenExpirationTime) {
         JsonWebTokenService.tokenExpirationTime = tokenExpirationTime;
+    }
+
+    public static int getTokenExpirationTime() {
+        return JsonWebTokenService.tokenExpirationTime;
     }
 }
