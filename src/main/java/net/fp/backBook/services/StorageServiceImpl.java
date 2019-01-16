@@ -3,6 +3,8 @@ package net.fp.backBook.services;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
+import net.fp.backBook.exceptions.FileNotFound;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,12 @@ public class StorageServiceImpl implements StorageService {
     public Resource load(String id) {
         try {
             GridFSFile gridFSFile = this.fileRepository.findById(id);
+            if (gridFSFile == null) {
+                throw new FileNotFound("No file");
+            }
             return gridFsOperations.getResource(gridFSFile);
+        } catch (FileNotFound e) {
+            throw e;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new GetException(e.getMessage(), e);
@@ -52,7 +59,7 @@ public class StorageServiceImpl implements StorageService {
             this.fileRepository.deleteById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new AddException(e.getMessage(), e);
+            throw new DeleteException(e.getMessage(), e);
         }
     }
 }
