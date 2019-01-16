@@ -3,6 +3,7 @@ package net.fp.backBook.services;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.FileNotFound;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.repositories.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,11 @@ public class StorageServiceImpl implements StorageService {
         try {
             GridFSFile gridFSFile = this.fileRepository.findById(id);
             if (gridFSFile == null) {
-                throw new GetException("No file");
+                throw new FileNotFound("No file");
             }
             return gridFsOperations.getResource(gridFSFile);
+        } catch (FileNotFound e) {
+            throw e;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new GetException(e.getMessage(), e);

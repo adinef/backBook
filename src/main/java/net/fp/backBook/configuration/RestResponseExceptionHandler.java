@@ -50,4 +50,10 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
         ErrorDto responseString = new ErrorDto("Error during authentication (POST METHOD). " + e.getMessage());
         return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.UNAUTHORIZED, request);
     }
+
+    @ExceptionHandler( value = {FileNotFound.class})
+    protected ResponseEntity<Object> handleFileNotFound(RuntimeException e, WebRequest request) {
+        ErrorDto responseString = new ErrorDto("Error during file download (GET METHOD). " + e.getMessage());
+        return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.NOT_FOUND, request);
+    }
 }
