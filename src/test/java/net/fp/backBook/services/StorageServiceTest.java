@@ -1,7 +1,9 @@
 package net.fp.backBook.services;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
+import com.mysql.cj.x.protobuf.MysqlxCrud;
 import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.FileNotFound;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.repositories.FileRepository;
@@ -96,5 +98,25 @@ public class StorageServiceTest {
         when(this.fileRepository.findById(id)).thenThrow(RuntimeException.class);
 
         this.storageService.load(id);
+    }
+
+    @Test
+    public void deleteSuccess() {
+        String id = "1";
+
+        doNothing().when(this.fileRepository).deleteById(id);
+
+        this.storageService.delete(id);
+
+        verify(this.fileRepository, times(1)).deleteById(id);
+    }
+
+    @Test(expected = DeleteException.class)
+    public void deleteFailure() {
+        String id = "1";
+
+        doThrow(RuntimeException.class).when(this.fileRepository).deleteById(id);
+
+        this.storageService.delete(id);
     }
 }

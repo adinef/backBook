@@ -3,6 +3,7 @@ package net.fp.backBook.services;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.FileNotFound;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.repositories.FileRepository;
@@ -58,7 +59,7 @@ public class StorageServiceImpl implements StorageService {
             this.fileRepository.deleteById(id);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new AddException(e.getMessage(), e);
+            throw new DeleteException(e.getMessage(), e);
         }
     }
 }
