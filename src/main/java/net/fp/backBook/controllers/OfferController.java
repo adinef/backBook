@@ -186,7 +186,7 @@ public class OfferController {
 
     @PostMapping(
             value = "/{id}/file",
-            consumes = MediaType.IMAGE_PNG_VALUE
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
     public void uploadFile(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
@@ -202,8 +202,9 @@ public class OfferController {
             produces = MediaType.IMAGE_PNG_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public Resource uploadFile(@PathVariable("id") String id) {
-        return this.storageService.load(id);
+    public Resource downloadFile(@PathVariable("id") String id) {
+        Offer offer = this.offerService.getById(id);
+        return this.storageService.load(offer.getFileId());
     }
 
     @DeleteMapping(
