@@ -62,9 +62,9 @@ public class AuthenticationControllerTests {
     public void testTokenOnLoginReturned() throws Exception {
         Credentials cred = Credentials.builder()
                 .login("test")
-                .password("test")
+                .password("pass")
                 .build();
-        when(this.tokenService.getToken(anyString(), anyString())).thenReturn("1");
+        when(this.tokenService.getToken("test", "pass")).thenReturn("1");
         mockMvc.perform(post("/auth")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(cred)))
