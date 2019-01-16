@@ -39,6 +39,9 @@ public class StorageServiceImpl implements StorageService {
     public Resource load(String id) {
         try {
             GridFSFile gridFSFile = this.fileRepository.findById(id);
+            if (gridFSFile == null) {
+                throw new GetException("No file");
+            }
             return gridFsOperations.getResource(gridFSFile);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
