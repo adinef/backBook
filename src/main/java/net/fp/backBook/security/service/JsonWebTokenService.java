@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,17 +44,14 @@ public class JsonWebTokenService implements TokenService {
         }
         Map<String, Object> tokenData = new HashMap<>();
         if (password.equals(user.getPassword())) {
-            tokenData.put("clientType", "user");
             tokenData.put("userID", user.getId());
             tokenData.put("username", user.getUsername());
             tokenData.put("authorities", user.getAuthorities());
-            LocalDateTime createDate = LocalDateTime.now();
-            tokenData.put("token_create_date", createDate);
-            LocalDateTime expirationDate = createDate.plusMinutes(tokenExpirationTime);
-            tokenData.put("token_expiration_date", expirationDate.format(DateTimeFormatter.ISO_DATE_TIME));
             JwtBuilder jwtBuilder = Jwts.builder();
-            jwtBuilder.setExpiration(Date.from(expirationDate.atZone(ZoneId.systemDefault()).toInstant()));
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.MINUTE, tokenExpirationTime);
             jwtBuilder.setClaims(tokenData);
+            jwtBuilder.setExpiration(calendar.getTime());
             return jwtBuilder.signWith(SignatureAlgorithm.HS512, tokenKey).compact();
 
         } else {

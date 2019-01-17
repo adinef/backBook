@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 
 @Slf4j
 @Service
@@ -79,10 +79,11 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
     }
 
     private LocalDateTime getExpirationTimeFromToken(Jws<Claims> tokenData) {
-        return LocalDateTime.parse(tokenData.getBody().get("token_expiration_date").toString(), DateTimeFormatter.ISO_DATE_TIME);
+        return tokenData.getBody().getExpiration().toInstant().atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 
-    private String resolveToken(HttpServletRequest request){
+    private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
