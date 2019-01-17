@@ -75,20 +75,30 @@ public class AuthenticationControllerTests {
 
     @Test
     public void testTokenOnWrongDataUnathorized() throws Exception {
+        Credentials cred = Credentials.builder()
+                .login("test")
+                .password("pass")
+                .build();
+
         when(this.tokenService.getToken(anyString(), anyString())).thenThrow(RuntimeException.class);
         mockMvc.perform(post("/auth")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(new Credentials())))
+                .content(objectMapper.writeValueAsString(cred)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void testTokenOnEmptyUnathorized() throws Exception {
-        when(this.tokenService.getToken("test", "pass")).thenReturn(null);
+        Credentials cred = Credentials.builder()
+                .login("test")
+                .password("pass")
+                .build();
+
+        when(this.tokenService.getToken(anyString(), anyString())).thenReturn(null);
         mockMvc.perform(post("/auth")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(new Credentials())))
+                .content(objectMapper.writeValueAsString(cred)))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
     }
