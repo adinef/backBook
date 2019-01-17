@@ -53,7 +53,7 @@ public class RoleController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public RoleDto addRole(@RequestBody RoleDto roleDto) {
         Role role = this.modelMapper.map(roleDto, Role.class);
         //TO DO EXCEPTION HANDLING

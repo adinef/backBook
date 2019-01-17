@@ -66,7 +66,7 @@ public class UserControllerTests {
     private MockMvc mockMvc;
 
     @Before
-    public void setServerAddress() {
+    public void setupTests() {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(userController)
                 .setControllerAdvice(restResponseExceptionHandler)

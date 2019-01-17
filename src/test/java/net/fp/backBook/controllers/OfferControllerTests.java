@@ -1,20 +1,20 @@
 package net.fp.backBook.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.fp.backBook.configuration.HttpResponsesConfig;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.*;
-import net.fp.backBook.exceptions.AddException;
-import net.fp.backBook.exceptions.DeleteException;
-import net.fp.backBook.exceptions.GetException;
-import net.fp.backBook.exceptions.ModifyException;
+import net.fp.backBook.exceptions.*;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.OfferService;
+import net.fp.backBook.services.StorageService;
 import net.fp.backBook.services.UserService;
 import org.apache.tomcat.jni.Local;
+import org.assertj.core.condition.DoesNotHave;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,15 +22,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.modelmapper.ModelMapper;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -67,6 +75,9 @@ public class OfferControllerTests {
     private OfferService offerService;
 
     @Mock
+    private StorageService storageService;
+
+    @Mock
     private ModelMapper modelMapper;
 
     @Autowired
@@ -81,7 +92,7 @@ public class OfferControllerTests {
     private MockMvc mockMvc;
 
     @Before
-    public void setup() {
+    public void setupTests() {
         mockMvc = MockMvcBuilders
                 .standaloneSetup(offerController)
                 .setControllerAdvice(restResponseExceptionHandler)
@@ -1363,4 +1374,177 @@ public class OfferControllerTests {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").isNotEmpty());
     }
+
+    /*
+    * Files handling tests below
+    *
+     */
+
+    @Test
+    public void testUploadFileSuccessOnSave() throws Exception {
+        Offer offer = Offer.builder().fileId("1").build();
+        MockMultipartFile multipartFile =
+                new MockMultipartFile("file", "file.data",
+                        "text/plain", "data type".getBytes());
+        when(this.storageService.store(any(MultipartFile.class)))
+                .thenReturn("1");
+        doNothing().when(this.storageService).delete("1");
+        when(this.offerService.getById("1")).thenReturn(offer);
+        when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        mockMvc.perform(multipart("/offers/1/file")
+                .file(multipartFile))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    public void testUploadFileNotAcceptableOnStorageServiceException() throws Exception {
+        MockMultipartFile multipartFile =
+                new MockMultipartFile("file", "file.data",
+                        "text/plain", "data type".getBytes());
+        Offer offer = Offer.builder().fileId("1").build();
+        when(this.storageService.store(any(MultipartFile.class)))
+                .thenThrow(RuntimeException.class);
+        doNothing().when(this.storageService).delete("1");
+        when(this.offerService.getById("1")).thenReturn(offer);
+        when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        mockMvc.perform(multipart("/offers/1/file")
+                .file(multipartFile))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testUploadFileNotAcceptableOnStorageServiceDeleteException() throws Exception {
+        MockMultipartFile multipartFile =
+                new MockMultipartFile("file", "file.data",
+                        "text/plain", "data type".getBytes());
+        Offer offer = Offer.builder().fileId("1").build();
+        when(this.storageService.store(any(MultipartFile.class)))
+                .thenReturn("1");
+        doThrow(RuntimeException.class).when(this.storageService).delete("1");
+        when(this.offerService.getById("1")).thenReturn(offer);
+        when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        mockMvc.perform(multipart("/offers/1/file")
+                .file(multipartFile))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testUploadFileNotAcceptableOnOfferServiceGetException() throws Exception {
+        MockMultipartFile multipartFile =
+                new MockMultipartFile("file", "file.data",
+                        "text/plain", "data type".getBytes());
+        when(this.offerService.getById("1"))
+                .thenThrow(GetException.class);
+        when(this.storageService.store(any(MultipartFile.class)))
+                .thenReturn("1");
+        doNothing().when(this.storageService).delete("1");
+        mockMvc.perform(multipart("/offers/1/file")
+                .file(multipartFile))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testUploadFileNotAcceptableOnOfferServiceModifyException() throws Exception {
+        Offer offer = mock(Offer.class);
+        MockMultipartFile multipartFile =
+                new MockMultipartFile("file", "file.data",
+                        "text/plain", "data type".getBytes());
+        when(this.offerService.modify(any(Offer.class)))
+                .thenThrow(ModifyException.class);
+        when(this.offerService.getById(anyString())).thenReturn(offer);
+        when(this.storageService.store(any(MultipartFile.class)))
+                .thenReturn("1");
+        doNothing().when(this.storageService).delete("1");
+        mockMvc.perform(multipart("/offers/1/file")
+                .file(multipartFile))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testGetFileReturnsResource() throws Exception {
+        Resource resource = new ByteArrayResource(new byte[] {1, 2, 3});
+        Offer offer = Offer.builder().fileId("1").build();
+        when(offerService.getById("1")).thenReturn(offer);
+        when(storageService.load("1")).thenReturn(resource);
+        mockMvc.perform(get("/offers/1/file"))
+                .andDo(print())
+                .andExpect(content().contentType(MediaType.IMAGE_PNG_VALUE))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetFileNotFoundOnStorageServiceLoadException() throws Exception {
+        Offer offer = Offer.builder().fileId("1").build();
+        when(offerService.getById("1")).thenReturn(offer);
+        when(storageService.load("1")).thenThrow(FileNotFound.class);
+        mockMvc.perform(get("/offers/1/file"))
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testGetFileBadRequestOnOfferServiceGetByIdException() throws Exception {
+        when(offerService.getById("1")).thenThrow(GetException.class);
+        mockMvc.perform(get("/offers/1/file"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteFileSuccess() throws Exception {
+        Offer offer = Offer.builder().fileId("1").build();
+        doNothing().when(this.storageService).delete("1");
+        when(this.offerService.getById("1")).thenReturn(offer);
+        when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        mockMvc.perform(delete("/offers/1/file"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDeleteFileNotAcceptableOnStorageServiceException() throws Exception {
+        Offer offer = Offer.builder().fileId("1").build();
+        doThrow(RuntimeException.class).when(this.storageService).delete("1");
+        when(this.offerService.getById("1")).thenReturn(offer);
+        mockMvc.perform(delete("/offers/1/file"))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteFileNotAcceptableOnOfferServiceGetException() throws Exception {
+        when(this.offerService.getById("1"))
+                .thenThrow(GetException.class);
+        when(this.storageService.store(any(MultipartFile.class)))
+                .thenReturn("1");
+        mockMvc.perform(delete("/offers/1/file"))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteFileNotAcceptableOnOfferServiceModifyException() throws Exception {
+        Offer offer = mock(Offer.class);
+        when(this.offerService.modify(any(Offer.class)))
+                .thenThrow(ModifyException.class);
+        when(this.offerService.getById(anyString())).thenReturn(offer);
+        mockMvc.perform(delete("/offers/1/file"))
+                .andDo(print())
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
 }
