@@ -24,11 +24,10 @@ public class BasicUserDetailsService implements UserDetailsService {
         try {
             return userService.getUserByLogin(username);
         } catch (Exception e) {
-            String message = new StringBuilder()
-                    .append("User with username: ")
-                    .append(username)
-                    .append(" not found").toString();
-            throw new UsernameNotFoundException(message);
+            throw new UsernameNotFoundException(
+                    "User with username "
+                            .concat(username)
+                            .concat(" not found!"));
         }
     }
 }

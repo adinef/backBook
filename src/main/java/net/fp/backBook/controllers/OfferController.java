@@ -5,6 +5,7 @@ import net.fp.backBook.dtos.DatePairDto;
 import net.fp.backBook.dtos.OfferDto;
 import net.fp.backBook.dtos.OfferSearchFilter;
 import net.fp.backBook.exceptions.AddException;
+import net.fp.backBook.exceptions.FileProcessingException;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Offer;
@@ -184,17 +185,44 @@ public class OfferController {
         offerService.delete(id);
     }
 
+    /*
+    * Files handling below.
+    *
+     */
     @PostMapping(
             value = "/{id}/file",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public void uploadFile(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
-        Offer offer = this.offerService.getById(id);
-        this.storageService.delete(offer.getFileId());
-        String fileId = this.storageService.store(file);
+        Offer offer;
+        try {
+            offer = this.offerService.getById(id);
+        } catch (final Exception e) {
+            throw new FileProcessingException("Exception during offer retrieval. "
+                    + e.getMessage());
+        }
+        try {
+            this.storageService.delete(offer.getFileId());
+        } catch (final Exception e) {
+            throw new FileProcessingException("Exception during file deletion. "
+                    + e.getMessage());
+        }
+        String fileId;
+        try {
+            fileId = this.storageService.store(file);
+        } catch (final Exception e) {
+            throw new FileProcessingException("Exception during file persistence. "
+                    + e.getMessage());
+        }
         offer.setFileId(fileId);
-        this.offerService.modify(offer);
+        try {
+            this.offerService.modify(offer);
+        } catch (final Exception e) {
+            this.storageService.delete(fileId);
+            throw new FileProcessingException("Exception during modification of offer. "
+                    + e.getMessage());
+        }
     }
 
     @GetMapping(
@@ -212,10 +240,27 @@ public class OfferController {
     )
     @ResponseStatus(HttpStatus.OK)
     public void deleteFile(@PathVariable("id") String id) {
-        Offer offer = this.offerService.getById(id);
-        this.storageService.delete(offer.getFileId());
+        Offer offer;
+        try {
+            offer = this.offerService.getById(id);
+        } catch (final Exception e) {
+            throw new FileProcessingException("Exception during offer retrieval. "
+                    + e.getMessage());
+        }
+        try {
+
+            this.storageService.delete(offer.getFileId());
+        } catch (final Exception e) {
+            throw new FileProcessingException("Exception during file persistence retrieval. "
+                    + e.getMessage());
+        }
         offer.setFileId(null);
-        this.offerService.modify(offer);
+        try {
+            this.offerService.modify(offer);
+        } catch (final Exception e) {
+            throw new FileProcessingException("Exception during modification of offer. "
+                    + e.getMessage());
+        }
     }
     private OfferDto MapSingleToDto(Offer offer) {
         return modelMapper.map(offer, OfferDto.class);

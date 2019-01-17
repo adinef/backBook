@@ -56,4 +56,10 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
         ErrorDto responseString = new ErrorDto("Error during file download (GET METHOD). " + e.getMessage());
         return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.NOT_FOUND, request);
     }
+
+    @ExceptionHandler( value = {FileProcessingException.class})
+    protected ResponseEntity<Object> handleFileProcessingError(RuntimeException e, WebRequest request) {
+        ErrorDto responseString = new ErrorDto("Error during file procesing (POST/DELETE). " + e.getMessage());
+        return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.NOT_ACCEPTABLE, request);
+    }
 }
