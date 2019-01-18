@@ -134,4 +134,18 @@ public class RoleServiceTests {
         this.roleService.modify(role);
         verify(this.roleRepository).save(role);
     }
+
+    @Test
+    public void testGetByName() {
+        Role role = mock(Role.class);
+        when(this.roleRepository.findByName(anyString())).thenReturn(Optional.of(role));
+        Assert.assertEquals(role, this.roleService.getByName(anyString()));
+        verify(this.roleRepository).findByName(anyString());
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetByNameThrowsOnRuntimeException() {
+        when(this.roleRepository.findByName(anyString())).thenThrow(RuntimeException.class);
+        this.roleService.getByName(anyString());
+    }
 }

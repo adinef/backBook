@@ -1,6 +1,7 @@
 package net.fp.backBook.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Role implements Serializable, GrantedAuthority {
     @Transient
     private static final long serialVersionUID = 32994189510287583L;
