@@ -26,6 +26,8 @@ public class OfferDto {
 
     private UserViewDto offerOwner;
 
+    private CategoryDto category;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
 

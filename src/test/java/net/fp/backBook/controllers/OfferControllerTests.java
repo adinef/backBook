@@ -8,6 +8,7 @@ import net.fp.backBook.configuration.HttpResponsesConfig;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.*;
 import net.fp.backBook.exceptions.*;
+import net.fp.backBook.model.Category;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.OfferService;
@@ -139,14 +140,84 @@ public class OfferControllerTests {
 
     @Test
     public void testGetByIdReturns() throws Exception {
-        Offer offer = Offer.builder().offerName("test").build();
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
+        User fakeUser = User.builder()
+                .id("1")
+                .email("email")
+                .password("password")
+                .login("login")
+                .lastName("lastName")
+                .name("name")
+                .build();
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
+                .id("1")
+                .email("email")
+                .lastName("lastName")
+                .name("name")
+                .build();
+        List<Offer> offers = new ArrayList<>();
+        Offer offer = Offer.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwner(fakeUser)
+                .category(category)
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .fileId("2")
+                .build();
+        OfferDto offerDto = OfferDto.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .url("/2")
+                .build();
         when(offerService.getById(anyString())).thenReturn(offer);
-        when(modelMapper.map(offer, OfferDto.class)).thenReturn(OfferDto.builder().offerName("test").build());
+        when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
         String path = "/offers/xxx";
         mockMvc.perform(get(path))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.offerName").value("test"));
+                .andExpect(jsonPath("$.id").value("1"))
+                .andExpect(jsonPath("$.bookTitle").value("title"))
+                .andExpect(jsonPath("$.bookReleaseYear").value("1111"))
+                .andExpect(jsonPath("$.offerName").value("name"))
+                .andExpect(jsonPath("$.offerOwner.id").value("1"))
+                .andExpect(jsonPath("$.offerOwner.email").value("email"))
+                .andExpect(jsonPath("$.offerOwner.lastName").value("lastName"))
+                .andExpect(jsonPath("$.createdAt").value(
+                        dtF.format(offerDto.getCreatedAt()))
+                )
+                .andExpect(jsonPath("$.expires").value(
+                        dtF.format(offerDto.getExpires()))
+                )
+                .andExpect(jsonPath("$.active").value("true"))
+                .andExpect(jsonPath("$.city").value("city"))
+                .andExpect(jsonPath("$.voivodeship").value("voiv"))
+                .andExpect(jsonPath("$.url").value("/2"))
+                .andExpect(jsonPath("$.category.id").value("1"))
+                .andExpect(jsonPath("$.category.name").value("category"));
         verify(offerService).getById(anyString());
     }
 
@@ -198,6 +269,14 @@ public class OfferControllerTests {
     }
     @Test
     public void testGetByTitleReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -220,6 +299,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -234,6 +314,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -248,6 +329,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -262,6 +344,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -299,6 +382,8 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
                 .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[1].id").value("2"))
                 .andExpect(jsonPath("$[1].bookTitle").value("title"))
                 .andExpect(jsonPath("$[1].bookReleaseYear").value("1111"))
@@ -315,7 +400,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"));
+                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].category.id").value("1"))
+                .andExpect(jsonPath("$[1].category.name").value("category"));
         verify(offerService).getAllByBookTitle(anyString());
     }
 
@@ -331,6 +418,14 @@ public class OfferControllerTests {
 
     @Test
     public void testGetByPublisherReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -353,6 +448,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -367,6 +463,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -381,6 +478,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -395,6 +493,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -432,6 +531,8 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
                 .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[1].id").value("2"))
                 .andExpect(jsonPath("$[1].bookTitle").value("title"))
                 .andExpect(jsonPath("$[1].bookReleaseYear").value("1111"))
@@ -448,7 +549,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"));
+                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].category.id").value("1"))
+                .andExpect(jsonPath("$[1].category.name").value("category"));
         verify(offerService).getAllByBookPublisher(anyString());
     }
 
@@ -464,6 +567,14 @@ public class OfferControllerTests {
 
     @Test
     public void testGetByCityReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -486,6 +597,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -500,6 +612,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -514,6 +627,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -528,6 +642,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -565,6 +680,8 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
                 .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[1].id").value("2"))
                 .andExpect(jsonPath("$[1].bookTitle").value("title"))
                 .andExpect(jsonPath("$[1].bookReleaseYear").value("1111"))
@@ -581,7 +698,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"));
+                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].category.id").value("1"))
+                .andExpect(jsonPath("$[1].category.name").value("category"));
         verify(offerService).getAllByCity(anyString());
     }
 
@@ -597,6 +716,14 @@ public class OfferControllerTests {
 
     @Test
     public void testGetByVoivodeshipReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -619,6 +746,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -633,6 +761,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -647,6 +776,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -661,6 +791,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -698,6 +829,8 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
                 .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[1].id").value("2"))
                 .andExpect(jsonPath("$[1].bookTitle").value("title"))
                 .andExpect(jsonPath("$[1].bookReleaseYear").value("1111"))
@@ -714,7 +847,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"));
+                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].category.id").value("1"))
+                .andExpect(jsonPath("$[1].category.name").value("category"));
         verify(offerService).getAllByVoivodeship(anyString());
     }
 
@@ -730,6 +865,14 @@ public class OfferControllerTests {
 
     @Test
     public void testGetByNameReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -752,6 +895,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -766,6 +910,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -780,6 +925,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -794,6 +940,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -831,6 +978,8 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
                 .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[1].id").value("2"))
                 .andExpect(jsonPath("$[1].bookTitle").value("title"))
                 .andExpect(jsonPath("$[1].bookReleaseYear").value("1111"))
@@ -847,7 +996,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"));
+                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].category.id").value("1"))
+                .andExpect(jsonPath("$[1].category.name").value("category"));
         verify(offerService).getAllByOfferName(anyString());
     }
 
@@ -863,6 +1014,14 @@ public class OfferControllerTests {
 
     @Test
     public void testGetByOfferOwnerReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -885,6 +1044,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -899,6 +1059,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -913,6 +1074,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -927,6 +1089,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -965,6 +1128,8 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
                 .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[1].id").value("2"))
                 .andExpect(jsonPath("$[1].bookTitle").value("title"))
                 .andExpect(jsonPath("$[1].bookReleaseYear").value("1111"))
@@ -981,7 +1146,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"));
+                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].category.id").value("1"))
+                .andExpect(jsonPath("$[1].category.name").value("category"));
         verify(offerService).getAllByOfferOwner(any(User.class));
     }
 
@@ -998,6 +1165,14 @@ public class OfferControllerTests {
 
     @Test
     public void testGetOffersBetweenDatesReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -1019,6 +1194,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1033,6 +1209,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1073,7 +1250,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"));
+                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"));
         verify(offerService).getAllCreatedBetweenDates(
                 any(LocalDateTime.class),
                 any(LocalDateTime.class));
@@ -1094,6 +1273,14 @@ public class OfferControllerTests {
 
     @Test
     public void testGetOffersNotExpiredDatesReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -1115,6 +1302,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1129,6 +1317,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1165,7 +1354,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"));
+                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].category.id").value("1"))
+                .andExpect(jsonPath("$[0].category.name").value("category"));
         verify(offerService).getAllNotExpired(any(LocalDateTime.class));
     }
 
@@ -1182,6 +1373,14 @@ public class OfferControllerTests {
 
     @Test
     public void testAddOfferReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -1203,6 +1402,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1217,6 +1417,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1251,7 +1452,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.active").value("true"))
                 .andExpect(jsonPath("$.city").value("city"))
                 .andExpect(jsonPath("$.voivodeship").value("voiv"))
-                .andExpect(jsonPath("$.url").value("/2"));
+                .andExpect(jsonPath("$.url").value("/2"))
+                .andExpect(jsonPath("$.category.id").value("1"))
+                .andExpect(jsonPath("$.category.name").value("category"));
         verify(offerService).add(offer);
     }
 
@@ -1271,6 +1474,14 @@ public class OfferControllerTests {
 
     @Test
     public void testModifyOfferReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
         User fakeUser = User.builder()
                 .id("1")
                 .email("email")
@@ -1292,6 +1503,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUser)
+                .category(category)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1306,6 +1518,7 @@ public class OfferControllerTests {
                 .bookPublisher("publisher")
                 .offerName("name")
                 .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
                 .createdAt(LocalDateTime.now())
                 .expires(LocalDateTime.now())
                 .active(true)
@@ -1339,7 +1552,9 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.active").value("true"))
                 .andExpect(jsonPath("$.city").value("city"))
                 .andExpect(jsonPath("$.voivodeship").value("voiv"))
-                .andExpect(jsonPath("$.url").value("/2"));
+                .andExpect(jsonPath("$.url").value("/2"))
+                .andExpect(jsonPath("$.category.id").value("1"))
+                .andExpect(jsonPath("$.category.name").value("category"));
         verify(offerService).modify(offer);
     }
 

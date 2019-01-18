@@ -17,4 +17,5 @@ public class OfferSearchFilter {
     private String bookTitle;
     private String bookPublisher;
     private String bookReleaseYear;
+    private CategoryDto category;
 }

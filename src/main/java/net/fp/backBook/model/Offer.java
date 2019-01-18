@@ -35,6 +35,9 @@ public class Offer implements Serializable {
     @DBRef
     private User offerOwner;
 
+    @DBRef
+    private Category category;
+
     @CreatedDate
     private LocalDateTime createdAt;
 

@@ -17,6 +17,7 @@ public class OfferFilter {
                 .withMatcher("offerName", startsWith().ignoreCase())
                 .withMatcher("bookTitle", regex().ignoreCase())
                 .withMatcher("bookPublisher", regex().ignoreCase())
-                .withMatcher("bookReleaseYear", startsWith());
+                .withMatcher("bookReleaseYear", startsWith())
+                .withMatcher("category.name", regex().ignoreCase());
     }
 }

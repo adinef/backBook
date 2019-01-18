@@ -46,7 +46,7 @@ public class CorsFilterTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Access-Control-Allow-Origin", "*"))
-                .andExpect(header().string("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE"))
+                .andExpect(header().string("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS"))
                 .andExpect(header().string("Access-Control-Max-Age", "3600"))
                 .andExpect(header().string("Access-Control-Allow-Headers", "Authorization, Content-Type"))
                 .andExpect(header().string("Access-Control-Expose-Headers", "Authorization, Content-Type"));
