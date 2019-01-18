@@ -5,4 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface RoleService extends BasicCrudService<Role, String>{
+    Role getByName(String name);
 }

@@ -74,4 +74,14 @@ public class RoleServiceImpl implements RoleService {
             throw new DeleteException(e);
         }
     }
+
+    @Override
+    public Role getByName(String name) {
+        try {
+            return this.roleRepository.findByName(name).orElseThrow( () -> new GetException("No role with specified name"));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new GetException(e);
+        }
+    }
 }
