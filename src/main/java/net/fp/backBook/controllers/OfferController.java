@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.DatePairDto;
 import net.fp.backBook.dtos.OfferDto;
 import net.fp.backBook.dtos.OfferSearchFilter;
+import net.fp.backBook.dtos.OfferShortDto;
 import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.FileProcessingException;
 import net.fp.backBook.exceptions.GetException;
@@ -58,6 +59,16 @@ public class OfferController {
         return MapToDto(offers);
     }
 
+    @GetMapping(
+            value = "/short",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferShortDto> getOffersShort() {
+        List<Offer> offers =  offerService.getAll();
+        return MapToShortDto(offers);
+    }
+
     @PostMapping(
             value = "/filter",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -70,12 +81,24 @@ public class OfferController {
         return MapToDto(offers);
     }
 
+    @PostMapping(
+            value = "/short/filter",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferShortDto> getOffersShortOnFilter(@RequestBody OfferSearchFilter filter) {
+        Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
+        List<Offer> offers =  offerService.getByFilter(searchCriteriaOffer);
+        return MapToShortDto(offers);
+    }
+
     @GetMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public OfferDto getOffer(@PathVariable String id) {
         Offer offer = this.offerService.getById(id);
-        return MapSingleToDto(offer);
+        return MapSingleToDto(offer, OfferDto.class);
     }
 
     @GetMapping(value = "/title/{title}",
@@ -159,7 +182,7 @@ public class OfferController {
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
         offer = this.offerService.add(offer);
-        return MapSingleToDto(offer);
+        return MapSingleToDto(offer, OfferDto.class);
     }
 
     @PutMapping(value = "/{id}",
@@ -175,7 +198,7 @@ public class OfferController {
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
         offer = this.offerService.modify(offer);
-        return MapSingleToDto(offer);
+        return (OfferDto)MapSingleToDto(offer, OfferDto.class);
     }
 
     @DeleteMapping(value = "/{id}",
@@ -262,14 +285,25 @@ public class OfferController {
                     + e.getMessage());
         }
     }
-    private OfferDto MapSingleToDto(Offer offer) {
-        return modelMapper.map(offer, OfferDto.class);
+    private <T> T MapSingleToDto(Offer offer, Class<T> cl) {
+        return modelMapper.map(offer, cl);
+    }
+
+    private List<OfferShortDto> MapToShortDto(List<Offer> offers) {
+        List<OfferShortDto> offersShortDto = new ArrayList<>();
+        for(Offer offer : offers) {
+            OfferShortDto mappedOfferDto =
+                    MapSingleToDto(offer, OfferShortDto.class);
+            offersShortDto.add(mappedOfferDto);
+        }
+        return offersShortDto;
     }
 
     private List<OfferDto> MapToDto(List<Offer> offerList) {
         List<OfferDto> offersDto = new ArrayList<>();
         for(Offer offer : offerList) {
-            OfferDto mappedOfferDto = MapSingleToDto(offer);
+            OfferDto mappedOfferDto =
+                    MapSingleToDto(offer, OfferDto.class);
             offersDto.add(mappedOfferDto);
         }
         return offersDto;

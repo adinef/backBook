@@ -129,9 +129,100 @@ public class OfferControllerTests {
     }
 
     @Test
+    public void testGetOffersShortReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
+        User fakeUser = User.builder()
+                .id("1")
+                .email("email")
+                .password("password")
+                .login("login")
+                .lastName("lastName")
+                .name("name")
+                .build();
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
+                .id("1")
+                .email("email")
+                .lastName("lastName")
+                .name("name")
+                .build();
+        Offer offer = Offer.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwner(fakeUser)
+                .category(category)
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .fileId("2")
+                .build();
+        OfferShortDto offerShortDto = OfferShortDto.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwnerName(fakeUserViewDto.getName())
+                .categoryName(categoryDto.getName())
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .url("/2")
+                .build();
+        List<Offer> offers = Arrays.asList(offer);
+        when(offerService.getAll()).thenReturn(offers);
+        when(modelMapper.map(offers.get(0), OfferShortDto.class)).thenReturn(offerShortDto);
+        mockMvc.perform(get("/offers/short"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(jsonPath("$").value(hasSize(1)))
+                .andExpect(jsonPath("$[0].id").value("1"))
+                .andExpect(jsonPath("$[0].bookTitle").value("title"))
+                .andExpect(jsonPath("$[0].bookReleaseYear").value("1111"))
+                .andExpect(jsonPath("$[0].offerName").value("name"))
+                .andExpect(jsonPath("$[0].offerOwnerName").value("name"))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerShortDto.getCreatedAt()))
+                )
+                .andExpect(jsonPath("$[0].expires").value(
+                        dtF.format(offerShortDto.getExpires()))
+                )
+                .andExpect(jsonPath("$[0].active").value("true"))
+                .andExpect(jsonPath("$[0].city").value("city"))
+                .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
+                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].categoryName").value("category"));
+        verify(offerService).getAll();
+    }
+
+    @Test
     public void testGetOffersBadRequestOnGetException() throws Exception {
         when(offerService.getAll()).thenThrow(GetException.class);
         mockMvc.perform(get("/offers"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+        verify(offerService).getAll();
+    }
+
+    @Test
+    public void testGetOffersShortBadRequestOnGetException() throws Exception {
+        when(offerService.getAll()).thenThrow(GetException.class);
+        mockMvc.perform(get("/offers/short"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.error").isNotEmpty());
@@ -162,7 +253,6 @@ public class OfferControllerTests {
                 .lastName("lastName")
                 .name("name")
                 .build();
-        List<Offer> offers = new ArrayList<>();
         Offer offer = Offer.builder()
                 .id("1")
                 .bookTitle("title")
