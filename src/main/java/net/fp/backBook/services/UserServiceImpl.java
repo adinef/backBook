@@ -56,6 +56,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public User add(User user) {
         try {
+            User fetched = userRepository.findByLogin(user.getLogin()).orElse(null);
+            if(fetched != null)
+                throw new AddException("User with that login already exists.");
+            fetched = userRepository.findByEmail(user.getEmail()).orElse(null);
+            if(fetched != null)
+                throw new AddException("User with that e-mail already exists.");
             userRepository.insert(user);
         } catch (final Exception e) {
             log.error("Error during inserting User object, {}", e);
@@ -69,6 +75,12 @@ public class UserServiceImpl implements UserService {
         if(user.getId() == null)
             throw new ModifyException("Id cannot be null for user to be modified.");
         try {
+            User fetched = userRepository.findByLogin(user.getLogin()).orElse(null);
+            if(fetched != null && !fetched.getId().equals(user.getId()))
+                throw new ModifyException("User with that login already exists.");
+            fetched = userRepository.findByEmail(user.getEmail()).orElse(null);
+            if(fetched != null && !fetched.getId().equals(user.getId()))
+                throw new ModifyException("User with that e-mail already exists.");
             userRepository.save(user);
         } catch (final Exception e) {
             log.error("Error during saving User object, {}", e);

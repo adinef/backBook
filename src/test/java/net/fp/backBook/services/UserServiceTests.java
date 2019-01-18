@@ -47,7 +47,7 @@ public class UserServiceTests {
         User user = mock(User.class);
         when(this.userRepository.findById(anyString())).thenReturn(Optional.of(user));
         Assert.assertEquals(user, this.userService.getById(anyString()));
-        verify(this.userRepository, times(1)).findById(anyString());
+        verify(this.userRepository).findById(anyString());
     }
 
     @Test(expected = GetException.class)
@@ -61,7 +61,7 @@ public class UserServiceTests {
         List<User> users = Arrays.asList(mock(User.class), mock(User.class));
         when(this.userRepository.findAll()).thenReturn(users);
         Assert.assertEquals(users, this.userService.getAll());
-        verify(this.userRepository, times(1)).findAll();
+        verify(this.userRepository).findAll();
     }
 
     @Test
@@ -84,7 +84,7 @@ public class UserServiceTests {
         User user = mock(User.class);
         when(this.userRepository.findByLogin(anyString())).thenReturn(Optional.of(user));
         Assert.assertEquals(user, this.userService.getUserByLogin(anyString()));
-        verify(this.userRepository, times(1)).findByLogin(anyString());
+        verify(this.userRepository).findByLogin(anyString());
     }
 
     @Test(expected = GetException.class)
@@ -98,7 +98,7 @@ public class UserServiceTests {
         User user = mock(User.class);
         when(this.userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         Assert.assertEquals(user, this.userService.getUserByEmail(anyString()));
-        verify(this.userRepository, times(1)).findByEmail(anyString());
+        verify(this.userRepository).findByEmail(anyString());
     }
 
     @Test(expected = GetException.class)
@@ -112,7 +112,7 @@ public class UserServiceTests {
         User user = mock(User.class);
         when(this.userRepository.findByLoginAndPassword(anyString(), anyString())).thenReturn(Optional.of(user));
         Assert.assertEquals(user, this.userService.getUserByLoginAndPassword(anyString(), anyString()));
-        verify(this.userRepository, times(1)).findByLoginAndPassword(anyString(), anyString());
+        verify(this.userRepository).findByLoginAndPassword(anyString(), anyString());
     }
 
     @Test(expected = GetException.class)
@@ -126,7 +126,7 @@ public class UserServiceTests {
         User user = mock(User.class);
         when(this.userRepository.insert(user)).thenReturn(user);
         Assert.assertEquals(user, this.userService.add(user));
-        verify(this.userRepository, times(1)).insert(user);
+        verify(this.userRepository).insert(user);
     }
 
     @Test(expected = AddException.class)
@@ -136,12 +136,26 @@ public class UserServiceTests {
         this.userService.add(user);
     }
 
+    @Test(expected = AddException.class)
+    public void testAddUserThrowsGetOnUserWithLoginExists() {
+        User user = User.builder().login("test").build();
+        when(this.userRepository.findByLogin(user.getLogin())).thenReturn(Optional.of(user));
+        this.userService.add(user);
+    }
+
+    @Test(expected = AddException.class)
+    public void testAddUserThrowsGetOnUserWithEmailExists() {
+        User user = User.builder().email("test").build();
+        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        this.userService.add(user);
+    }
+
     @Test
     public void testDeleteUser() {
         User user = User.builder().id("1").build();
         doNothing().when(this.userRepository).deleteById(user.getId());
         this.userService.delete(user.getId());
-        verify(this.userRepository, times(1)).deleteById(user.getId());
+        verify(this.userRepository).deleteById(user.getId());
     }
 
     @Test(expected = DeleteException.class)
@@ -156,7 +170,41 @@ public class UserServiceTests {
         User user = User.builder().id("1").build();
         when(this.userRepository.save(user)).thenReturn(user);
         Assert.assertEquals(user, this.userService.modify(user));
-        verify(this.userRepository, times(1)).save(user);
+        verify(this.userRepository).save(user);
+    }
+
+    @Test
+    public void testModifyUserReturnsWhenIdTheSameAndLoginChanged() {
+        User user = User.builder().id("1").login("test").build();
+        User user2 = User.builder().id("1").login("test2").build();
+        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user2));
+        when(this.userRepository.save(user)).thenReturn(user);
+        this.userService.modify(user);
+    }
+
+    @Test
+    public void testModifyUserReturnsWhenIdTheSameAndEmailChanged() {
+        User user = User.builder().id("1").email("test").build();
+        User user2 = User.builder().id("1").email("test2").build();
+        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user2));
+        when(this.userRepository.save(user)).thenReturn(user);
+        this.userService.modify(user);
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testModifyUserThrowsGetOnUserWithLoginExists() {
+        User user = User.builder().id("1").login("test").build();
+        User user2 = User.builder().id("2").login("test").build();
+        when(this.userRepository.findByLogin(user.getLogin())).thenReturn(Optional.of(user2));
+        this.userService.modify(user);
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testModifyUserThrowsGetOnUserWithEmailExists() {
+        User user = User.builder().id("1").email("test").build();
+        User user2 = User.builder().id("2").email("test").build();
+        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user2));
+        this.userService.modify(user);
     }
 
     @Test(expected = ModifyException.class)
