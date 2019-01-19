@@ -37,10 +37,6 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
         String token = this.resolveToken(request);
         Jws<Claims> tokenData = parseToken(token);
         if (tokenData != null) {
-            if (this.getExpirationTimeFromToken(tokenData).isBefore(LocalDateTime.now())) {
-                log.info("Token expired");
-                throw new TokenExpiredException("Token expired");
-            }
             try {
                 User user = getUserFromToken(tokenData);
                 return new UserAuthentication(user);
@@ -76,11 +72,6 @@ public class JsonWebTokenAuthenticationService implements TokenAuthenticationSer
     private User getUserFromToken(Jws<Claims> tokenData) {
         return (User) userDetailsService
                 .loadUserByUsername(tokenData.getBody().get("username").toString());
-    }
-
-    private LocalDateTime getExpirationTimeFromToken(Jws<Claims> tokenData) {
-        return tokenData.getBody().getExpiration().toInstant().atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
     }
 
     private String resolveToken(HttpServletRequest request) {

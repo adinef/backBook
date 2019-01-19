@@ -1,7 +1,5 @@
 package net.fp.backBook.security.fiter;
 
-import net.fp.backBook.dtos.ErrorDto;
-import net.fp.backBook.exceptions.TokenExpiredException;
 import net.fp.backBook.security.service.TokenAuthenticationService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,15 +21,9 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        try {
-            Authentication authentication = authenticationService.authenticate(httpServletRequest);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-            SecurityContextHolder.getContext().setAuthentication(null);
-        } catch (TokenExpiredException e) {
-            httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            httpServletResponse.setHeader("Content-Type", "application/json");
-            httpServletResponse.getOutputStream().println( new ErrorDto(e.getMessage()).getJsonMessage() );
-        }
+        Authentication authentication = authenticationService.authenticate(httpServletRequest);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
+        SecurityContextHolder.getContext().setAuthentication(null);
     }
 }
