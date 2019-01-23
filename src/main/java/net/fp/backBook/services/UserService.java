@@ -6,6 +6,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService extends BasicCrudService<User, String> {
     User getUserByLogin(String login);
-    User getUserByLoginAndPassword(String login, String password);
     User getUserByEmail(String email);
 }

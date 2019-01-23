@@ -108,20 +108,6 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testGetByLoginAndPassword() {
-        User user = mock(User.class);
-        when(this.userRepository.findByLoginAndPassword(anyString(), anyString())).thenReturn(Optional.of(user));
-        Assert.assertEquals(user, this.userService.getUserByLoginAndPassword(anyString(), anyString()));
-        verify(this.userRepository).findByLoginAndPassword(anyString(), anyString());
-    }
-
-    @Test(expected = GetException.class)
-    public void testGetByLoginAndPasswordThrowsOnRuntimeException() {
-        when(this.userRepository.findByLoginAndPassword(anyString(), anyString())).thenThrow(RuntimeException.class);
-        this.userService.getUserByLoginAndPassword(anyString(), anyString());
-    }
-
-    @Test
     public void testAddUser() {
         User user = mock(User.class);
         when(this.userRepository.insert(user)).thenReturn(user);

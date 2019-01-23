@@ -102,18 +102,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByLoginAndPassword(String login, String password) {
-        try {
-            return userRepository
-                    .findByLoginAndPassword(login, password)
-                    .orElseThrow( () -> new GetException("Cannot find user by login and password."));
-        } catch (final Exception e) {
-            log.error("Error during getting User objects by Login and Password, {}", e);
-            throw new GetException(e.getMessage());
-        }
-    }
-
-    @Override
     public User getUserByEmail(String email) {
         try {
             return userRepository

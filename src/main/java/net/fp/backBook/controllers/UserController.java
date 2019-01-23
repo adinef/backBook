@@ -68,17 +68,6 @@ public class UserController {
         return MapSingleToDto(user);
     }
 
-    @PostMapping(value = "/credentials",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public UserViewDto getUserByCredentials(@RequestBody Credentials credentials) {
-        if(credentials.getLogin() == null || credentials.getPassword() == null)
-            throw new GetException("One or more of credentials are empty");
-        User user = this.userService.getUserByLoginAndPassword(credentials.getLogin(), credentials.getPassword());
-        return MapSingleToDto(user);
-    }
-
     @PostMapping(value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)

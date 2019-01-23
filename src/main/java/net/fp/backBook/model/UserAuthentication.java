@@ -1,5 +1,6 @@
 package net.fp.backBook.model;
 
+import net.fp.backBook.dtos.Credentials;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -22,18 +23,18 @@ public class UserAuthentication implements Authentication {
     }
 
     @Override
-    public Object getCredentials() {
-        return user.getPassword();
+    public Credentials getCredentials() {
+        return new Credentials(this.user.getLogin(), this.user.getPassword());
     }
 
     @Override
-    public Object getDetails() {
+    public User getDetails() {
         return user;
     }
 
     @Override
-    public Object getPrincipal() {
-        return user.getUsername();
+    public User getPrincipal() {
+        return user;
     }
 
     @Override
@@ -48,7 +49,7 @@ public class UserAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return user.getUsername();
+        return user.getLogin();
     }
 
     public User getUser() {
