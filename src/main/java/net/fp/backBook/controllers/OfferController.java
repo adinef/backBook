@@ -5,10 +5,7 @@ import net.fp.backBook.dtos.DatePairDto;
 import net.fp.backBook.dtos.OfferDto;
 import net.fp.backBook.dtos.OfferSearchFilter;
 import net.fp.backBook.dtos.OfferShortDto;
-import net.fp.backBook.exceptions.AddException;
-import net.fp.backBook.exceptions.FileProcessingException;
-import net.fp.backBook.exceptions.GetException;
-import net.fp.backBook.exceptions.ModifyException;
+import net.fp.backBook.exceptions.*;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.OfferService;
@@ -218,33 +215,26 @@ public class OfferController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public void uploadFile(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
-        Offer offer;
+        String fileId = null;
         try {
-            offer = this.offerService.getById(id);
-        } catch (final Exception e) {
-            throw new FileProcessingException("Exception during offer retrieval. "
-                    + e.getMessage());
-        }
-        try {
+            Offer offer = offer = this.offerService.getById(id);
             this.storageService.delete(offer.getFileId());
-        } catch (final Exception e) {
-            throw new FileProcessingException("Exception during file deletion. "
-                    + e.getMessage());
-        }
-        String fileId;
-        try {
             fileId = this.storageService.store(file);
-        } catch (final Exception e) {
-            throw new FileProcessingException("Exception during file persistence. "
-                    + e.getMessage());
-        }
-        offer.setFileId(fileId);
-        try {
+            offer.setFileId(fileId);
             this.offerService.modify(offer);
-        } catch (final Exception e) {
+        } catch( final GetException getExc) {
+            throw new FileProcessingException("Exception during offer retrieval. "
+                    + getExc.getMessage());
+        } catch (final DeleteException delExc) {
+            throw new FileProcessingException("Exception during file deletion. "
+                    + delExc.getMessage());
+        } catch( final AddException addExc) {
+            throw new FileProcessingException("Exception during file persistence. "
+                    + addExc.getMessage());
+        } catch (final ModifyException modExc) {
             this.storageService.delete(fileId);
             throw new FileProcessingException("Exception during modification of offer. "
-                    + e.getMessage());
+                    + modExc.getMessage());
         }
     }
 
@@ -263,26 +253,23 @@ public class OfferController {
     )
     @ResponseStatus(HttpStatus.OK)
     public void deleteFile(@PathVariable("id") String id) {
-        Offer offer;
-        try {
-            offer = this.offerService.getById(id);
-        } catch (final Exception e) {
-            throw new FileProcessingException("Exception during offer retrieval. "
-                    + e.getMessage());
-        }
-        try {
 
-            this.storageService.delete(offer.getFileId());
-        } catch (final Exception e) {
-            throw new FileProcessingException("Exception during file persistence retrieval. "
-                    + e.getMessage());
-        }
-        offer.setFileId(null);
+        String fileId = null;
         try {
+            Offer offer = offer = this.offerService.getById(id);
+            this.storageService.delete(offer.getFileId());
+            offer.setFileId(null);
             this.offerService.modify(offer);
-        } catch (final Exception e) {
+        } catch( final GetException getExc) {
+            throw new FileProcessingException("Exception during offer retrieval. "
+                    + getExc.getMessage());
+        } catch (final DeleteException delExc) {
+            throw new FileProcessingException("Exception during file deletion. "
+                    + delExc.getMessage());
+        } catch (final ModifyException modExc) {
+            this.storageService.delete(fileId);
             throw new FileProcessingException("Exception during modification of offer. "
-                    + e.getMessage());
+                    + modExc.getMessage());
         }
     }
     private <T> T MapSingleToDto(Offer offer, Class<T> cl) {

@@ -1709,7 +1709,7 @@ public class OfferControllerTests {
                         "text/plain", "data type".getBytes());
         Offer offer = Offer.builder().fileId("1").build();
         when(this.storageService.store(any(MultipartFile.class)))
-                .thenThrow(RuntimeException.class);
+                .thenThrow(AddException.class);
         doNothing().when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
         when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
@@ -1728,7 +1728,7 @@ public class OfferControllerTests {
         Offer offer = Offer.builder().fileId("1").build();
         when(this.storageService.store(any(MultipartFile.class)))
                 .thenReturn("1");
-        doThrow(RuntimeException.class).when(this.storageService).delete("1");
+        doThrow(DeleteException.class).when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
         when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
         mockMvc.perform(multipart("/offers/1/file")
@@ -1820,7 +1820,7 @@ public class OfferControllerTests {
     @Test
     public void testDeleteFileNotAcceptableOnStorageServiceException() throws Exception {
         Offer offer = Offer.builder().fileId("1").build();
-        doThrow(RuntimeException.class).when(this.storageService).delete("1");
+        doThrow(DeleteException.class).when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
         mockMvc.perform(delete("/offers/1/file"))
                 .andDo(print())
