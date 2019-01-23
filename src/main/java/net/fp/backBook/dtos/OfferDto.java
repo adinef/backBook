@@ -28,6 +28,8 @@ public class OfferDto {
 
     private CategoryDto category;
 
+    private String description;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime createdAt;
 

@@ -38,6 +38,8 @@ public class Offer implements Serializable {
     @DBRef
     private Category category;
 
+    private String description;
+
     @CreatedDate
     private LocalDateTime createdAt;
 
