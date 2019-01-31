@@ -1,7 +1,6 @@
 package net.fp.backBook.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.fp.backBook.config.MongoTestingConfig;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.Credentials;
 import net.fp.backBook.security.service.TokenService;
