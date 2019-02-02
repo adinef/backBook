@@ -118,7 +118,7 @@ public class UserControllerTests {
                 .param("limit", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$").value(hasSize(1)));
+                .andExpect(jsonPath("$.content").value(hasSize(1)));
         verify(userService).getUsersByPage(1, 1);
     }
 
@@ -131,7 +131,7 @@ public class UserControllerTests {
                 .param("limit", "2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(jsonPath("$.content").isEmpty());
         verify(userService).getUsersByPage(1, 2);
     }
 

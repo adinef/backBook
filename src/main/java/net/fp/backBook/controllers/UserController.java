@@ -11,6 +11,7 @@ import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -50,10 +51,9 @@ public class UserController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public List<UserViewDto> getUsersByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
+    public Page<UserViewDto> getUsersByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
         Page<User> usersPage =  userService.getUsersByPage(page, limit);
-        List<User> users =  usersPage.getContent();
-        return MapToDto(users);
+        return MapToPageDto(usersPage);
     }
 
     @GetMapping(value = "/{id}",
@@ -123,5 +123,15 @@ public class UserController {
             usersDto.add(mappedOfferDto);
         }
         return usersDto;
+    }
+
+    private Page<UserViewDto> MapToPageDto(Page<User> usersPage) {
+        List<UserViewDto> usersDto = new ArrayList<>();
+        for(User user : usersPage) {
+            UserViewDto mappedOfferDto = MapSingleToDto(user);
+            usersDto.add(mappedOfferDto);
+        }
+        Page<UserViewDto> page = new PageImpl<>(usersDto);
+        return page;
     }
 }

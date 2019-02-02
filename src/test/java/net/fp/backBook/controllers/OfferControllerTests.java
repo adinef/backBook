@@ -143,7 +143,7 @@ public class OfferControllerTests {
                 .param("limit", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$").value(hasSize(1)));
+                .andExpect(jsonPath("$.content").value(hasSize(1)));
         verify(offerService).getAllOffersByPage(1, 1);
     }
 
@@ -156,7 +156,7 @@ public class OfferControllerTests {
                 .param("limit", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(jsonPath("$.content").isEmpty());
         verify(offerService).getAllOffersByPage(1, 1);
     }
 
@@ -334,23 +334,23 @@ public class OfferControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andDo(print())
-                .andExpect(jsonPath("$").value(hasSize(1)))
-                .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].bookTitle").value("title"))
-                .andExpect(jsonPath("$[0].bookReleaseYear").value("1111"))
-                .andExpect(jsonPath("$[0].offerName").value("name"))
-                .andExpect(jsonPath("$[0].offerOwnerName").value("name"))
-                .andExpect(jsonPath("$[0].createdAt").value(
+                .andExpect(jsonPath("$.content").value(hasSize(1)))
+                .andExpect(jsonPath("$.content[0].id").value("1"))
+                .andExpect(jsonPath("$.content[0].bookTitle").value("title"))
+                .andExpect(jsonPath("$.content[0].bookReleaseYear").value("1111"))
+                .andExpect(jsonPath("$.content[0].offerName").value("name"))
+                .andExpect(jsonPath("$.content[0].offerOwnerName").value("name"))
+                .andExpect(jsonPath("$.content[0].createdAt").value(
                         dtF.format(offerShortDto.getCreatedAt()))
                 )
-                .andExpect(jsonPath("$[0].expires").value(
+                .andExpect(jsonPath("$.content[0].expires").value(
                         dtF.format(offerShortDto.getExpires()))
                 )
-                .andExpect(jsonPath("$[0].active").value("true"))
-                .andExpect(jsonPath("$[0].city").value("city"))
-                .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
-                .andExpect(jsonPath("$[0].categoryName").value("category"));
+                .andExpect(jsonPath("$.content[0].active").value("true"))
+                .andExpect(jsonPath("$.content[0].city").value("city"))
+                .andExpect(jsonPath("$.content[0].voivodeship").value("voiv"))
+                .andExpect(jsonPath("$.content[0].url").value("/2"))
+                .andExpect(jsonPath("$.content[0].categoryName").value("category"));
         verify(offerService).getAllOffersByPage(1, 2);
     }
 
@@ -363,7 +363,7 @@ public class OfferControllerTests {
                 .param("limit", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$").isEmpty());
+                .andExpect(jsonPath("$.content").isEmpty());
         verify(offerService).getAllOffersByPage(1, 1);
     }
 

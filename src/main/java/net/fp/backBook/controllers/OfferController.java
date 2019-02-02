@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -62,11 +63,11 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public List<OfferDto> getOffersByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
+    public Page<OfferDto> getOffersByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
         Page<Offer> offersPage =  offerService.getAllOffersByPage(page, limit);
-        List<Offer> offers = offersPage.getContent();
-        return MapToDto(offers);
+        return MapToPageDto(offersPage);
     }
+
 
     @GetMapping(
             value = "/short",
@@ -83,10 +84,9 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
-    public List<OfferShortDto> getOffersShortByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
+    public Page<OfferShortDto> getOffersShortByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
         Page<Offer> offersPage =  offerService.getAllOffersByPage(page, limit);
-        List<Offer> offers = offersPage.getContent();
-        return MapToShortDto(offers);
+        return MapToPageShortDto(offersPage);
     }
 
     @PostMapping(
@@ -309,6 +309,17 @@ public class OfferController {
         return offersShortDto;
     }
 
+    private Page<OfferShortDto> MapToPageShortDto(Page<Offer> offers) {
+        List<OfferShortDto> offersShortDto = new ArrayList<>();
+        for(Offer offer : offers) {
+            OfferShortDto mappedOfferDto =
+                    MapSingleToDto(offer, OfferShortDto.class);
+            offersShortDto.add(mappedOfferDto);
+        }
+        Page<OfferShortDto> page = new PageImpl<>(offersShortDto);
+        return page;
+    }
+
     private List<OfferDto> MapToDto(List<Offer> offerList) {
         List<OfferDto> offersDto = new ArrayList<>();
         for(Offer offer : offerList) {
@@ -317,5 +328,16 @@ public class OfferController {
             offersDto.add(mappedOfferDto);
         }
         return offersDto;
+    }
+
+    private Page<OfferDto> MapToPageDto(Page<Offer> offersPage) {
+        List<OfferDto> offersDto = new ArrayList<>();
+        for(Offer offer : offersPage) {
+            OfferDto mappedOfferDto =
+                    MapSingleToDto(offer, OfferDto.class);
+            offersDto.add(mappedOfferDto);
+        }
+        Page<OfferDto> page = new PageImpl<>(offersDto);
+        return page;
     }
 }
