@@ -14,6 +14,7 @@ import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -57,12 +58,34 @@ public class OfferController {
     }
 
     @GetMapping(
+            value = "p",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferDto> getOffersByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
+        Page<Offer> offersPage =  offerService.getAllOffersByPage(page, limit);
+        List<Offer> offers = offersPage.getContent();
+        return MapToDto(offers);
+    }
+
+    @GetMapping(
             value = "/short",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @ResponseStatus(HttpStatus.OK)
     public List<OfferShortDto> getOffersShort() {
         List<Offer> offers =  offerService.getAll();
+        return MapToShortDto(offers);
+    }
+
+    @GetMapping(
+            value = "/short/p",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferShortDto> getOffersShortByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
+        Page<Offer> offersPage =  offerService.getAllOffersByPage(page, limit);
+        List<Offer> offers = offersPage.getContent();
         return MapToShortDto(offers);
     }
 
@@ -217,7 +240,7 @@ public class OfferController {
     public void uploadFile(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
         String fileId = null;
         try {
-            Offer offer = offer = this.offerService.getById(id);
+            Offer offer = this.offerService.getById(id);
             this.storageService.delete(offer.getFileId());
             fileId = this.storageService.store(file);
             offer.setFileId(fileId);

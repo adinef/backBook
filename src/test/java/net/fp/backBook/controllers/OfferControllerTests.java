@@ -32,6 +32,9 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -126,6 +129,45 @@ public class OfferControllerTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$").isEmpty());
         verify(offerService).getAll();
+    }
+
+    @Test
+    public void testGetOffersByPageReturns() throws Exception {
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        PageRequest pageRequest = PageRequest.of(1, 1);
+        Page<Offer> page = new PageImpl<>(Arrays.asList(offers.get(0)));
+        when(offerService.getAllOffersByPage(1, 1)).thenReturn(page);
+        when(modelMapper.map(offers.get(0), OfferDto.class)).thenReturn(new OfferDto());
+        mockMvc.perform((get("/offers/p")
+                .param("page", "1"))
+                .param("limit", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$").value(hasSize(1)));
+        verify(offerService).getAllOffersByPage(1, 1);
+    }
+
+    @Test
+    public void testGetOffersByPageReturnsEmptyList() throws Exception {
+        List<Offer> offers = Arrays.asList();
+        when(offerService.getAllOffersByPage(1, 1)).thenReturn(new PageImpl<>(offers));
+        mockMvc.perform(get("/offers/p")
+                .param("page", "1")
+                .param("limit", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$").isEmpty());
+        verify(offerService).getAllOffersByPage(1, 1);
+    }
+
+    @Test
+    public void testGetOffersByPageBadRequestOnGetException() throws Exception {
+        when(offerService.getAllOffersByPage(1, 1)).thenThrow(GetException.class);
+        mockMvc.perform(get("/offers/p")
+                .param("page", "1")
+                .param("limit", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
     }
 
     @Test
@@ -227,6 +269,112 @@ public class OfferControllerTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.error").isNotEmpty());
         verify(offerService).getAll();
+    }
+
+    @Test
+    public void testGetOffersShortByPageReturns() throws Exception {
+        Category category = Category.builder()
+                .id("1")
+                .name("category")
+                .build();
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id("1")
+                .name("category")
+                .build();
+        User fakeUser = User.builder()
+                .id("1")
+                .email("email")
+                .password("password")
+                .login("login")
+                .lastName("lastName")
+                .name("name")
+                .build();
+        UserViewDto fakeUserViewDto = UserViewDto.builder()
+                .id("1")
+                .email("email")
+                .lastName("lastName")
+                .name("name")
+                .build();
+        Offer offer = Offer.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwner(fakeUser)
+                .category(category)
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .fileId("2")
+                .build();
+        OfferShortDto offerShortDto = OfferShortDto.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwnerName(fakeUserViewDto.getName())
+                .categoryName(categoryDto.getName())
+                .createdAt(LocalDateTime.now())
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .url("/2")
+                .build();
+        List<Offer> offers = Arrays.asList(offer);
+        when(offerService.getAllOffersByPage(1, 2)).thenReturn(new PageImpl<>(offers));
+        when(modelMapper.map(offers.get(0), OfferShortDto.class)).thenReturn(offerShortDto);
+        mockMvc.perform(get("/offers/short/p")
+                .param("page", "1")
+                .param("limit", "2"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andDo(print())
+                .andExpect(jsonPath("$").value(hasSize(1)))
+                .andExpect(jsonPath("$[0].id").value("1"))
+                .andExpect(jsonPath("$[0].bookTitle").value("title"))
+                .andExpect(jsonPath("$[0].bookReleaseYear").value("1111"))
+                .andExpect(jsonPath("$[0].offerName").value("name"))
+                .andExpect(jsonPath("$[0].offerOwnerName").value("name"))
+                .andExpect(jsonPath("$[0].createdAt").value(
+                        dtF.format(offerShortDto.getCreatedAt()))
+                )
+                .andExpect(jsonPath("$[0].expires").value(
+                        dtF.format(offerShortDto.getExpires()))
+                )
+                .andExpect(jsonPath("$[0].active").value("true"))
+                .andExpect(jsonPath("$[0].city").value("city"))
+                .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
+                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].categoryName").value("category"));
+        verify(offerService).getAllOffersByPage(1, 2);
+    }
+
+    @Test
+    public void testGetOffersShortByPageReturnsEmptyList() throws Exception {
+        List<Offer> offers = Arrays.asList();
+        when(offerService.getAllOffersByPage(1, 1)).thenReturn(new PageImpl<>(offers));
+        mockMvc.perform(get("/offers/short/p")
+                .param("page", "1")
+                .param("limit", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$").isEmpty());
+        verify(offerService).getAllOffersByPage(1, 1);
+    }
+
+    @Test
+    public void testGetOffersShortByPageBadRequestOnGetException() throws Exception {
+        when(offerService.getAllOffersByPage(1, 1)).thenThrow(GetException.class);
+        mockMvc.perform(get("/offers/short/p")
+                .param("page", "1")
+                .param("limit", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
     }
 
     @Test

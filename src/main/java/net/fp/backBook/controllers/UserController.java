@@ -10,6 +10,7 @@ import net.fp.backBook.model.User;
 import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,17 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public List<UserViewDto> getUsers() {
         List<User> users =  userService.getAll();
+        return MapToDto(users);
+    }
+
+    @GetMapping(
+            value = "p",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserViewDto> getUsersByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
+        Page<User> usersPage =  userService.getUsersByPage(page, limit);
+        List<User> users =  usersPage.getContent();
         return MapToDto(users);
     }
 

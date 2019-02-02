@@ -17,8 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -169,6 +168,22 @@ public class OfferServiceTests {
     private ExampleMatcher getMatcher() {
         ExampleMatcher exampleMatcher = new OfferFilter().getMatcher();
         return exampleMatcher;
+    }
+
+    @Test
+    public void testGetByPage() {
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        Page<Offer> page = new PageImpl<Offer>(offers);
+        PageRequest pageRequest = PageRequest.of(1, 2);
+        when(this.offerRepository.findAll(pageRequest)).thenReturn(page);
+        Assert.assertEquals(page, this.offerService.getAllOffersByPage(1, 2));
+        verify(this.offerRepository).findAll(pageRequest);
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetByPageThrowsOnRuntimeException() {
+        when(this.offerRepository.findAll(any(PageRequest.class))).thenThrow(RuntimeException.class);
+        this.offerService.getAllOffersByPage(1, 2);
     }
 
     @Test

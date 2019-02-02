@@ -20,6 +20,9 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.*;
@@ -105,6 +108,22 @@ public class UserServiceTests {
     public void testGetByEmailThrowsOnRuntimeException() {
         when(this.userRepository.findByEmail(anyString())).thenThrow(RuntimeException.class);
         this.userService.getUserByEmail(anyString());
+    }
+
+    @Test
+    public void testGetByPage() {
+        User user = mock(User.class);
+        Page<User> page = new PageImpl<>(Arrays.asList(user));
+        PageRequest pageRequest = PageRequest.of(1, 2);
+        when(this.userRepository.findAll(pageRequest)).thenReturn(page);
+        Assert.assertEquals(page, this.userService.getUsersByPage(1, 2));
+        verify(this.userRepository).findAll(pageRequest);
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetByPageThrowsOnRuntimeException() {
+        when(this.userRepository.findAll(any(PageRequest.class))).thenThrow(RuntimeException.class);
+        this.userService.getUsersByPage(1, 2);
     }
 
     @Test

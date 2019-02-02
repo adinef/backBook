@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -106,6 +107,44 @@ public class UserControllerTests {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.error").isNotEmpty());
         verify(userService).getAll();
+    }
+
+    @Test
+    public void testGetUsersByPageReturns() throws Exception {
+        List<User> users = Arrays.asList(mock(User.class), mock(User.class));
+        when(userService.getUsersByPage(1, 1)).thenReturn(new PageImpl<>(Arrays.asList(users.get(0))));
+        mockMvc.perform(get("/users/p")
+                .param("page", "1")
+                .param("limit", "1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$").value(hasSize(1)));
+        verify(userService).getUsersByPage(1, 1);
+    }
+
+    @Test
+    public void testGetUsersByPageReturnsEmptyList() throws Exception {
+        List<User> users = Arrays.asList();
+        when(userService.getUsersByPage(1, 2)).thenReturn(new PageImpl<>(users));
+        mockMvc.perform((get("/users/p")
+                .param("page", "1"))
+                .param("limit", "2"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$").isEmpty());
+        verify(userService).getUsersByPage(1, 2);
+    }
+
+    @Test
+    public void testGetUsersByPageBadRequestOnGetException() throws Exception {
+        when(userService.getUsersByPage(1, 1)).thenThrow(GetException.class);
+        mockMvc.perform(get("/users/p")
+                .param("page", "1")
+                .param("limit", "1"))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+        verify(userService).getUsersByPage(1, 1);
     }
 
     @Test

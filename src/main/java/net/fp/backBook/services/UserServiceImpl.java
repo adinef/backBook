@@ -8,6 +8,10 @@ import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +43,16 @@ public class UserServiceImpl implements UserService {
             return userRepository.findAll();
         } catch (final Exception e) {
             log.error("Error during getting User objects, {}", e);
+            throw new GetException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Page<User> getUsersByPage( int page, int limit) {
+        try {
+            return userRepository.findAll(PageRequest.of(page, limit));
+        } catch (final Exception e) {
+            log.error("Error during getting User objects by page, {}", e);
             throw new GetException(e.getMessage());
         }
     }

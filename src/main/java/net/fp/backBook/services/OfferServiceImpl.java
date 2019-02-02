@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -173,6 +175,16 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByVoivodeship(voivodeship);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects by voivodeship, {}", e);
+            throw new GetException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Page<Offer> getAllOffersByPage(int page, int limit) {
+        try {
+            return offerRepository.findAll(PageRequest.of(page, limit));
+        } catch (final Exception e) {
+            log.error("Error during getting Offer objects by page, {}", e);
             throw new GetException(e.getMessage());
         }
     }

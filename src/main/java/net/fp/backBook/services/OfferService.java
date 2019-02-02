@@ -2,6 +2,7 @@ package net.fp.backBook.services;
 
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,5 +18,6 @@ public interface OfferService extends BasicCrudService<Offer, String> {
     List<Offer> getAllByOfferOwner(User user);
     List<Offer> getAllByCity(String city);
     List<Offer> getAllByVoivodeship(String voivodeship);
+    Page<Offer> getAllOffersByPage(int page, int limit);
     List<Offer> getByFilter(Offer offer);
 }
