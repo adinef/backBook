@@ -14,6 +14,7 @@ import net.fp.backBook.model.User;
 import net.fp.backBook.services.OfferService;
 import net.fp.backBook.services.StorageService;
 import net.fp.backBook.services.UserService;
+import org.apache.tomcat.jni.File;
 import org.apache.tomcat.jni.Local;
 import org.assertj.core.condition.DoesNotHave;
 import org.junit.Before;
@@ -1817,9 +1818,10 @@ public class OfferControllerTests {
         when(offerService.modify(any(Offer.class))).thenReturn(offer);
         when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
         when(modelMapper.map(any(OfferDto.class), eq(Offer.class))).thenReturn(offer);
+        when(offerService.getById(anyString())).thenReturn(offer);
         String path = "/offers/" + offer.getId();
         mockMvc.perform(put(path)
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .content(objectMapper.writeValueAsString(offerDto)))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -1852,7 +1854,7 @@ public class OfferControllerTests {
         when(offerService.modify(any(Offer.class))).thenThrow(ModifyException.class);
         String path = "/offers/1";
         mockMvc.perform(put(path)
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .content(objectMapper.writeValueAsString(new OfferDto())))
                 .andDo(print())
                 .andExpect(status().isConflict())
@@ -1861,6 +1863,8 @@ public class OfferControllerTests {
 
     @Test
     public void testDeleteOfferSuccess() throws Exception {
+        Offer offer = mock(Offer.class);
+        when(offerService.getById(anyString())).thenReturn(offer);
         doNothing().when(offerService).delete(anyString());
         String path = "/offers/1";
         mockMvc.perform(delete(path))
@@ -1871,6 +1875,8 @@ public class OfferControllerTests {
 
     @Test
     public void testDeleteOfferIsBadRequestDeleteException() throws Exception {
+        Offer offer = mock(Offer.class);
+        when(offerService.getById(anyString())).thenReturn(offer);
         doThrow(DeleteException.class).when(offerService).delete(anyString());
         String path = "/offers/1";
         mockMvc.perform(delete(path))

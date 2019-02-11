@@ -40,8 +40,7 @@ public class OfferController {
             final OfferService offerService,
             final ModelMapper modelMapper,
             final UserService userService,
-            final StorageService storageService
-    ) {
+            final StorageService storageService) {
         this.offerService = offerService;
         this.modelMapper = modelMapper;
         this.userService = userService;
@@ -55,7 +54,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffers() {
         List<Offer> offers =  offerService.getAll();
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @GetMapping(
@@ -65,7 +64,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public Page<OfferDto> getOffersByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
         Page<Offer> offersPage =  offerService.getAllOffersByPage(page, limit);
-        return MapToPageDto(offersPage);
+        return mapToPageDto(offersPage);
     }
 
 
@@ -76,7 +75,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferShortDto> getOffersShort() {
         List<Offer> offers =  offerService.getAll();
-        return MapToShortDto(offers);
+        return mapToShortDto(offers);
     }
 
     @GetMapping(
@@ -86,7 +85,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public Page<OfferShortDto> getOffersShortByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
         Page<Offer> offersPage =  offerService.getAllOffersByPage(page, limit);
-        return MapToPageShortDto(offersPage);
+        return mapToPageShortDto(offersPage);
     }
 
     @PostMapping(
@@ -98,7 +97,7 @@ public class OfferController {
     public List<OfferDto> getOffersOnFilter(@RequestBody OfferSearchFilter filter) {
         Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
         List<Offer> offers =  offerService.getByFilter(searchCriteriaOffer);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @PostMapping(
@@ -110,7 +109,7 @@ public class OfferController {
     public List<OfferShortDto> getOffersShortOnFilter(@RequestBody OfferSearchFilter filter) {
         Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
         List<Offer> offers =  offerService.getByFilter(searchCriteriaOffer);
-        return MapToShortDto(offers);
+        return mapToShortDto(offers);
     }
 
     @GetMapping(value = "/{id}",
@@ -118,7 +117,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public OfferDto getOffer(@PathVariable String id) {
         Offer offer = this.offerService.getById(id);
-        return MapSingleToDto(offer, OfferDto.class);
+        return mapSingleToDto(offer, OfferDto.class);
     }
 
     @GetMapping(value = "/title/{title}",
@@ -126,7 +125,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByBookTitle(@PathVariable String title) {
         List<Offer> offers = this.offerService.getAllByBookTitle(title);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @GetMapping(value = "/publisher/{publisher}",
@@ -134,7 +133,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByBookPublisher(@PathVariable String publisher) {
         List<Offer> offers = this.offerService.getAllByBookPublisher(publisher);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @GetMapping(value = "/user/{id}",
@@ -143,7 +142,7 @@ public class OfferController {
     public List<OfferDto> getOffersByOfferOwner(@PathVariable String id) {
         User user = userService.getById(id);
         List<Offer> offers = this.offerService.getAllByOfferOwner(user);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @GetMapping(value = "/city/{city}",
@@ -151,7 +150,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByCity(@PathVariable String city) {
         List<Offer> offers = this.offerService.getAllByCity(city);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @GetMapping(value = "/voivodeship/{voivodeship}",
@@ -159,7 +158,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByVoivodeship(@PathVariable String voivodeship) {
         List<Offer> offers = this.offerService.getAllByVoivodeship(voivodeship);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @GetMapping(value = "/name/{name}",
@@ -167,7 +166,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersByName(@PathVariable String name) {
         List<Offer> offers = this.offerService.getAllByOfferName(name);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @PostMapping(value = "/between",
@@ -178,7 +177,7 @@ public class OfferController {
         if(dates == null)
             throw new GetException("Date-pair can't be null!");
         List<Offer> offers = this.offerService.getAllCreatedBetweenDates(dates.getStartDate(), dates.getEndDate());
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @GetMapping(value = "/notexpired/{dateString}",
@@ -189,7 +188,7 @@ public class OfferController {
             throw new GetException("Date string is null!");
         LocalDateTime date = LocalDateTime.parse(dateString);
         List<Offer> offers = this.offerService.getAllNotExpired(date);
-        return MapToDto(offers);
+        return mapToDto(offers);
     }
 
     @PostMapping(value = "",
@@ -199,45 +198,59 @@ public class OfferController {
     public OfferDto addOffer(@ModelAttribute OfferDto offerDto) {
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
-        String fileId = null;
         if (offerDto.getFile() != null) {
-            fileId = this.storageService.store(offerDto.getFile());
+            String fileId = this.storageService.store(offerDto.getFile());
             offer.setFileId(fileId);
         }
 
-        try {
-            offer = this.offerService.add(offer);
-        } catch (Exception e) {
-            if (fileId != null) {
-                this.storageService.delete(fileId);
-            }
-            throw e;
-        }
-
-        return MapSingleToDto(offer, OfferDto.class);
+        offer = this.offerService.add(offer);
+        return mapSingleToDto(offer, OfferDto.class);
     }
 
     @PutMapping(value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public OfferDto updateOffer(@PathVariable String id, @RequestBody OfferDto offerDto) {
-        if(offerDto == null)
-            throw new ModifyException("Offer dto can't be null");
+    public OfferDto updateOffer(@PathVariable String id, @ModelAttribute OfferDto offerDto) {
         if(!id.equals(offerDto.getId())) {
             throw new ModifyException("Unmatching ids");
         }
-        Offer offer = this.modelMapper.map(offerDto, Offer.class);
-        // set user from context here
-        offer = this.offerService.modify(offer);
-        return (OfferDto)MapSingleToDto(offer, OfferDto.class);
+
+        try {
+            Offer offer = this.modelMapper.map(offerDto, Offer.class);
+            // set user from context here
+
+            Offer unmodifiedOffer = this.offerService.getById(id);
+            String fileId = unmodifiedOffer.getFileId();
+            if (fileId != null) {
+                this.storageService.delete(fileId);
+            }
+
+            fileId = this.storageService.store(offerDto.getFile());
+            offer.setFileId(fileId);
+
+            offer = this.offerService.modify(offer);
+            return mapSingleToDto(offer, OfferDto.class);
+        } catch (Exception e) {
+            throw new ModifyException(e);
+        }
     }
 
     @DeleteMapping(value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteOffer(@PathVariable String id) {
-        offerService.delete(id);
+        String fileId;
+        try {
+            fileId = this.offerService.getById(id).getFileId();
+        } catch (Exception e) {
+            throw new DeleteException(e);
+        }
+        this.offerService.delete(id);
+
+        if (fileId != null) {
+            this.storageService.delete(fileId);
+        }
     }
 
     /*
@@ -291,7 +304,7 @@ public class OfferController {
 
         String fileId = null;
         try {
-            Offer offer = offer = this.offerService.getById(id);
+            Offer offer = this.offerService.getById(id);
             this.storageService.delete(offer.getFileId());
             offer.setFileId(null);
             this.offerService.modify(offer);
@@ -307,49 +320,47 @@ public class OfferController {
                     + modExc.getMessage());
         }
     }
-    private <T> T MapSingleToDto(Offer offer, Class<T> cl) {
+    private <T> T mapSingleToDto(Offer offer, Class<T> cl) {
         return modelMapper.map(offer, cl);
     }
 
-    private List<OfferShortDto> MapToShortDto(List<Offer> offers) {
+    private List<OfferShortDto> mapToShortDto(List<Offer> offers) {
         List<OfferShortDto> offersShortDto = new ArrayList<>();
         for(Offer offer : offers) {
             OfferShortDto mappedOfferDto =
-                    MapSingleToDto(offer, OfferShortDto.class);
+                    mapSingleToDto(offer, OfferShortDto.class);
             offersShortDto.add(mappedOfferDto);
         }
         return offersShortDto;
     }
 
-    private Page<OfferShortDto> MapToPageShortDto(Page<Offer> offers) {
+    private Page<OfferShortDto> mapToPageShortDto(Page<Offer> offers) {
         List<OfferShortDto> offersShortDto = new ArrayList<>();
         for(Offer offer : offers) {
             OfferShortDto mappedOfferDto =
-                    MapSingleToDto(offer, OfferShortDto.class);
+                    mapSingleToDto(offer, OfferShortDto.class);
             offersShortDto.add(mappedOfferDto);
         }
-        Page<OfferShortDto> page = new PageImpl<>(offersShortDto);
-        return page;
+        return new PageImpl<>(offersShortDto);
     }
 
-    private List<OfferDto> MapToDto(List<Offer> offerList) {
+    private List<OfferDto> mapToDto(List<Offer> offerList) {
         List<OfferDto> offersDto = new ArrayList<>();
         for(Offer offer : offerList) {
             OfferDto mappedOfferDto =
-                    MapSingleToDto(offer, OfferDto.class);
+                    mapSingleToDto(offer, OfferDto.class);
             offersDto.add(mappedOfferDto);
         }
         return offersDto;
     }
 
-    private Page<OfferDto> MapToPageDto(Page<Offer> offersPage) {
+    private Page<OfferDto> mapToPageDto(Page<Offer> offersPage) {
         List<OfferDto> offersDto = new ArrayList<>();
         for(Offer offer : offersPage) {
             OfferDto mappedOfferDto =
-                    MapSingleToDto(offer, OfferDto.class);
+                    mapSingleToDto(offer, OfferDto.class);
             offersDto.add(mappedOfferDto);
         }
-        Page<OfferDto> page = new PageImpl<>(offersDto);
-        return page;
+        return new PageImpl<>(offersDto);
     }
 }
