@@ -226,8 +226,11 @@ public class OfferController {
                 this.storageService.delete(fileId);
             }
 
-            fileId = this.storageService.store(offerDto.getFile());
-            offer.setFileId(fileId);
+            if (offerDto.getFile() != null) {
+                fileId = this.storageService.store(offerDto.getFile());
+                offer.setFileId(fileId);
+            }
+            
 
             offer = this.offerService.modify(offer);
             return mapSingleToDto(offer, OfferDto.class);
