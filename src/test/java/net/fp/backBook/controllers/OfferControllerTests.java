@@ -1716,7 +1716,7 @@ public class OfferControllerTests {
         when(modelMapper.map(any(OfferDto.class), eq(Offer.class))).thenReturn(offer);
         String path = "/offers";
         mockMvc.perform(post(path)
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .content(objectMapper.writeValueAsString(offerDto)))
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -1751,7 +1751,7 @@ public class OfferControllerTests {
                 .thenReturn(new Offer());
         String path = "/offers";
         mockMvc.perform(post(path)
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .content(objectMapper.writeValueAsString(new OfferDto())))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())

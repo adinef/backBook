@@ -193,15 +193,27 @@ public class OfferController {
     }
 
     @PostMapping(value = "",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public OfferDto addOffer(@RequestBody OfferDto offerDto) {
-        if(offerDto == null)
-            throw new AddException("Offer dto can't be null");
+    public OfferDto addOffer(@ModelAttribute OfferDto offerDto) {
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
-        offer = this.offerService.add(offer);
+        String fileId = null;
+        if (offerDto.getFile() != null) {
+            fileId = this.storageService.store(offerDto.getFile());
+            offer.setFileId(fileId);
+        }
+
+        try {
+            offer = this.offerService.add(offer);
+        } catch (Exception e) {
+            if (fileId != null) {
+                this.storageService.delete(fileId);
+            }
+            throw e;
+        }
+
         return MapSingleToDto(offer, OfferDto.class);
     }
 
