@@ -11,6 +11,16 @@ import java.util.List;
 @Service
 public interface CounterOfferService extends BasicCrudService<CounterOffer, String> {
 
+    CounterOffer getById(String id);
+
+    List<CounterOffer> getAll();
+
+    void delete(String id);
+
+    CounterOffer add(CounterOffer offer);
+
+    CounterOffer modify(CounterOffer offer);
+
     List<CounterOffer> getAllByOffer(Offer offer);
 
     List<CounterOffer> getAllByUser(User user);

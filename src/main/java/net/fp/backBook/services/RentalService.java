@@ -12,6 +12,16 @@ import java.util.List;
 @Service
 public interface RentalService extends BasicCrudService<Rental, String> {
 
+    Rental getById(String id);
+
+    List<Rental> getAll();
+
+    void delete(String id);
+
+    Rental add(Rental offer);
+
+    Rental modify(Rental offer);
+
     Rental getByOffer(Offer offer);
 
     List<Rental> getAllByUser(User user);

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface CategoryService {
+public interface CategoryService extends BasicCrudService<Category, String> {
     Category getById(String id);
 
     List<Category> getAll();
