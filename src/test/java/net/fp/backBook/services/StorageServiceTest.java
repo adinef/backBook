@@ -1,7 +1,6 @@
 package net.fp.backBook.services;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
-import com.mysql.cj.x.protobuf.MysqlxCrud;
 import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.FileNotFound;

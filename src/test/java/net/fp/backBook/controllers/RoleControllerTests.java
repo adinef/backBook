@@ -3,16 +3,12 @@ package net.fp.backBook.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.RoleDto;
-import net.fp.backBook.dtos.UserDto;
-import net.fp.backBook.dtos.UserViewDto;
 import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.Role;
-import net.fp.backBook.model.User;
 import net.fp.backBook.services.RoleService;
-import net.fp.backBook.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +25,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 

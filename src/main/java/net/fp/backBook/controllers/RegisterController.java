@@ -1,10 +1,6 @@
 package net.fp.backBook.controllers;
 
-import net.fp.backBook.dtos.Credentials;
-import net.fp.backBook.dtos.TokenDto;
 import net.fp.backBook.dtos.UserDto;
-import net.fp.backBook.exceptions.AddException;
-import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.exceptions.RegisterException;
 import net.fp.backBook.model.Role;
 import net.fp.backBook.model.User;

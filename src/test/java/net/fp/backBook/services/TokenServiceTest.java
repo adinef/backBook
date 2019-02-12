@@ -1,11 +1,8 @@
 package net.fp.backBook.services;
 
-import com.mongodb.client.gridfs.model.GridFSFile;
-import net.fp.backBook.exceptions.*;
+import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.model.User;
-import net.fp.backBook.repositories.FileRepository;
 import net.fp.backBook.security.service.JsonWebTokenService;
-import net.fp.backBook.security.service.TokenService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,18 +12,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
-import org.springframework.data.mongodb.gridfs.GridFsResource;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest

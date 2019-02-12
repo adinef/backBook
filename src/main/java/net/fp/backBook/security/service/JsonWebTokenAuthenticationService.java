@@ -2,7 +2,6 @@ package net.fp.backBook.security.service;
 
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
-import net.fp.backBook.exceptions.TokenExpiredException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.model.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @Slf4j
 @Service

@@ -1,7 +1,5 @@
 package net.fp.backBook.repositories;
 
-import net.fp.backBook.model.CounterOffer;
-import net.fp.backBook.model.User;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

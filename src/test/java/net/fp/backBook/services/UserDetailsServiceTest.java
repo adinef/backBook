@@ -1,9 +1,7 @@
 package net.fp.backBook.services;
 
-import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.security.service.BasicUserDetailsService;
-import net.fp.backBook.security.service.JsonWebTokenService;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +11,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.mockito.Mockito.when;

@@ -1,10 +1,8 @@
 package net.fp.backBook.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import net.fp.backBook.dtos.Credentials;
 import net.fp.backBook.dtos.UserDto;
 import net.fp.backBook.dtos.UserViewDto;
-import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.UserService;
@@ -131,7 +129,6 @@ public class UserController {
             UserViewDto mappedOfferDto = MapSingleToDto(user);
             usersDto.add(mappedOfferDto);
         }
-        Page<UserViewDto> page = new PageImpl<>(usersDto);
-        return page;
+        return new PageImpl<>(usersDto);
     }
 }

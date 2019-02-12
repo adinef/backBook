@@ -4,9 +4,10 @@ import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.DeleteException;
 import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
-import net.fp.backBook.model.*;
+import net.fp.backBook.model.CounterOffer;
+import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.Rental;
-import net.fp.backBook.repositories.CounterOfferRepository;
+import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.RentalRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +27,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 @SpringBootTest

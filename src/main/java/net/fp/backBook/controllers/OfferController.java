@@ -217,8 +217,7 @@ public class OfferController {
             Offer offer = this.modelMapper.map(offerDto, Offer.class);
             // set user from context here
 
-            Offer unmodifiedOffer = this.offerService.getById(id);
-            String fileId = unmodifiedOffer.getFileId();
+            String fileId = this.offerService.getById(id).getFileId();
             if (fileId != null) {
                 this.storageService.delete(fileId);
             }
@@ -227,7 +226,6 @@ public class OfferController {
                 fileId = this.storageService.store(offerDto.getFile());
                 offer.setFileId(fileId);
             }
-            
 
             offer = this.offerService.modify(offer);
             return mapSingleToDto(offer, OfferDto.class);
@@ -246,6 +244,7 @@ public class OfferController {
         } catch (Exception e) {
             throw new DeleteException(e);
         }
+
         this.offerService.delete(id);
 
         if (fileId != null) {

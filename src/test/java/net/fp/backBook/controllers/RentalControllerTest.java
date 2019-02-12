@@ -2,7 +2,6 @@ package net.fp.backBook.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
-import net.fp.backBook.dtos.CounterOfferDto;
 import net.fp.backBook.dtos.RentalDto;
 import net.fp.backBook.exceptions.AddException;
 import net.fp.backBook.exceptions.DeleteException;
@@ -24,13 +23,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.aggregation.ArithmeticOperators;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.w3c.dom.css.Counter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,11 +35,9 @@ import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
