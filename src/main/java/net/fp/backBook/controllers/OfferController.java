@@ -304,8 +304,6 @@ public class OfferController {
     )
     @ResponseStatus(HttpStatus.OK)
     public void deleteFile(@PathVariable("id") String id) {
-
-        String fileId = null;
         try {
             Offer offer = this.offerService.getById(id);
             this.storageService.delete(offer.getFileId());
@@ -318,7 +316,6 @@ public class OfferController {
             throw new FileProcessingException("Exception during file deletion. "
                     + delExc.getMessage());
         } catch (final ModifyException modExc) {
-            this.storageService.delete(fileId);
             throw new FileProcessingException("Exception during modification of offer. "
                     + modExc.getMessage());
         }
@@ -338,13 +335,7 @@ public class OfferController {
     }
 
     private Page<OfferShortDto> mapToPageShortDto(Page<Offer> offers) {
-        List<OfferShortDto> offersShortDto = new ArrayList<>();
-        for(Offer offer : offers) {
-            OfferShortDto mappedOfferDto =
-                    mapSingleToDto(offer, OfferShortDto.class);
-            offersShortDto.add(mappedOfferDto);
-        }
-        return new PageImpl<>(offersShortDto);
+        return new PageImpl<>(this.mapToShortDto(offers.getContent()));
     }
 
     private List<OfferDto> mapToDto(List<Offer> offerList) {
@@ -358,12 +349,6 @@ public class OfferController {
     }
 
     private Page<OfferDto> mapToPageDto(Page<Offer> offersPage) {
-        List<OfferDto> offersDto = new ArrayList<>();
-        for(Offer offer : offersPage) {
-            OfferDto mappedOfferDto =
-                    mapSingleToDto(offer, OfferDto.class);
-            offersDto.add(mappedOfferDto);
-        }
-        return new PageImpl<>(offersDto);
+        return new PageImpl<>(this.mapToDto(offersPage.getContent()));
     }
 }
