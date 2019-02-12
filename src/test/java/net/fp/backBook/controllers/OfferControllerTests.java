@@ -1714,7 +1714,7 @@ public class OfferControllerTests {
         when(offerService.add(offer)).thenReturn(offer);
 
         when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
-        when(modelMapper.map(any(OfferDto.class), eq(Offer.class))).thenReturn(offer);
+        when(modelMapper.map(any(OfferInputDto.class), eq(Offer.class))).thenReturn(offer);
         String path = "/offers";
         mockMvc.perform(post(path)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -1748,7 +1748,7 @@ public class OfferControllerTests {
     @Test
     public void testAddOfferIsNotAcceptableAddException() throws Exception {
         when(offerService.add(any(Offer.class))).thenThrow(AddException.class);
-        when(modelMapper.map(new OfferDto(), Offer.class))
+        when(modelMapper.map(new OfferInputDto(), Offer.class))
                 .thenReturn(new Offer());
         String path = "/offers";
         mockMvc.perform(post(path)
@@ -1817,7 +1817,7 @@ public class OfferControllerTests {
                 .build();
         when(offerService.modify(any(Offer.class))).thenReturn(offer);
         when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
-        when(modelMapper.map(any(OfferDto.class), eq(Offer.class))).thenReturn(offer);
+        when(modelMapper.map(any(OfferInputDto.class), eq(Offer.class))).thenReturn(offer);
         when(offerService.getById(anyString())).thenReturn(offer);
         String path = "/offers/" + offer.getId();
         mockMvc.perform(put(path)

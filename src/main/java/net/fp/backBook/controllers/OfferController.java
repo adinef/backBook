@@ -1,10 +1,7 @@
 package net.fp.backBook.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import net.fp.backBook.dtos.DatePairDto;
-import net.fp.backBook.dtos.OfferDto;
-import net.fp.backBook.dtos.OfferSearchFilter;
-import net.fp.backBook.dtos.OfferShortDto;
+import net.fp.backBook.dtos.*;
 import net.fp.backBook.exceptions.*;
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
@@ -195,7 +192,7 @@ public class OfferController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public OfferDto addOffer(@ModelAttribute OfferDto offerDto) {
+    public OfferDto addOffer(@ModelAttribute OfferInputDto offerDto) {
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
         // set user from context here
         if (offerDto.getFile() != null) {
@@ -211,7 +208,7 @@ public class OfferController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public OfferDto updateOffer(@PathVariable String id, @ModelAttribute OfferDto offerDto) {
+    public OfferDto updateOffer(@PathVariable String id, @ModelAttribute OfferInputDto offerDto) {
         if(!id.equals(offerDto.getId())) {
             throw new ModifyException("Unmatching ids");
         }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OfferDto {
+public class OfferInputDto {
 
     private String id;
 
@@ -43,5 +43,5 @@ public class OfferDto {
 
     private String voivodeship;
 
-    private String url;
+    private MultipartFile file;
 }
