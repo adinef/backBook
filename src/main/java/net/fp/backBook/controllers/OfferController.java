@@ -7,6 +7,7 @@ import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.OfferService;
 import net.fp.backBook.services.StorageService;
+import net.fp.backBook.services.UserDetectionService;
 import net.fp.backBook.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class OfferController {
     private OfferService offerService;
     private UserService userService;
     private StorageService storageService;
+    private UserDetectionService userDetectionService;
     private ModelMapper modelMapper;
 
     @Autowired
@@ -37,10 +39,12 @@ public class OfferController {
             final OfferService offerService,
             final ModelMapper modelMapper,
             final UserService userService,
+            final UserDetectionService userDetectionService,
             final StorageService storageService) {
         this.offerService = offerService;
         this.modelMapper = modelMapper;
         this.userService = userService;
+        this.userDetectionService = userDetectionService;
         this.storageService = storageService;
     }
 
@@ -194,7 +198,7 @@ public class OfferController {
     @ResponseStatus(HttpStatus.CREATED)
     public OfferDto addOffer(@ModelAttribute OfferInputDto offerDto) {
         Offer offer = this.modelMapper.map(offerDto, Offer.class);
-        // set user from context here
+        offer.setOfferOwner(this.userDetectionService.getAuthenticatedUser());
         if (offerDto.getFile() != null) {
             String fileId = this.storageService.store(offerDto.getFile());
             offer.setFileId(fileId);

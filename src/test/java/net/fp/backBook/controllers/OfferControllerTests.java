@@ -9,6 +9,7 @@ import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.OfferService;
 import net.fp.backBook.services.StorageService;
+import net.fp.backBook.services.UserDetectionService;
 import net.fp.backBook.services.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,6 +67,9 @@ public class OfferControllerTests {
 
     @Mock
     private OfferService offerService;
+
+    @Mock
+    private UserDetectionService userDetectionService;
 
     @Mock
     private StorageService storageService;
