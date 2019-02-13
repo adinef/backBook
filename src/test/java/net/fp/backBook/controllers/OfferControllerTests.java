@@ -1925,6 +1925,8 @@ public class OfferControllerTests {
         doNothing().when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
         when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(multipart("/offers/1/file")
                 .file(multipartFile))
                 .andDo(print())
@@ -1942,6 +1944,8 @@ public class OfferControllerTests {
         doNothing().when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
         when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(multipart("/offers/1/file")
                 .file(multipartFile))
                 .andDo(print())
@@ -1960,6 +1964,8 @@ public class OfferControllerTests {
         doThrow(DeleteException.class).when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
         when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(multipart("/offers/1/file")
                 .file(multipartFile))
                 .andDo(print())
@@ -1977,6 +1983,8 @@ public class OfferControllerTests {
         when(this.storageService.store(any(MultipartFile.class)))
                 .thenReturn("1");
         doNothing().when(this.storageService).delete("1");
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(multipart("/offers/1/file")
                 .file(multipartFile))
                 .andDo(print())
@@ -1996,12 +2004,30 @@ public class OfferControllerTests {
         when(this.storageService.store(any(MultipartFile.class)))
                 .thenReturn("1");
         doNothing().when(this.storageService).delete("1");
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(multipart("/offers/1/file")
                 .file(multipartFile))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())
                 .andExpect(jsonPath("$.error").isNotEmpty());
     }
+
+    @Test
+    public void testUploadFileOwnerException() throws Exception {
+        Offer offer = mock(Offer.class);
+        MockMultipartFile multipartFile =
+                new MockMultipartFile("file", "file.data",
+                        "text/plain", "data type".getBytes());
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(false);
+        mockMvc.perform(multipart("/offers/1/file")
+                .file(multipartFile))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
 
     @Test
     public void testGetFileReturnsResource() throws Exception {
@@ -2041,6 +2067,8 @@ public class OfferControllerTests {
         doNothing().when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
         when(this.offerService.modify(any(Offer.class))).thenReturn(offer);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(delete("/offers/1/file"))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -2051,6 +2079,10 @@ public class OfferControllerTests {
         Offer offer = Offer.builder().fileId("1").build();
         doThrow(DeleteException.class).when(this.storageService).delete("1");
         when(this.offerService.getById("1")).thenReturn(offer);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(delete("/offers/1/file"))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())
@@ -2063,6 +2095,8 @@ public class OfferControllerTests {
                 .thenThrow(GetException.class);
         when(this.storageService.store(any(MultipartFile.class)))
                 .thenReturn("1");
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(delete("/offers/1/file"))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())
@@ -2075,9 +2109,21 @@ public class OfferControllerTests {
         when(this.offerService.modify(any(Offer.class)))
                 .thenThrow(ModifyException.class);
         when(this.offerService.getById(anyString())).thenReturn(offer);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         mockMvc.perform(delete("/offers/1/file"))
                 .andDo(print())
                 .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteFileOwnerException() throws Exception {
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(false);
+        mockMvc.perform(delete("/offers/1/file"))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").isNotEmpty());
     }
 

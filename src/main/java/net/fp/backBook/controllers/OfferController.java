@@ -276,6 +276,11 @@ public class OfferController {
     )
     @ResponseStatus(HttpStatus.CREATED)
     public void uploadFile(@PathVariable("id") String id, @RequestParam("file") MultipartFile file) {
+        User authenticatedUser = this.userDetectionService.getAuthenticatedUser();
+        if (!this.offerService.existsByIdAndOfferOwner(id, authenticatedUser)) {
+            throw new OwnerException("User is not user owner");
+        }
+
         String fileId = null;
         try {
             Offer offer = this.offerService.getById(id);
@@ -314,6 +319,11 @@ public class OfferController {
     )
     @ResponseStatus(HttpStatus.OK)
     public void deleteFile(@PathVariable("id") String id) {
+        User authenticatedUser = this.userDetectionService.getAuthenticatedUser();
+        if (!this.offerService.existsByIdAndOfferOwner(id, authenticatedUser)) {
+            throw new OwnerException("User is not user owner");
+        }
+
         try {
             Offer offer = this.offerService.getById(id);
             this.storageService.delete(offer.getFileId());
