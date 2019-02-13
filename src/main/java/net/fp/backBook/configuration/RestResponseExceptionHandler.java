@@ -68,4 +68,10 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
         ErrorDto responseString = new ErrorDto("Error during registration (POST METHOD). " + e.getMessage());
         return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.BAD_REQUEST, request);
     }
+
+    @ExceptionHandler(value = {OwnerException.class})
+    protected ResponseEntity<Object> handleOwnerExceptionProblem(RuntimeException e, WebRequest request) {
+        ErrorDto responseString = new ErrorDto("Error. " + e.getMessage());
+        return handleExceptionInternal(e, responseString, httpHeaders, HttpStatus.BAD_REQUEST, request);
+    }
 }

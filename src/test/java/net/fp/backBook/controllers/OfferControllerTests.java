@@ -1811,6 +1811,8 @@ public class OfferControllerTests {
         when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
         when(modelMapper.map(any(OfferInputDto.class), eq(Offer.class))).thenReturn(offer);
         when(offerService.getById(anyString())).thenReturn(offer);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         String path = "/offers/" + offer.getId();
         mockMvc.perform(put(path)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -1842,7 +1844,9 @@ public class OfferControllerTests {
     }
 
     @Test
-    public void testAddUserIsConflictModifyException() throws Exception {
+    public void testUpdateOfferIsConflictModifyException() throws Exception {
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         when(offerService.modify(any(Offer.class))).thenThrow(ModifyException.class);
         String path = "/offers/1";
         mockMvc.perform(put(path)
@@ -1854,8 +1858,23 @@ public class OfferControllerTests {
     }
 
     @Test
+    public void testUpdateOfferOwnerException() throws Exception {
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(false);
+        String path = "/offers/1";
+        mockMvc.perform(put(path)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .content(objectMapper.writeValueAsString(new OfferDto())))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
     public void testDeleteOfferSuccess() throws Exception {
         Offer offer = mock(Offer.class);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         when(offerService.getById(anyString())).thenReturn(offer);
         doNothing().when(offerService).delete(anyString());
         String path = "/offers/1";
@@ -1868,8 +1887,21 @@ public class OfferControllerTests {
     @Test
     public void testDeleteOfferIsBadRequestDeleteException() throws Exception {
         Offer offer = mock(Offer.class);
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         when(offerService.getById(anyString())).thenReturn(offer);
         doThrow(DeleteException.class).when(offerService).delete(anyString());
+        String path = "/offers/1";
+        mockMvc.perform(delete(path))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteOfferIsBadRequestOwnerException() throws Exception {
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(false);
         String path = "/offers/1";
         mockMvc.perform(delete(path))
                 .andDo(print())

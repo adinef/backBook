@@ -217,9 +217,14 @@ public class OfferController {
             throw new ModifyException("Unmatching ids");
         }
 
+        User authenticatedUser = this.userDetectionService.getAuthenticatedUser();
+        if (!this.offerService.existsByIdAndOfferOwner(id, authenticatedUser)) {
+            throw new OwnerException("User is not user owner");
+        }
+
         try {
             Offer offer = this.modelMapper.map(offerDto, Offer.class);
-            // set user from context here
+            offer.setOfferOwner(authenticatedUser);
 
             String fileId = this.offerService.getById(id).getFileId();
             if (fileId != null) {
@@ -242,6 +247,11 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public void deleteOffer(@PathVariable String id) {
+        User authenticatedUser = this.userDetectionService.getAuthenticatedUser();
+        if (!this.offerService.existsByIdAndOfferOwner(id, authenticatedUser)) {
+            throw new OwnerException("User is not user owner");
+        }
+
         String fileId;
         try {
             fileId = this.offerService.getById(id).getFileId();
