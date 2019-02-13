@@ -2,6 +2,8 @@ package net.fp.backBook.repositories;
 
 import net.fp.backBook.model.Offer;
 import net.fp.backBook.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,4 +26,5 @@ public interface OfferRepository extends MongoRepository<Offer, String> {
     List<Offer> findAllByCity(String city);
     List<Offer> findAllByVoivodeship(String voivodeship);
     boolean existsByIdAndOfferOwner(String id, User user);
+    Page<Offer> findAllByOfferOwner(User offerOwner, Pageable pageable);
 }

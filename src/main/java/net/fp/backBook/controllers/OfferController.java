@@ -89,6 +89,27 @@ public class OfferController {
         return mapToPageShortDto(offersPage);
     }
 
+    @GetMapping(
+            value = "/my/short",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public List<OfferShortDto> getUsersOffersShort() {
+        List<Offer> offers =  offerService.getAllByOfferOwner(this.userDetectionService.getAuthenticatedUser());
+        return mapToShortDto(offers);
+    }
+
+    @GetMapping(
+            value = "/my/short/p",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public Page<OfferShortDto> getUsersOffersShortByPage(@RequestParam("limit") int limit, @RequestParam("page") int page) {
+        Page<Offer> offersPage =  offerService
+                .getAllUsersOffersByPage(this.userDetectionService.getAuthenticatedUser(), page, limit);
+        return mapToPageShortDto(offersPage);
+    }
+
     @PostMapping(
             value = "/filter",
             consumes = MediaType.APPLICATION_JSON_VALUE,

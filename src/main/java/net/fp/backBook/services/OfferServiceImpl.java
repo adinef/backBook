@@ -204,4 +204,14 @@ public class OfferServiceImpl implements OfferService {
             throw new GetException(e.getMessage());
         }
     }
+
+    @Override
+    public Page<Offer> getAllUsersOffersByPage(User user, int page, int limit) {
+        try {
+            return offerRepository.findAllByOfferOwner(user, PageRequest.of(page, limit));
+        } catch (final Exception e) {
+            log.error("Error during getting users Offer objects by page, {}", e);
+            throw new GetException(e.getMessage());
+        }
+    }
 }

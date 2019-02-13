@@ -42,4 +42,6 @@ public interface OfferService extends BasicCrudService<Offer, String> {
     List<Offer> getByFilter(Offer offer);
 
     boolean existsByIdAndOfferOwner(String id, User user);
+
+    Page<Offer> getAllUsersOffersByPage(User user, int page, int limit);
 }
