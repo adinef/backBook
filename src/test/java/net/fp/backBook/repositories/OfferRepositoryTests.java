@@ -135,4 +135,15 @@ public class OfferRepositoryTests {
         List<Offer> fetched = offerRepository.findAllByVoivodeship("voi");
         Assert.assertEquals(2, fetched.size());
     }
+
+    @Test
+    public void testExistsByIdAndOfferOwner() {
+        User testUser1 = User.builder().lastName("name1").build();
+        User testUser2 = User.builder().lastName("name2").build();
+        userRepository.insert(testUser1);
+        userRepository.insert(testUser2);
+        Offer offer = offerRepository.insert( Offer.builder().offerName("test").offerOwner(testUser1).build() );
+        Assert.assertTrue(this.offerRepository.existsByIdAndOfferOwner(offer.getId(), testUser1));
+        Assert.assertFalse(this.offerRepository.existsByIdAndOfferOwner(offer.getId(), testUser2));
+    }
 }

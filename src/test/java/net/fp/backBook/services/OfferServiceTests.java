@@ -257,4 +257,19 @@ public class OfferServiceTests {
         this.offerService.modify(offer);
         verify(this.offerRepository).save(offer);
     }
+
+    @Test
+    public void testExistsByIdAndOfferOwnerSuccess() {
+        User user = mock(User.class);
+        when(this.offerRepository.existsByIdAndOfferOwner(anyString(), eq(user))).thenReturn(true);
+        Assert.assertTrue(this.offerService.existsByIdAndOfferOwner("1", user));
+        verify(this.offerRepository, times(1)).existsByIdAndOfferOwner(anyString(), eq(user));
+    }
+
+    @Test(expected = GetException.class)
+    public void testExistsByIdAndOfferOwnerFailure() {
+        User user = mock(User.class);
+        when(this.offerRepository.existsByIdAndOfferOwner(anyString(), eq(user))).thenThrow(RuntimeException.class);
+        this.offerService.existsByIdAndOfferOwner("1", user);
+    }
 }

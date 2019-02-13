@@ -23,4 +23,5 @@ public interface OfferRepository extends MongoRepository<Offer, String> {
     List<Offer> findAllByBookPublisher(String bookPublisher);
     List<Offer> findAllByCity(String city);
     List<Offer> findAllByVoivodeship(String voivodeship);
+    boolean existsByIdAndOfferOwner(String id, User user);
 }

@@ -194,4 +194,14 @@ public class OfferServiceImpl implements OfferService {
             throw new GetException(e.getMessage());
         }
     }
+
+    @Override
+    public boolean existsByIdAndOfferOwner(String id, User user) {
+        try {
+            return this.offerRepository.existsByIdAndOfferOwner(id, user);
+        }catch (final Exception e) {
+            log.error("Error during checking if user is offer owner, {}", e);
+            throw new GetException(e.getMessage());
+        }
+    }
 }
