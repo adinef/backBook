@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -376,7 +377,11 @@ public class OfferController {
     }
 
     private Page<OfferShortDto> mapToPageShortDto(Page<Offer> offers) {
-        return new PageImpl<>(this.mapToShortDto(offers.getContent()));
+        return new PageImpl<>(
+                        this.mapToShortDto(offers.getContent()),
+                        offers.getPageable(),
+                        offers.getTotalElements()
+                );
     }
 
     private List<OfferDto> mapToDto(List<Offer> offerList) {
@@ -390,6 +395,10 @@ public class OfferController {
     }
 
     private Page<OfferDto> mapToPageDto(Page<Offer> offersPage) {
-        return new PageImpl<>(this.mapToDto(offersPage.getContent()));
+        return new PageImpl<>(
+                this.mapToDto(offersPage.getContent()),
+                offersPage.getPageable(),
+                offersPage.getTotalElements()
+        );
     }
 }
