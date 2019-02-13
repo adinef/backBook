@@ -124,6 +124,19 @@ public class OfferController {
     }
 
     @PostMapping(
+            value = "/filter/p",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public Page<OfferDto> getOffersOnFilterByPage(@RequestBody OfferSearchFilter filter,
+                                                  @RequestParam("limit") int limit, @RequestParam("page") int page) {
+        Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
+        Page<Offer> offers =  offerService.getPageByFilter(searchCriteriaOffer, page, limit);
+        return mapToPageDto(offers);
+    }
+
+    @PostMapping(
             value = "/short/filter",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -133,6 +146,19 @@ public class OfferController {
         Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
         List<Offer> offers =  offerService.getByFilter(searchCriteriaOffer);
         return mapToShortDto(offers);
+    }
+
+    @PostMapping(
+            value = "/short/filter/p",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.OK)
+    public Page<OfferShortDto> getOffersShortOnFilterByPage(@RequestBody OfferSearchFilter filter,
+                                                  @RequestParam("limit") int limit, @RequestParam("page") int page) {
+        Offer searchCriteriaOffer = modelMapper.map(filter, Offer.class);
+        Page<Offer> offers =  offerService.getPageByFilter(searchCriteriaOffer, page, limit);
+        return mapToPageShortDto(offers);
     }
 
     @GetMapping(value = "/{id}",

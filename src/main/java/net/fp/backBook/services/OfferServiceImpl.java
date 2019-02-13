@@ -194,6 +194,16 @@ public class OfferServiceImpl implements OfferService {
             throw new GetException(e.getMessage());
         }
     }
+    @Override
+    public Page<Offer> getPageByFilter(Offer offer, int page, int limit) {
+        try {
+            Example<Offer> offerExample = Example.of(offer, filter.getMatcher());
+            return offerRepository.findAll(offerExample, PageRequest.of(page, limit));
+        } catch (final Exception e) {
+            log.error("Error during getting users Offer objects by page (filtered), {}", e);
+            throw new GetException(e.getMessage());
+        }
+    }
 
     @Override
     public boolean existsByIdAndOfferOwner(String id, User user) {
