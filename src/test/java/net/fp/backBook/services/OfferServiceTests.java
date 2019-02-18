@@ -91,6 +91,36 @@ public class OfferServiceTests {
     }
 
     @Test
+    public void testGetAllByOfferName() {
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        String offerName = anyString();
+        when(this.offerRepository.findAllByOfferName(offerName)).thenReturn(offers);
+        Assert.assertEquals(offers, this.offerService.getAllByOfferName(offerName));
+        verify(this.offerRepository, times(1)).findAllByOfferName(offerName);
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllByOfferNameThrowsOnRuntimeException() {
+        when(this.offerRepository.findAllByOfferName(anyString())).thenThrow(RuntimeException.class);
+        this.offerService.getAllByOfferName(anyString());
+    }
+
+    @Test
+    public void testGetAllByBookPublisher() {
+        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
+        String publisher = anyString();
+        when(this.offerRepository.findAllByBookPublisher(publisher)).thenReturn(offers);
+        Assert.assertEquals(offers, this.offerService.getAllByBookPublisher(publisher));
+        verify(this.offerRepository, times(1)).findAllByBookPublisher(publisher);
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllByBookPublisherThrowsOnRuntimeException() {
+        when(this.offerRepository.findAllByBookPublisher(anyString())).thenThrow(RuntimeException.class);
+        this.offerService.getAllByBookPublisher(anyString());
+    }
+
+    @Test
     public void testGetAllNotExpired() {
         List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
         LocalDateTime topDate = LocalDateTime.now().plusDays(4);
@@ -132,6 +162,21 @@ public class OfferServiceTests {
         verify(this.offerRepository).findAllByCreatedAtBetween(createdStartTime, createdTopTime);
     }
 
+    @Test(expected = GetException.class)
+    public void testGetAllCreatedBetweenNullDates() {
+        this.offerService.getAllCreatedBetweenDates(null, null);
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllCreatedBetweenException() {
+        LocalDateTime createdStartTime = LocalDateTime.now();
+        LocalDateTime createdTopTime = LocalDateTime.now().plusDays(3);
+        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime))
+                .thenThrow(RuntimeException.class);
+
+        this.offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime);
+    }
+
     @Test
     public void testGetAllByOfferOwner() {
         User user = mock(User.class);
@@ -156,12 +201,24 @@ public class OfferServiceTests {
         verify(this.offerRepository, times(1)).findAllByCity(anyString());
     }
 
+    @Test(expected = GetException.class)
+    public void testGetAllByCityException() {
+        when(this.offerRepository.findAllByCity(anyString())).thenThrow(RuntimeException.class);
+        this.offerService.getAllByCity(anyString());
+    }
+
     @Test
     public void testGetAllByVoivodeship() {
         List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
         when(this.offerRepository.findAllByVoivodeship(anyString())).thenReturn(offers);
         Assert.assertEquals(offers, this.offerService.getAllByVoivodeship(anyString()));
         verify(this.offerRepository, times(1)).findAllByVoivodeship(anyString());
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllByVoivodeshipException() {
+        when(this.offerRepository.findAllByVoivodeship(anyString())).thenThrow(RuntimeException.class);
+        this.offerService.getAllByVoivodeship(anyString());
     }
 
 
