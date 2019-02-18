@@ -272,4 +272,23 @@ public class OfferServiceTests {
         when(this.offerRepository.existsByIdAndOfferOwner(anyString(), eq(user))).thenThrow(RuntimeException.class);
         this.offerService.existsByIdAndOfferOwner("1", user);
     }
+
+    @Test
+    public void testGetAllUsersOffersByPageSuccess() {
+        Page<Offer> page = mock(Page.class);
+        User user = mock(User.class);
+        when(this.offerRepository.findAllByOfferOwner(any(User.class), any(PageRequest.class))).thenReturn(page);
+
+        Assert.assertEquals(page, this.offerService.getAllUsersOffersByPage(user, 1, 1));
+
+        verify(this.offerRepository, times(1)).findAllByOfferOwner(user, PageRequest.of(1, 1));
+    }
+
+    @Test(expected = GetException.class)
+    public void testGetAllUsersOffersByPageFailure() {
+        User user = mock(User.class);
+        when(this.offerRepository.findAllByOfferOwner(any(User.class), any(PageRequest.class))).thenThrow(RuntimeException.class);
+
+        this.offerService.getAllUsersOffersByPage(user, 1, 1);
+    }
 }

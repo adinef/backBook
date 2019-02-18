@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDateTime;
@@ -145,5 +148,20 @@ public class OfferRepositoryTests {
         Offer offer = offerRepository.insert( Offer.builder().offerName("test").offerOwner(testUser1).build() );
         Assert.assertTrue(this.offerRepository.existsByIdAndOfferOwner(offer.getId(), testUser1));
         Assert.assertFalse(this.offerRepository.existsByIdAndOfferOwner(offer.getId(), testUser2));
+    }
+
+    @Test
+    public void testFindAllByOfferOwner() {
+        User testUser1 = User.builder().lastName("name1").build();
+        userRepository.insert(testUser1);
+
+        offerRepository.insert( Offer.builder().offerName("test1").offerOwner(testUser1).build() );
+        offerRepository.insert( Offer.builder().offerName("test2").offerOwner(testUser1).build() );
+        offerRepository.insert( Offer.builder().offerName("test3").offerOwner(testUser1).build() );
+
+        Page<Offer> offerPage = this.offerRepository.findAllByOfferOwner(testUser1, PageRequest.of(1, 2));
+        Assert.assertEquals(2 ,offerPage.getTotalPages());
+        Assert.assertEquals(3 ,offerPage.getTotalElements());
+        Assert.assertEquals(1 ,offerPage.getNumberOfElements());
     }
 }
