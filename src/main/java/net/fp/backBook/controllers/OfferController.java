@@ -218,17 +218,6 @@ public class OfferController {
         return mapToDto(offers);
     }
 
-    @PostMapping(value = "/between",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public List<OfferDto> getOffersBetweenDates(@RequestBody DatePairDto dates) {
-        if(dates == null)
-            throw new GetException("Date-pair can't be null!");
-        List<Offer> offers = this.offerService.getAllCreatedBetweenDates(dates.getStartDate(), dates.getEndDate());
-        return mapToDto(offers);
-    }
-
     @GetMapping(value = "/notexpired/{dateString}",
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)

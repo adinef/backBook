@@ -25,10 +25,6 @@ public class RentalDto {
     private CounterOfferDto counterOffer;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime createdAt;
-
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @JsonFormat(pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime startDate;
 

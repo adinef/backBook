@@ -62,8 +62,7 @@ public class OfferRepositoryTests {
     @Test
     public void testFindAllByExpiresBetween() {
         Offer testOffer = Offer.builder()
-                .expires(LocalDateTime.now().plusDays(5))
-                .createdAt(LocalDateTime.now().minusDays(2)).build();
+                .expires(LocalDateTime.now().plusDays(5)).build();
         LocalDateTime expiresStartTime = LocalDateTime.now().minusDays(5);
         LocalDateTime expiresTopTime = LocalDateTime.now();
         offerRepository.insert(testOffer);
@@ -71,20 +70,6 @@ public class OfferRepositoryTests {
                 0, offerRepository.findAllByExpiresBetween(expiresStartTime, expiresTopTime).size());
         Assert.assertNotEquals(
                 0, offerRepository.findAllByExpiresBetween(expiresStartTime, expiresTopTime.plusDays(7)).size());
-    }
-
-    @Test
-    public void testFindAllByCreatedAtBetween() {
-        Offer testOffer = Offer.builder()
-                .createdAt(LocalDateTime.now().minusDays(2))
-                .build();
-        LocalDateTime createdStartTime = LocalDateTime.now().minusDays(5);
-        LocalDateTime createdTopTime = LocalDateTime.now();
-        offerRepository.insert(testOffer);
-        Assert.assertEquals(
-                1, offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime).size());
-        Assert.assertEquals(
-                0, offerRepository.findAllByCreatedAtBetween(createdStartTime.plusDays(4), createdTopTime).size());
     }
 
     @Test

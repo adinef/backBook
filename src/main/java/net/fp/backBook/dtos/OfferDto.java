@@ -33,10 +33,6 @@ public class OfferDto {
 
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime createdAt;
-
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern="dd-MM-yyyy HH:mm:ss")
     private LocalDateTime expires;
 
     private Boolean active;
@@ -45,5 +41,5 @@ public class OfferDto {
 
     private String voivodeship;
 
-    private String url;
+    private String fileId;
 }

@@ -17,8 +17,6 @@ public interface OfferRepository extends MongoRepository<Offer, String> {
     List<Offer> findAllByOfferOwner(User offerOwner);
     @Query("{'expires' : { $gte: ?0, $lte: ?1 } }")
     List<Offer> findAllByExpiresBetween(LocalDateTime starteDate, LocalDateTime endDate);
-    @Query("{'createdAt' : { $gte: ?0, $lte: ?1 } }")
-    List<Offer> findAllByCreatedAtBetween(LocalDateTime starteDate, LocalDateTime endDate);
     @Query("{'expires' : { $gte: ?0} }")
     List<Offer> findAllByNotExpired(LocalDateTime starteDate);
     List<Offer> findAllByBookTitle(String bookTitle);
