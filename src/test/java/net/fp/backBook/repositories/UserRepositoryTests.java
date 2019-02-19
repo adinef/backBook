@@ -53,4 +53,16 @@ public class UserRepositoryTests {
         Assert.assertEquals("test", fetched.getLogin());
         Assert.assertEquals("pass", fetched.getPassword());
     }
+
+    @Test
+    public void testExistsByLoginOrEmailWithLoginCase() {
+        userRepository.insert( User.builder().login("login").build() );
+        Assert.assertTrue(userRepository.existsByLoginOrEmail("login", "x"));
+    }
+
+    @Test
+    public void testExistsByLoginOrEmailWithEmailCase() {
+        userRepository.insert( User.builder().email("email").build() );
+        Assert.assertTrue(userRepository.existsByLoginOrEmail("x", "email"));
+    }
 }

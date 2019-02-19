@@ -139,16 +139,9 @@ public class UserServiceTests {
     }
 
     @Test(expected = AddException.class)
-    public void testAddUserThrowsGetOnUserWithLoginExists() {
-        User user = User.builder().login("test").build();
-        when(this.userRepository.findByLogin(user.getLogin())).thenReturn(Optional.of(user));
-        this.userService.add(user);
-    }
-
-    @Test(expected = AddException.class)
-    public void testAddUserThrowsGetOnUserWithEmailExists() {
-        User user = User.builder().email("test").build();
-        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+    public void testAddUserThrowsGetOnUserWithLoginOrEmailExists() {
+        User user = User.builder().login("test").email("email").build();
+        when(this.userRepository.existsByLoginOrEmail(user.getLogin(), user.getEmail())).thenReturn(true);
         this.userService.add(user);
     }
 
