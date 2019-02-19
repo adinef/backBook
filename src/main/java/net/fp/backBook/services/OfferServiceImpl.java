@@ -67,7 +67,6 @@ public class OfferServiceImpl implements OfferService {
     @Override
     public Offer add(Offer offer) {
         try {
-            offer.setCreatedAt(LocalDateTime.now());
             offerRepository.insert(offer);
         } catch (final Exception e) {
             log.error("Error during inserting Offer object, {}", e);
@@ -125,21 +124,6 @@ public class OfferServiceImpl implements OfferService {
             return offerRepository.findAllByNotExpired(startDate);
         } catch (final Exception e) {
             log.error("Error during getting Offer objects before expiration, {}", e);
-            throw new GetException(e.getMessage());
-        }
-    }
-
-    @Override
-    public List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate) {
-        if(startDate == null || endDate == null)
-            throw new GetException("None of dates can be null");
-
-        if(!startDate.isBefore(endDate))
-            throw new GetException("Start date smaller than end date");
-        try {
-            return offerRepository.findAllByCreatedAtBetween(startDate, endDate);
-        } catch (final Exception e) {
-            log.error("Error during getting Offer objects between dates, {}", e);
             throw new GetException(e.getMessage());
         }
     }

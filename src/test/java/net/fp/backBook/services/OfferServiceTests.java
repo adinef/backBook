@@ -135,48 +135,6 @@ public class OfferServiceTests {
         offerService.getAllNotExpired(ldt);
     }
 
-
-    @Test
-    public void testGetAllCreatedBetween() {
-        LocalDateTime createdStartTime = LocalDateTime.now().minusDays(5);
-        LocalDateTime createdTopTime = LocalDateTime.now().minusDays(3);
-        LocalDateTime createdTopTime2 = LocalDateTime.now().minusDays(1);
-        List<Offer> offers = Arrays.asList(mock(Offer.class), mock(Offer.class));
-        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime))
-                .thenReturn(offers);
-        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime2))
-                .thenReturn(new ArrayList<>());
-
-        Assert.assertEquals(offers,
-                this.offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime));
-        Assert.assertEquals(new ArrayList<>(),
-                this.offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime2));
-    }
-
-
-    @Test(expected = GetException.class)
-    public void testGetAllCreatedBetweenThrowsOnStartBiggerThanEnd() {
-        LocalDateTime createdStartTime = LocalDateTime.now();
-        LocalDateTime createdTopTime = LocalDateTime.now().minusDays(3);
-        offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime);
-        verify(this.offerRepository).findAllByCreatedAtBetween(createdStartTime, createdTopTime);
-    }
-
-    @Test(expected = GetException.class)
-    public void testGetAllCreatedBetweenNullDates() {
-        this.offerService.getAllCreatedBetweenDates(null, null);
-    }
-
-    @Test(expected = GetException.class)
-    public void testGetAllCreatedBetweenException() {
-        LocalDateTime createdStartTime = LocalDateTime.now();
-        LocalDateTime createdTopTime = LocalDateTime.now().plusDays(3);
-        when(this.offerRepository.findAllByCreatedAtBetween(createdStartTime, createdTopTime))
-                .thenThrow(RuntimeException.class);
-
-        this.offerService.getAllCreatedBetweenDates(createdStartTime, createdTopTime);
-    }
-
     @Test
     public void testGetAllByOfferOwner() {
         User user = mock(User.class);

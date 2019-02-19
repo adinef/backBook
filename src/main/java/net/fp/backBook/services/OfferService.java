@@ -27,8 +27,6 @@ public interface OfferService extends BasicCrudService<Offer, String> {
 
     List<Offer> getAllByBookPublisher(String bookPublisher);
 
-    List<Offer> getAllCreatedBetweenDates(LocalDateTime startDate, LocalDateTime endDate);
-
     List<Offer> getAllNotExpired(LocalDateTime startDate);
 
     List<Offer> getAllByOfferOwner(User user);

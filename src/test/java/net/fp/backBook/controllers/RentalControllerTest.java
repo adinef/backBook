@@ -113,7 +113,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -125,7 +124,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -133,7 +131,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -151,7 +148,6 @@ public class RentalControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
@@ -161,7 +157,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -178,7 +173,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$.counterOffer.offer.city").value("city"))
@@ -217,7 +211,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -229,7 +222,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -237,7 +229,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -285,7 +276,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -297,7 +287,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -305,7 +294,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -323,7 +311,6 @@ public class RentalControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
@@ -333,7 +320,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -350,7 +336,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$.counterOffer.offer.city").value("city"))
@@ -389,7 +374,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -401,7 +385,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -409,7 +392,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -455,7 +437,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -467,7 +448,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -475,7 +455,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -522,7 +501,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -534,7 +512,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -542,7 +519,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -557,7 +533,6 @@ public class RentalControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
@@ -567,7 +542,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -584,7 +558,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$.counterOffer.offer.city").value("city"))
@@ -635,7 +608,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher1")
                 .offerName("offerName1")
                 .offerOwner(offerUser1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city1")
@@ -647,7 +619,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer1)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental1 = Rental.builder()
@@ -655,7 +626,6 @@ public class RentalControllerTest {
                 .user(user1)
                 .counterOffer(counterOffer1)
                 .offer(offer1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -684,7 +654,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher2")
                 .offerName("offerName2")
                 .offerOwner(offerUser2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city2")
@@ -696,7 +665,6 @@ public class RentalControllerTest {
                 .id("2")
                 .offer(offer2)
                 .user(user2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental2 = Rental.builder()
@@ -704,7 +672,6 @@ public class RentalControllerTest {
                 .user(user2)
                 .counterOffer(counterOffer2)
                 .offer(offer2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -721,7 +688,6 @@ public class RentalControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].user.id").value("1"))
@@ -731,7 +697,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].offer.id").value("1"))
                 .andExpect(jsonPath("$[0].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.active").value("true"))
                 .andExpect(jsonPath("$[0].offer.city").value("city1"))
@@ -748,7 +713,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.city").value("city1"))
@@ -758,7 +722,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].counterOffer.offer.offerOwner.lastName").value("lastName2"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.offerOwner.email").value("email2"))
                 .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].user.id").value("3"))
@@ -768,7 +731,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[1].offer.id").value("2"))
                 .andExpect(jsonPath("$[1].offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.active").value("true"))
                 .andExpect(jsonPath("$[1].offer.city").value("city2"))
@@ -785,7 +747,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[1].counterOffer.offer.id").value("2"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.city").value("city2"))
@@ -849,7 +810,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -861,7 +821,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -869,7 +828,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -885,7 +843,6 @@ public class RentalControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
@@ -895,7 +852,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -912,7 +868,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$.counterOffer.offer.city").value("city"))
@@ -976,7 +931,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher1")
                 .offerName("offerName1")
                 .offerOwner(offerUser1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city1")
@@ -988,7 +942,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer1)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental1 = Rental.builder()
@@ -996,7 +949,6 @@ public class RentalControllerTest {
                 .user(user1)
                 .counterOffer(counterOffer1)
                 .offer(offer1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -1025,7 +977,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher2")
                 .offerName("offerName2")
                 .offerOwner(offerUser2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city2")
@@ -1037,7 +988,6 @@ public class RentalControllerTest {
                 .id("2")
                 .offer(offer2)
                 .user(user2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental2 = Rental.builder()
@@ -1045,7 +995,6 @@ public class RentalControllerTest {
                 .user(user1)
                 .counterOffer(counterOffer2)
                 .offer(offer2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -1064,7 +1013,6 @@ public class RentalControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].user.id").value("1"))
@@ -1074,7 +1022,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].offer.id").value("1"))
                 .andExpect(jsonPath("$[0].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.active").value("true"))
                 .andExpect(jsonPath("$[0].offer.city").value("city1"))
@@ -1091,7 +1038,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.city").value("city1"))
@@ -1101,7 +1047,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].counterOffer.offer.offerOwner.lastName").value("lastName2"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.offerOwner.email").value("email2"))
                 .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].user.id").value("1"))
@@ -1111,7 +1056,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[1].offer.id").value("2"))
                 .andExpect(jsonPath("$[1].offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.active").value("true"))
                 .andExpect(jsonPath("$[1].offer.city").value("city2"))
@@ -1128,7 +1072,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[1].counterOffer.offer.id").value("2"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.city").value("city2"))
@@ -1192,7 +1135,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -1204,7 +1146,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental = Rental.builder()
@@ -1212,7 +1153,6 @@ public class RentalControllerTest {
                 .user(user)
                 .counterOffer(counterOffer)
                 .offer(offer)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -1228,7 +1168,6 @@ public class RentalControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
@@ -1238,7 +1177,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -1255,7 +1193,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$.counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.counterOffer.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$.counterOffer.offer.city").value("city"))
@@ -1319,7 +1256,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher1")
                 .offerName("offerName1")
                 .offerOwner(offerUser1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city1")
@@ -1331,7 +1267,6 @@ public class RentalControllerTest {
                 .id("1")
                 .offer(offer1)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental1 = Rental.builder()
@@ -1339,7 +1274,6 @@ public class RentalControllerTest {
                 .user(user1)
                 .counterOffer(counterOffer1)
                 .offer(offer1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -1368,7 +1302,6 @@ public class RentalControllerTest {
                 .bookPublisher("publisher2")
                 .offerName("offerName2")
                 .offerOwner(offerUser2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city2")
@@ -1380,7 +1313,6 @@ public class RentalControllerTest {
                 .id("2")
                 .offer(offer2)
                 .user(user2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         Rental rental2 = Rental.builder()
@@ -1388,7 +1320,6 @@ public class RentalControllerTest {
                 .user(user2)
                 .counterOffer(counterOffer2)
                 .offer(offer2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .startDate(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("03-03-2018 12:00:00", dateTimeFormatter)).build();
 
@@ -1406,7 +1337,6 @@ public class RentalControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].user.id").value("1"))
@@ -1416,7 +1346,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].offer.id").value("1"))
                 .andExpect(jsonPath("$[0].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.active").value("true"))
                 .andExpect(jsonPath("$[0].offer.city").value("city1"))
@@ -1433,7 +1362,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].counterOffer.offer.id").value("1"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.city").value("city1"))
@@ -1443,7 +1371,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[0].counterOffer.offer.offerOwner.lastName").value("lastName2"))
                 .andExpect(jsonPath("$[0].counterOffer.offer.offerOwner.email").value("email2"))
                 .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].startDate").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].expires").value("03-03-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].user.id").value("3"))
@@ -1453,7 +1380,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[1].offer.id").value("2"))
                 .andExpect(jsonPath("$[1].offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.active").value("true"))
                 .andExpect(jsonPath("$[1].offer.city").value("city2"))
@@ -1470,7 +1396,6 @@ public class RentalControllerTest {
                 .andExpect(jsonPath("$[1].counterOffer.offer.id").value("2"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].counterOffer.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.active").value("true"))
                 .andExpect(jsonPath("$[1].counterOffer.offer.city").value("city2"))

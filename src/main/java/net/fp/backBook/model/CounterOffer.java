@@ -30,8 +30,5 @@ public class CounterOffer implements Serializable {
     @DBRef
     private User user;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
     private LocalDateTime expires;
 }

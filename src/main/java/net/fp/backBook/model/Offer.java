@@ -40,9 +40,6 @@ public class Offer implements Serializable {
 
     private String description;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
     private LocalDateTime expires;
 
     private Boolean active;

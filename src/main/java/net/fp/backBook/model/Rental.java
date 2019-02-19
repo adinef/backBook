@@ -33,9 +33,6 @@ public class Rental implements Serializable {
     @DBRef
     private CounterOffer counterOffer;
 
-    @CreatedDate
-    private LocalDateTime createdAt;
-
     private LocalDateTime startDate;
 
     private LocalDateTime expires;

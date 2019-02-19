@@ -114,7 +114,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -126,7 +125,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto = this.modelMapper.map(counterOffer, CounterOfferDto.class);
@@ -143,7 +141,6 @@ public class CounterOfferControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
                 .andExpect(jsonPath("$.user.name").value("name1"))
@@ -152,7 +149,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -191,7 +187,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -203,7 +198,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto = this.modelMapper.map(counterOffer, CounterOfferDto.class);
@@ -249,7 +243,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -261,7 +254,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto = this.modelMapper.map(counterOffer, CounterOfferDto.class);
@@ -278,7 +270,6 @@ public class CounterOfferControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
                 .andExpect(jsonPath("$.user.name").value("name1"))
@@ -287,7 +278,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -326,7 +316,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -338,7 +327,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto = this.modelMapper.map(counterOffer, CounterOfferDto.class);
@@ -381,7 +369,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -393,7 +380,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto = this.modelMapper.map(counterOffer, CounterOfferDto.class);
@@ -439,7 +425,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher1")
                 .offerName("offerName1")
                 .offerOwner(offerUser1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city1")
@@ -451,7 +436,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer1)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         User user2 = User.builder()
@@ -479,7 +463,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher2")
                 .offerName("offerName2")
                 .offerOwner(offerUser2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city2")
@@ -491,7 +474,6 @@ public class CounterOfferControllerTest {
                 .id("2")
                 .offer(offer2)
                 .user(user2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto1 = this.modelMapper.map(counterOffer1, CounterOfferDto.class);
@@ -509,7 +491,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].user.id").value("1"))
                 .andExpect(jsonPath("$[0].user.name").value("name1"))
@@ -518,7 +499,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.id").value("1"))
                 .andExpect(jsonPath("$[0].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.active").value("true"))
                 .andExpect(jsonPath("$[0].offer.city").value("city1"))
@@ -528,7 +508,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.offerOwner.lastName").value("lastName2"))
                 .andExpect(jsonPath("$[0].offer.offerOwner.email").value("email2"))
                 .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].user.id").value("3"))
                 .andExpect(jsonPath("$[1].user.name").value("name3"))
@@ -537,7 +516,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.id").value("2"))
                 .andExpect(jsonPath("$[1].offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.active").value("true"))
                 .andExpect(jsonPath("$[1].offer.city").value("city2"))
@@ -589,7 +567,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher")
                 .offerName("offerName")
                 .offerOwner(offerUser)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city")
@@ -601,7 +578,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer)
                 .user(user)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto = this.modelMapper.map(counterOffer, CounterOfferDto.class);
@@ -615,7 +591,6 @@ public class CounterOfferControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.user.id").value("1"))
                 .andExpect(jsonPath("$.user.name").value("name1"))
@@ -624,7 +599,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$.offer.id").value("1"))
                 .andExpect(jsonPath("$.offer.bookTitle").value("title"))
                 .andExpect(jsonPath("$.offer.bookPublisher").value("publisher"))
-                .andExpect(jsonPath("$.offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$.offer.active").value("true"))
                 .andExpect(jsonPath("$.offer.city").value("city"))
@@ -706,7 +680,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher1")
                 .offerName("offerName1")
                 .offerOwner(offerUser1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city1")
@@ -718,7 +691,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer1)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         User user2 = User.builder()
@@ -734,7 +706,6 @@ public class CounterOfferControllerTest {
                 .id("2")
                 .offer(offer1)
                 .user(user2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto1 = this.modelMapper.map(counterOffer1, CounterOfferDto.class);
@@ -753,7 +724,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].user.id").value("1"))
                 .andExpect(jsonPath("$[0].user.name").value("name1"))
@@ -762,7 +732,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.id").value("1"))
                 .andExpect(jsonPath("$[0].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.active").value("true"))
                 .andExpect(jsonPath("$[0].offer.city").value("city1"))
@@ -772,7 +741,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.offerOwner.lastName").value("lastName2"))
                 .andExpect(jsonPath("$[0].offer.offerOwner.email").value("email2"))
                 .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].user.id").value("3"))
                 .andExpect(jsonPath("$[1].user.name").value("name3"))
@@ -781,7 +749,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.id").value("1"))
                 .andExpect(jsonPath("$[1].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[1].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[1].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.active").value("true"))
                 .andExpect(jsonPath("$[1].offer.city").value("city1"))
@@ -849,7 +816,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher1")
                 .offerName("offerName1")
                 .offerOwner(offerUser1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city1")
@@ -861,7 +827,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer1)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         User offerUser2 = User.builder()
@@ -880,7 +845,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher2")
                 .offerName("offerName2")
                 .offerOwner(offerUser2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city2")
@@ -892,7 +856,6 @@ public class CounterOfferControllerTest {
                 .id("2")
                 .offer(offer2)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto1 = this.modelMapper.map(counterOffer1, CounterOfferDto.class);
@@ -911,7 +874,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].user.id").value("1"))
                 .andExpect(jsonPath("$[0].user.name").value("name1"))
@@ -920,7 +882,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.id").value("1"))
                 .andExpect(jsonPath("$[0].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.active").value("true"))
                 .andExpect(jsonPath("$[0].offer.city").value("city1"))
@@ -930,7 +891,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.offerOwner.lastName").value("lastName2"))
                 .andExpect(jsonPath("$[0].offer.offerOwner.email").value("email2"))
                 .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].user.id").value("1"))
                 .andExpect(jsonPath("$[1].user.name").value("name1"))
@@ -939,7 +899,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.id").value("2"))
                 .andExpect(jsonPath("$[1].offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.active").value("true"))
                 .andExpect(jsonPath("$[1].offer.city").value("city2"))
@@ -1007,7 +966,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher1")
                 .offerName("offerName1")
                 .offerOwner(offerUser1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city1")
@@ -1019,7 +977,6 @@ public class CounterOfferControllerTest {
                 .id("1")
                 .offer(offer1)
                 .user(user1)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         User user2 = User.builder()
@@ -1047,7 +1004,6 @@ public class CounterOfferControllerTest {
                 .bookPublisher("publisher2")
                 .offerName("offerName2")
                 .offerOwner(offerUser2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter))
                 .active(true)
                 .city("city2")
@@ -1059,7 +1015,6 @@ public class CounterOfferControllerTest {
                 .id("2")
                 .offer(offer2)
                 .user(user2)
-                .createdAt(LocalDateTime.parse("01-01-2018 12:00:00", dateTimeFormatter))
                 .expires(LocalDateTime.parse("02-02-2018 12:00:00", dateTimeFormatter)).build();
 
         CounterOfferDto counterOfferDto1 = this.modelMapper.map(counterOffer1, CounterOfferDto.class);
@@ -1080,7 +1035,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$").isArray())
                 .andExpect(jsonPath("$").isNotEmpty())
                 .andExpect(jsonPath("$[0].id").value("1"))
-                .andExpect(jsonPath("$[0].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].user.id").value("1"))
                 .andExpect(jsonPath("$[0].user.name").value("name1"))
@@ -1089,7 +1043,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.id").value("1"))
                 .andExpect(jsonPath("$[0].offer.bookTitle").value("title1"))
                 .andExpect(jsonPath("$[0].offer.bookPublisher").value("publisher1"))
-                .andExpect(jsonPath("$[0].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[0].offer.active").value("true"))
                 .andExpect(jsonPath("$[0].offer.city").value("city1"))
@@ -1099,7 +1052,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[0].offer.offerOwner.lastName").value("lastName2"))
                 .andExpect(jsonPath("$[0].offer.offerOwner.email").value("email2"))
                 .andExpect(jsonPath("$[1].id").value("2"))
-                .andExpect(jsonPath("$[1].createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].user.id").value("3"))
                 .andExpect(jsonPath("$[1].user.name").value("name3"))
@@ -1108,7 +1060,6 @@ public class CounterOfferControllerTest {
                 .andExpect(jsonPath("$[1].offer.id").value("2"))
                 .andExpect(jsonPath("$[1].offer.bookTitle").value("title2"))
                 .andExpect(jsonPath("$[1].offer.bookPublisher").value("publisher2"))
-                .andExpect(jsonPath("$[1].offer.createdAt").value("01-01-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.expires").value("02-02-2018 12:00:00"))
                 .andExpect(jsonPath("$[1].offer.active").value("true"))
                 .andExpect(jsonPath("$[1].offer.city").value("city2"))
