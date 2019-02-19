@@ -68,12 +68,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User add(User user) {
         try {
-            User fetched = userRepository.findByLogin(user.getLogin()).orElse(null);
-            if(fetched != null)
-                throw new AddException("User with that login already exists.");
-            fetched = userRepository.findByEmail(user.getEmail()).orElse(null);
-            if(fetched != null)
-                throw new AddException("User with that e-mail already exists.");
+            if(userRepository.existsByLoginOrEmail(user.getLogin(), user.getEmail())) {
+                throw new AddException("User with that e-mail or login already exists.");
+            }
             userRepository.insert(user);
         } catch (final Exception e) {
             log.error("Error during inserting User object, {}", e);
