@@ -4,11 +4,13 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -44,10 +46,14 @@ public class JsonWebTokenService implements TokenService {
         try {
             user = (User) userDetailsService.loadUserByUsername(username);
         } catch (Exception e) {
-            throw new AuthenticationException("Error during user details loading. " + e.getMessage());
+            throw new UsernameNotFoundException("Error during user details loading. " + e.getMessage());
         }
-        Map<String, Object> tokenData = new HashMap<>();
 
+        if (!user.isEnabled()) {
+            throw new DisabledException("User is not activated");
+        }
+
+        Map<String, Object> tokenData = new HashMap<>();
         if(passwordEncoder.matches(password, user.getPassword())) {
             tokenData.put("userID", user.getId());
             tokenData.put("username", user.getUsername());
@@ -59,7 +65,7 @@ public class JsonWebTokenService implements TokenService {
             jwtBuilder.setExpiration(calendar.getTime());
             return jwtBuilder.signWith(SignatureAlgorithm.HS512, tokenKey).compact();
         } else {
-            throw new AuthenticationException("Authentication error");
+            throw new BadCredentialsException("Authentication error");
         }
     }
 
