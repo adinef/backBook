@@ -17,7 +17,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableWebSecurity
 @Profile("prod")
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
