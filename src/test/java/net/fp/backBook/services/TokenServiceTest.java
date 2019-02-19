@@ -1,6 +1,5 @@
 package net.fp.backBook.services;
 
-import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.security.service.JsonWebTokenService;
 import org.junit.Assert;
@@ -12,6 +11,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -44,6 +44,13 @@ public class TokenServiceTest {
     @Test(expected = AuthenticationException.class)
     public void testGetTokenThrowsOnProblemDuringGettingUserDetails() {
         when(userDetailsService.loadUserByUsername("test")).thenThrow(RuntimeException.class);
+        tokenService.getToken("test", "pass");
+    }
+
+    @Test(expected = AuthenticationException.class)
+    public void testGetTokenThrowsOnNotEnabledUser() {
+        UserDetails userDetails = User.builder().login("test").password("pass").enabled(false).build();
+        when(userDetailsService.loadUserByUsername("test")).thenReturn(userDetails);
         tokenService.getToken("test", "pass");
     }
 }

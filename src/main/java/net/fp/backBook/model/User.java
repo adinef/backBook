@@ -43,7 +43,7 @@ public class User implements Serializable, UserDetails {
     @DBRef
     private List<Role> roles;
 
-    private Boolean enabled;
+    private boolean enabled;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -68,10 +68,5 @@ public class User implements Serializable, UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,9 +43,6 @@ public class RegisterControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private DateTimeFormatter dateTimeFormatter;
-
-    @Autowired
     private RestResponseExceptionHandler restResponseExceptionHandler;
 
     @Autowired
@@ -61,6 +59,9 @@ public class RegisterControllerTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private RegisterController registerController;
