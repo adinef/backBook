@@ -41,5 +41,5 @@ public class OfferDto {
 
     private String voivodeship;
 
-    private String url;
+    private String fileId;
 }

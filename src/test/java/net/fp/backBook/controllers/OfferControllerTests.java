@@ -256,7 +256,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         List<Offer> offers = Arrays.asList(offer);
         when(offerService.getAll()).thenReturn(offers);
@@ -277,7 +277,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].categoryName").value("category"));
         verify(offerService).getAll();
     }
@@ -352,7 +352,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         List<Offer> offers = Arrays.asList(offer);
         User user = mock(User.class);
@@ -375,7 +375,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].categoryName").value("category"));
         verify(offerService).getAllByOfferOwner(user);
     }
@@ -454,7 +454,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         List<Offer> offers = Arrays.asList(offer);
         when(offerService.getAllOffersByPage(1, 2)).thenReturn(new PageImpl<>(offers));
@@ -477,7 +477,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.content[0].active").value("true"))
                 .andExpect(jsonPath("$.content[0].city").value("city"))
                 .andExpect(jsonPath("$.content[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$.content[0].url").value("/2"))
+                .andExpect(jsonPath("$.content[0].fileId").value("/2"))
                 .andExpect(jsonPath("$.content[0].categoryName").value("category"));
         verify(offerService).getAllOffersByPage(1, 2);
     }
@@ -557,7 +557,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         when(offerService.getById(anyString())).thenReturn(offer);
         when(modelMapper.map(offer, OfferDto.class)).thenReturn(offerDto);
@@ -578,7 +578,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.active").value("true"))
                 .andExpect(jsonPath("$.city").value("city"))
                 .andExpect(jsonPath("$.voivodeship").value("voiv"))
-                .andExpect(jsonPath("$.url").value("/2"))
+                .andExpect(jsonPath("$.fileId").value("/2"))
                 .andExpect(jsonPath("$.category.id").value("1"))
                 .andExpect(jsonPath("$.category.name").value("category"))
                 .andExpect(jsonPath("$.description").value("zero"));
@@ -699,7 +699,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         OfferDto offer2Dto = OfferDto.builder()
                 .id("2")
@@ -714,7 +714,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/3")
+                .fileId("/3")
                 .build();
         offers.add(offer);
         offers.add(offer2);
@@ -742,7 +742,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].category.id").value("1"))
                 .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[0].description").value("zero"))
@@ -759,7 +759,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].fileId").value("/3"))
                 .andExpect(jsonPath("$[1].category.id").value("1"))
                 .andExpect(jsonPath("$[1].category.name").value("category"))
                 .andExpect(jsonPath("$[1].description").value("zero"));
@@ -844,7 +844,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         OfferDto offer2Dto = OfferDto.builder()
                 .id("2")
@@ -859,7 +859,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/3")
+                .fileId("/3")
                 .build();
         offers.add(offer);
         offers.add(offer2);
@@ -887,7 +887,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].category.id").value("1"))
                 .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[0].description").value("zero"))
@@ -904,7 +904,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].fileId").value("/3"))
                 .andExpect(jsonPath("$[1].category.id").value("1"))
                 .andExpect(jsonPath("$[1].category.name").value("category"))
                 .andExpect(jsonPath("$[1].description").value("zero"));
@@ -989,7 +989,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         OfferDto offer2Dto = OfferDto.builder()
                 .id("2")
@@ -1004,7 +1004,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/3")
+                .fileId("/3")
                 .build();
         offers.add(offer);
         offers.add(offer2);
@@ -1032,7 +1032,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].category.id").value("1"))
                 .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[0].description").value("zero"))
@@ -1049,7 +1049,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].fileId").value("/3"))
                 .andExpect(jsonPath("$[1].category.id").value("1"))
                 .andExpect(jsonPath("$[1].category.name").value("category"))
                 .andExpect(jsonPath("$[1].description").value("zero"));
@@ -1134,7 +1134,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         OfferDto offer2Dto = OfferDto.builder()
                 .id("2")
@@ -1149,7 +1149,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/3")
+                .fileId("/3")
                 .build();
         offers.add(offer);
         offers.add(offer2);
@@ -1177,7 +1177,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].category.id").value("1"))
                 .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[0].description").value("zero"))
@@ -1194,7 +1194,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].fileId").value("/3"))
                 .andExpect(jsonPath("$[1].category.id").value("1"))
                 .andExpect(jsonPath("$[1].category.name").value("category"))
                 .andExpect(jsonPath("$[1].description").value("zero"));
@@ -1279,7 +1279,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         OfferDto offer2Dto = OfferDto.builder()
                 .id("2")
@@ -1294,7 +1294,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/3")
+                .fileId("/3")
                 .build();
         offers.add(offer);
         offers.add(offer2);
@@ -1322,7 +1322,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].category.id").value("1"))
                 .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[0].description").value("zero"))
@@ -1339,7 +1339,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].fileId").value("/3"))
                 .andExpect(jsonPath("$[1].category.id").value("1"))
                 .andExpect(jsonPath("$[1].category.name").value("category"))
                 .andExpect(jsonPath("$[1].description").value("zero"));
@@ -1424,7 +1424,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         OfferDto offer2Dto = OfferDto.builder()
                 .id("2")
@@ -1439,7 +1439,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/3")
+                .fileId("/3")
                 .build();
         offers.add(offer);
         offers.add(offer2);
@@ -1468,7 +1468,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].category.id").value("1"))
                 .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[0].description").value("zero"))
@@ -1485,7 +1485,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[1].active").value("true"))
                 .andExpect(jsonPath("$[1].city").value("city"))
                 .andExpect(jsonPath("$[1].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[1].url").value("/3"))
+                .andExpect(jsonPath("$[1].fileId").value("/3"))
                 .andExpect(jsonPath("$[1].category.id").value("1"))
                 .andExpect(jsonPath("$[1].category.name").value("category"))
                 .andExpect(jsonPath("$[1].description").value("zero"));
@@ -1555,7 +1555,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         when(offerService.getAllNotExpired(
                 any(LocalDateTime.class)))
@@ -1583,7 +1583,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$[0].active").value("true"))
                 .andExpect(jsonPath("$[0].city").value("city"))
                 .andExpect(jsonPath("$[0].voivodeship").value("voiv"))
-                .andExpect(jsonPath("$[0].url").value("/2"))
+                .andExpect(jsonPath("$[0].fileId").value("/2"))
                 .andExpect(jsonPath("$[0].category.id").value("1"))
                 .andExpect(jsonPath("$[0].category.name").value("category"))
                 .andExpect(jsonPath("$[0].description").value("zero"));
@@ -1653,7 +1653,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         when(offerService.add(offer)).thenReturn(offer);
 
@@ -1679,7 +1679,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.active").value("true"))
                 .andExpect(jsonPath("$.city").value("city"))
                 .andExpect(jsonPath("$.voivodeship").value("voiv"))
-                .andExpect(jsonPath("$.url").value("/2"))
+                .andExpect(jsonPath("$.fileId").value("/2"))
                 .andExpect(jsonPath("$.category.id").value("1"))
                 .andExpect(jsonPath("$.category.name").value("category"))
                 .andExpect(jsonPath("$.description").value("zero"));
@@ -1752,7 +1752,7 @@ public class OfferControllerTests {
                 .active(true)
                 .city("city")
                 .voivodeship("voiv")
-                .url("/2")
+                .fileId("/2")
                 .build();
         when(offerService.modify(any(Offer.class))).thenReturn(offer);
         when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
@@ -1780,7 +1780,7 @@ public class OfferControllerTests {
                 .andExpect(jsonPath("$.active").value("true"))
                 .andExpect(jsonPath("$.city").value("city"))
                 .andExpect(jsonPath("$.voivodeship").value("voiv"))
-                .andExpect(jsonPath("$.url").value("/2"))
+                .andExpect(jsonPath("$.fileId").value("/2"))
                 .andExpect(jsonPath("$.category.id").value("1"))
                 .andExpect(jsonPath("$.category.name").value("category"))
                 .andExpect(jsonPath("$.description").value("zero"));

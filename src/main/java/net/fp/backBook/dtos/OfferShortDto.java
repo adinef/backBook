@@ -39,5 +39,5 @@ public class OfferShortDto {
 
     private String voivodeship;
 
-    private String url;
+    private String fileId;
 }
