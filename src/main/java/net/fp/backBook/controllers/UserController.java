@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,16 +23,19 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserService userService;
-    private ModelMapper modelMapper;
+    private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final ModelMapper modelMapper;
 
     @Autowired
     public UserController(
             final ModelMapper modelMapper,
-            final UserService userService
-    ) {
+            final UserService userService,
+            final PasswordEncoder passwordEncoder
+            ) {
         this.modelMapper = modelMapper;
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping(
@@ -84,6 +88,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserViewDto addUser(@RequestBody UserDto userDto) {
         User user = this.modelMapper.map(userDto, User.class);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user = this.userService.add(user);
         return MapSingleToDto(user);
     }
