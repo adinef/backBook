@@ -18,9 +18,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class EmailVerificationToken implements Serializable {
-    @Value("net.fp.backBook.email_token_exp")
-    private static final int EXPIRATION = 0;
 
+    private static final long serialVersionUID = -1817686292340018302L;
     @Id
     private String id;
 

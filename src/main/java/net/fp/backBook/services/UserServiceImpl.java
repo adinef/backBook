@@ -84,21 +84,40 @@ public class UserServiceImpl implements UserService {
         if(user.getId() == null)
             throw new ModifyException("Id cannot be null for user to be modified.");
         try {
-            User fetched = userRepository.findByLogin(user.getLogin()).orElse(null);
-            if(fetched != null && !fetched.getId().equals(user.getId()))
-                throw new ModifyException("User with that login already exists.");
-            fetched = userRepository.findByEmail(user.getEmail()).orElse(null);
-            if(fetched != null && !fetched.getId().equals(user.getId()))
-                throw new ModifyException("User with that e-mail already exists.");
-            if (fetched != null) {
-                user.setEnabled(fetched.isEnabled());
+            if(userRepository.existsByLoginOrEmail(user.getLogin(), user.getEmail())) {
+                throw new ModifyException("User with that login or e-mail already exists.");
             }
+            User fetchedUser = userRepository
+                    .findById(user.getId())
+                    .orElseThrow(() -> new ModifyException("No user to modify."));
+            user.setEnabled( fetchedUser.isEnabled() );
             userRepository.save(user);
         } catch (final Exception e) {
-            log.error("Error during saving User object, {}", e);
+            log.error("Error during saving of User object, {}", e);
             throw new ModifyException(e.getMessage());
         }
         return user;
+    }
+
+    @Override
+    public User activate(String id) {
+        User fetchedUser = null;
+        if(id == null)
+            throw new ModifyException("Id cannot be null for user to be activated.");
+        try {
+            fetchedUser = userRepository
+                    .findById(id)
+                    .orElseThrow(() -> new ModifyException("No user to activate."));
+            if(fetchedUser.isEnabled()) {
+                throw new ModifyException("User account is already activated.");
+            }
+            fetchedUser.setEnabled(true);
+            userRepository.save(fetchedUser);
+        } catch (final Exception e) {
+            log.error("Error during activation of User object, {}", e);
+            throw new ModifyException(e.getMessage());
+        }
+        return fetchedUser;
     }
 
     @Override

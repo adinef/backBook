@@ -1,15 +1,14 @@
 package net.fp.backBook.services;
 
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Async;
 
-@Service
-public class EmailSenderService {
+import javax.mail.internet.MimeMessage;
 
-    private final JavaMailSender mailSender;
+public interface EmailSenderService {
+    @Async
+    void sendSimpleMail(SimpleMailMessage mail);
 
-    public EmailSenderService(final JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
-
+    @Async
+    void sendMimeMail(MimeMessage mail);
 }

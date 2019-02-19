@@ -21,6 +21,8 @@ public interface UserService extends BasicCrudService<User, String> {
     @Secured({"ROLE_USER"})
     User modify(User offer);
 
+    User activate(String id);
+
     User getUserByLogin(String login);
 
     User getUserByEmail(String email);

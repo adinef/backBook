@@ -24,6 +24,6 @@ public interface RoleService extends BasicCrudService<Role, String>{
     @Secured({"ROLE_ADMIN"})
     Role modify(Role offer);
 
-    @Secured({"ROLE_USER"})
+    //@Secured({"ROLE_USER"})
     Role getByName(String name);
 }

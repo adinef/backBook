@@ -10,6 +10,7 @@ import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.EmailVerificationToken;
 import net.fp.backBook.model.Role;
 import net.fp.backBook.model.User;
+import net.fp.backBook.services.EmailSenderService;
 import net.fp.backBook.services.EmailVerificationTokenService;
 import net.fp.backBook.services.RoleService;
 import net.fp.backBook.services.UserService;
@@ -24,6 +25,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -61,6 +63,9 @@ public class AccountVerificationControllerTests {
     private EmailVerificationTokenService tokenService;
 
     @Mock
+    private EmailSenderService emailSenderService;
+
+    @Mock
     private ModelMapper modelMapper;
 
     @Autowired
@@ -82,14 +87,18 @@ public class AccountVerificationControllerTests {
     @Test
     public void testVerifySuccess() throws Exception {
         User user = User.builder()
+                .id("1")
                 .enabled(false)
+                .email("test@test.com")
                 .build();
         EmailVerificationToken token = EmailVerificationToken.builder()
                 .user(user)
                 .token("test")
                 .build();
         when(tokenService.getVerificationTokenByRequested("test")).thenReturn(token);
-        when(userService.modify(any(User.class))).thenReturn(user);
+        when(userService.activate(user.getId())).thenReturn(user);
+        doNothing().when(emailSenderService).sendSimpleMail(any(SimpleMailMessage.class));
+        doNothing().when(tokenService).delete(anyString());
 
         mockMvc.perform(get("/account/verify/test"))
                 .andDo(print())

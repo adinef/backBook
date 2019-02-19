@@ -164,41 +164,41 @@ public class UserServiceTests {
     public void testModifyUser() {
         User user = User.builder().id("1").build();
         when(this.userRepository.save(user)).thenReturn(user);
+        when(this.userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         Assert.assertEquals(user, this.userService.modify(user));
         verify(this.userRepository).save(user);
     }
 
     @Test
     public void testModifyUserReturnsWhenIdTheSameAndLoginChanged() {
-        User user = User.builder().id("1").login("test").build();
-        User user2 = User.builder().id("1").login("test2").build();
-        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user2));
+        User user = User.builder().id("1").login("test").email("test").build();
+        when(this.userRepository.existsByLoginOrEmail(user.getLogin(), user.getEmail())).thenReturn(false);
         when(this.userRepository.save(user)).thenReturn(user);
-        this.userService.modify(user);
-    }
-
-    @Test
-    public void testModifyUserReturnsWhenIdTheSameAndEmailChanged() {
-        User user = User.builder().id("1").email("test").build();
-        User user2 = User.builder().id("1").email("test2").build();
-        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user2));
-        when(this.userRepository.save(user)).thenReturn(user);
+        when(this.userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         this.userService.modify(user);
     }
 
     @Test(expected = ModifyException.class)
-    public void testModifyUserThrowsGetOnUserWithLoginExists() {
-        User user = User.builder().id("1").login("test").build();
-        User user2 = User.builder().id("2").login("test").build();
-        when(this.userRepository.findByLogin(user.getLogin())).thenReturn(Optional.of(user2));
+    public void testModifyUserThrowsModifyOnUserWithLoginExists() {
+        User user = User
+                .builder()
+                .id("1")
+                .login("test")
+                .email("test@test.com")
+                .build();
+        when(this.userRepository.existsByLoginOrEmail(user.getLogin(), user.getEmail())).thenReturn(true);
         this.userService.modify(user);
     }
 
     @Test(expected = ModifyException.class)
     public void testModifyUserThrowsGetOnUserWithEmailExists() {
-        User user = User.builder().id("1").email("test").build();
-        User user2 = User.builder().id("2").email("test").build();
-        when(this.userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user2));
+        User user = User
+                .builder()
+                .id("1")
+                .email("test@test.com")
+                .login("test")
+                .build();
+        when(this.userRepository.existsByLoginOrEmail(user.getLogin(), user.getEmail())).thenReturn(true);
         this.userService.modify(user);
     }
 
@@ -210,8 +210,58 @@ public class UserServiceTests {
 
     @Test(expected = ModifyException.class)
     public void testModifyUserThrowsOnRuntimeException() {
-        User user = User.builder().id("1").build();
+        User user = User
+                .builder()
+                .id("1")
+                .login("test")
+                .email("test@test.com")
+                .enabled(false)
+                .build();
+        when(userRepository.existsByLoginOrEmail(user.getLogin(), user.getEmail())).thenReturn(false);
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenThrow(RuntimeException.class);
         this.userService.modify(user);
+    }
+
+    @Test
+    public void testActivateUser() {
+        User user = User.builder().id("1").build();
+        when(this.userRepository.save(user)).thenReturn(user);
+        when(this.userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        Assert.assertEquals(user, this.userService.activate(user.getId()));
+        verify(this.userRepository).save(user);
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testActivateUserThrowsModifyOnUserAlreadyActive() {
+        User user = User
+                .builder()
+                .id("1")
+                .login("test")
+                .email("test@test.com")
+                .enabled(true)
+                .build();
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        this.userService.activate(user.getId());
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testActivateUserThrowsOnIdNull() {
+        User user = User.builder().build();
+        Assert.assertEquals(user, this.userService.activate(user.getId()));
+    }
+
+    @Test(expected = ModifyException.class)
+    public void testActivateUserThrowsOnRuntimeException() {
+        User user = User
+                .builder()
+                .id("1")
+                .login("test")
+                .email("test@test.com")
+                .enabled(false)
+                .build();
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenThrow(RuntimeException.class);
+        this.userService.activate(user.getId());
     }
 }

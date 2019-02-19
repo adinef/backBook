@@ -3,8 +3,11 @@ package net.fp.backBook.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.fp.backBook.configuration.RestResponseExceptionHandler;
 import net.fp.backBook.dtos.UserDto;
+import net.fp.backBook.model.EmailVerificationToken;
 import net.fp.backBook.model.Role;
 import net.fp.backBook.model.User;
+import net.fp.backBook.services.EmailSenderService;
+import net.fp.backBook.services.EmailVerificationTokenService;
 import net.fp.backBook.services.RoleService;
 import net.fp.backBook.services.UserService;
 import org.junit.Before;
@@ -19,12 +22,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 
@@ -63,6 +68,12 @@ public class RegisterControllerTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private EmailSenderService emailSenderService;
+
+    @Mock
+    private EmailVerificationTokenService verificationTokenService;
+
     @InjectMocks
     private RegisterController registerController;
 
@@ -91,11 +102,20 @@ public class RegisterControllerTest {
                 .name("test")
                 .build();
 
+        EmailVerificationToken verificationToken = EmailVerificationToken.builder()
+                .user(user)
+                .token("12345")
+                .expires(LocalDateTime.now().plusMinutes(40))
+                .build();
+
         UserDto userDto = this.modelMapper.map(user, UserDto.class);
 
         when(this.modelMapperMock.map(any(UserDto.class), eq(User.class))).thenReturn(user);
         when(this.roleService.getByName("ROLE_USER")).thenReturn(role);
-
+        when(this.passwordEncoder.encode(any(CharSequence.class))).thenReturn("12345");
+        when(this.verificationTokenService.add(any(EmailVerificationToken.class))).thenReturn(verificationToken);
+        when(this.userService.add(any(User.class))).thenReturn(user);
+        doNothing().when(emailSenderService).sendSimpleMail(any(SimpleMailMessage.class));
 
         this.mockMvc.perform(
                 post("/register")
