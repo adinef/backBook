@@ -7,6 +7,6 @@ public interface BasicCrudService<E extends Serializable, Id> {
     E getById(Id id);
     List<E> getAll();
     void delete(Id id);
-    E add(E offer);
-    E modify(E offer);
+    E add(E entity);
+    E modify(E entity);
 }

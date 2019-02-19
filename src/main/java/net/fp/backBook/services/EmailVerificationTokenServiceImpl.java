@@ -83,6 +83,9 @@ public class EmailVerificationTokenServiceImpl implements EmailVerificationToken
     @Override
     public EmailVerificationToken modify(EmailVerificationToken token) {
         try {
+            if(token.getId() == null) {
+                throw new ModifyException("Id must be set.");
+            }
             return this.tokenRepository.save(token);
         } catch (final Exception e) {
             log.error(e.getMessage());

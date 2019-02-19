@@ -5,5 +5,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface EmailVerificationTokenService extends BasicCrudService<EmailVerificationToken, String> {
-    public EmailVerificationToken getVerificationTokenByRequested(String token);
+    EmailVerificationToken getVerificationTokenByRequested(String token);
 }
