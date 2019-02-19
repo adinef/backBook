@@ -9,6 +9,7 @@ import net.fp.backBook.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class JsonWebTokenService implements TokenService {
 
     private static int tokenExpirationTime = 30;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${security.token.secret.key}")
     private String tokenKey;
@@ -27,8 +29,10 @@ public class JsonWebTokenService implements TokenService {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    public JsonWebTokenService(UserDetailsService userDetailsService) {
+    public JsonWebTokenService(final UserDetailsService userDetailsService,
+                               final PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -43,7 +47,8 @@ public class JsonWebTokenService implements TokenService {
             throw new AuthenticationException("Error during user details loading. " + e.getMessage());
         }
         Map<String, Object> tokenData = new HashMap<>();
-        if (password.equals(user.getPassword())) {
+
+        if(passwordEncoder.matches(password, user.getPassword())) {
             tokenData.put("userID", user.getId());
             tokenData.put("username", user.getUsername());
             tokenData.put("authorities", user.getAuthorities());
@@ -53,7 +58,6 @@ public class JsonWebTokenService implements TokenService {
             jwtBuilder.setClaims(tokenData);
             jwtBuilder.setExpiration(calendar.getTime());
             return jwtBuilder.signWith(SignatureAlgorithm.HS512, tokenKey).compact();
-
         } else {
             throw new AuthenticationException("Authentication error");
         }

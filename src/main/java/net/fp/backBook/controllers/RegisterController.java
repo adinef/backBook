@@ -1,5 +1,6 @@
 package net.fp.backBook.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import net.fp.backBook.dtos.UserDto;
 import net.fp.backBook.exceptions.RegisterException;
 import net.fp.backBook.model.Role;
@@ -10,6 +11,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -18,6 +21,8 @@ import java.util.Collections;
 @RequestMapping("/register")
 public class RegisterController {
 
+    private PasswordEncoder passwordEncoder;
+
     private UserService userService;
 
     private RoleService roleService;
@@ -25,10 +30,14 @@ public class RegisterController {
     private ModelMapper modelMapper;
 
     @Autowired
-    public RegisterController(UserService userService, RoleService roleService, ModelMapper modelMapper) {
+    public RegisterController(final UserService userService,
+                              final RoleService roleService,
+                              final ModelMapper modelMapper,
+                              final PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
         this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping(
@@ -41,8 +50,10 @@ public class RegisterController {
             User user = this.modelMapper.map(userDto, User.class);
             Role role = this.roleService.getByName("ROLE_USER");
             user.setRoles(Collections.singletonList(role));
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             this.userService.add(user);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RegisterException("Registration failed. " + e.getMessage());
         }
     }

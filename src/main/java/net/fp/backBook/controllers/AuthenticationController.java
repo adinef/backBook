@@ -5,6 +5,8 @@ import net.fp.backBook.dtos.TokenDto;
 import net.fp.backBook.exceptions.AuthenticationException;
 import net.fp.backBook.security.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,10 @@ public class AuthenticationController {
     public TokenDto authenticate(@RequestBody Credentials credentials) {
         String token;
         try {
-            token = tokenService.getToken(credentials.getLogin(), credentials.getPassword());
+            token = tokenService.getToken(
+                    credentials.getLogin(),
+                    credentials.getPassword()
+            );
         } catch (Exception e) {
             throw new AuthenticationException("Authentication failed. " + e.getMessage());
         }

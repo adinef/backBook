@@ -84,7 +84,6 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public UserViewDto addUser(@RequestBody UserDto userDto) {
         User user = this.modelMapper.map(userDto, User.class);
-        // set user from context here
         user = this.userService.add(user);
         return MapSingleToDto(user);
     }
@@ -98,7 +97,6 @@ public class UserController {
             throw new ModifyException("Unmatching ids");
         }
         User user = this.modelMapper.map(userDto, User.class);
-        // set user from context here
         user = this.userService.modify(user);
         return MapSingleToDto(user);
     }
