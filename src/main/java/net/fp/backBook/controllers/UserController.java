@@ -102,6 +102,7 @@ public class UserController {
             throw new ModifyException("Unmatching ids");
         }
         User user = this.modelMapper.map(userDto, User.class);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user = this.userService.modify(user);
         return MapSingleToDto(user);
     }
