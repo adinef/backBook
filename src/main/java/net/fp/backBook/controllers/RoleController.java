@@ -56,7 +56,6 @@ public class RoleController {
     @ResponseStatus(HttpStatus.CREATED)
     public RoleDto addRole(@RequestBody RoleDto roleDto) {
         Role role = this.modelMapper.map(roleDto, Role.class);
-        //TO DO EXCEPTION HANDLING
         return MapSingleToDto(roleService.add(role));
     }
 
@@ -71,7 +70,6 @@ public class RoleController {
             throw new ModifyException("Ids aren't matching.");
         }
         Role role = this.modelMapper.map(roleDto, Role.class);
-        //TO DO EXCEPTION HANDLING
         return MapSingleToDto(roleService.modify(role));
     }
 

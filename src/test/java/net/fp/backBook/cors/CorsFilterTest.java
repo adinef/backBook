@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -44,6 +45,19 @@ public class CorsFilterTest {
     public void testCors() throws Exception {
         this.mockMvc
                 .perform(get("/test-cors"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(header().string("Access-Control-Allow-Origin", "*"))
+                .andExpect(header().string("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS"))
+                .andExpect(header().string("Access-Control-Max-Age", "3600"))
+                .andExpect(header().string("Access-Control-Allow-Headers", "Authorization, Content-Type"))
+                .andExpect(header().string("Access-Control-Expose-Headers", "Authorization, Content-Type"));
+    }
+
+    @Test
+    public void testCorsOptions() throws Exception {
+        this.mockMvc
+                .perform(options("/test-cors"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(header().string("Access-Control-Allow-Origin", "*"))

@@ -181,12 +181,25 @@ public class RoleControllerTests {
     }
 
     @Test
+    public void testModifyRoleWrongId() throws Exception {
+        Role role = new Role("1", "role");
+        when(modelMapper.map(new RoleDto(), Role.class)).thenReturn(role);
+        String path = "/roles/2";
+        mockMvc.perform(put(path)
+                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .content(objectMapper.writeValueAsString(new RoleDto())))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
     public void testModifyUserIsConflictModifyException() throws Exception {
-        when(roleService.add(any(Role.class))).thenThrow(ModifyException.class);
+        when(roleService.modify(any(Role.class))).thenThrow(ModifyException.class);
         when(modelMapper.map(new RoleDto(), Role.class))
                 .thenReturn(new Role());
-        String path = "/roles";
-        mockMvc.perform(post(path)
+        String path = "/roles/1";
+        mockMvc.perform(put(path)
                 .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .content(objectMapper.writeValueAsString(new RoleDto())))
                 .andDo(print())

@@ -33,7 +33,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -1655,6 +1657,22 @@ public class OfferControllerTests {
                 .voivodeship("voiv")
                 .fileId("/2")
                 .build();
+
+        OfferInputDto offerInputDto = OfferInputDto.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
+                .description("zero")
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .build();
+
         when(offerService.add(offer)).thenReturn(offer);
 
         when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
@@ -1662,7 +1680,7 @@ public class OfferControllerTests {
         String path = "/offers";
         mockMvc.perform(post(path)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .content(objectMapper.writeValueAsString(offerDto)))
+                .content(objectMapper.writeValueAsString(offerInputDto)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -1754,6 +1772,21 @@ public class OfferControllerTests {
                 .voivodeship("voiv")
                 .fileId("/2")
                 .build();
+        OfferInputDto offerInputDto = OfferInputDto.builder()
+                .id("1")
+                .bookTitle("title")
+                .bookReleaseYear("1111")
+                .bookPublisher("publisher")
+                .offerName("name")
+                .offerOwner(fakeUserViewDto)
+                .category(categoryDto)
+                .description("zero")
+                .expires(LocalDateTime.now())
+                .active(true)
+                .city("city")
+                .voivodeship("voiv")
+                .build();
+
         when(offerService.modify(any(Offer.class))).thenReturn(offer);
         when(modelMapper.map(any(Offer.class), eq(OfferDto.class))).thenReturn(offerDto);
         when(modelMapper.map(any(OfferInputDto.class), eq(Offer.class))).thenReturn(offer);
@@ -1763,7 +1796,7 @@ public class OfferControllerTests {
         String path = "/offers/" + offer.getId();
         mockMvc.perform(put(path)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .content(objectMapper.writeValueAsString(offerDto)))
+                .content(objectMapper.writeValueAsString(offerInputDto)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
@@ -1816,7 +1849,8 @@ public class OfferControllerTests {
 
     @Test
     public void testDeleteOfferSuccess() throws Exception {
-        Offer offer = mock(Offer.class);
+        Offer offer = Offer.builder()
+                .fileId("id").build();
         when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
         when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         when(offerService.getById(anyString())).thenReturn(offer);
@@ -1834,6 +1868,19 @@ public class OfferControllerTests {
         when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
         when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
         when(offerService.getById(anyString())).thenReturn(offer);
+        doThrow(DeleteException.class).when(offerService).delete(anyString());
+        String path = "/offers/1";
+        mockMvc.perform(delete(path))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    public void testDeleteOfferOfferServiceGetByIdException() throws Exception {
+        when(userDetectionService.getAuthenticatedUser()).thenReturn(mock(User.class));
+        when(offerService.existsByIdAndOfferOwner(anyString(), any(User.class))).thenReturn(true);
+        when(offerService.getById(anyString())).thenThrow(RuntimeException.class);
         doThrow(DeleteException.class).when(offerService).delete(anyString());
         String path = "/offers/1";
         mockMvc.perform(delete(path))

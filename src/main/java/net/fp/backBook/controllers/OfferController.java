@@ -222,8 +222,6 @@ public class OfferController {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public List<OfferDto> getOffersNotExpired(@PathVariable String dateString) {
-        if(dateString == null)
-            throw new GetException("Date string is null!");
         LocalDateTime date = LocalDateTime.parse(dateString);
         List<Offer> offers = this.offerService.getAllNotExpired(date);
         return mapToDto(offers);
@@ -233,11 +231,11 @@ public class OfferController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public OfferDto addOffer(@ModelAttribute OfferInputDto offerDto) {
-        Offer offer = this.modelMapper.map(offerDto, Offer.class);
+    public OfferDto addOffer(@ModelAttribute OfferInputDto offerInputDto) {
+        Offer offer = this.modelMapper.map(offerInputDto, Offer.class);
         offer.setOfferOwner(this.userDetectionService.getAuthenticatedUser());
-        if (offerDto.getFile() != null) {
-            String fileId = this.storageService.store(offerDto.getFile());
+        if (offerInputDto.getFile() != null) {
+            String fileId = this.storageService.store(offerInputDto.getFile());
             offer.setFileId(fileId);
         }
 
@@ -249,8 +247,8 @@ public class OfferController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
-    public OfferDto updateOffer(@PathVariable String id, @ModelAttribute OfferInputDto offerDto) {
-        if(!id.equals(offerDto.getId())) {
+    public OfferDto updateOffer(@PathVariable String id, @ModelAttribute OfferInputDto offerInputDto) {
+        if(!id.equals(offerInputDto.getId())) {
             throw new ModifyException("Unmatching ids");
         }
 
@@ -260,7 +258,7 @@ public class OfferController {
         }
 
         try {
-            Offer offer = this.modelMapper.map(offerDto, Offer.class);
+            Offer offer = this.modelMapper.map(offerInputDto, Offer.class);
             offer.setOfferOwner(authenticatedUser);
 
             String fileId = this.offerService.getById(id).getFileId();
@@ -268,8 +266,8 @@ public class OfferController {
                 this.storageService.delete(fileId);
             }
 
-            if (offerDto.getFile() != null) {
-                fileId = this.storageService.store(offerDto.getFile());
+            if (offerInputDto.getFile() != null) {
+                fileId = this.storageService.store(offerInputDto.getFile());
                 offer.setFileId(fileId);
             }
 
