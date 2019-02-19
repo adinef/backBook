@@ -90,6 +90,9 @@ public class UserServiceImpl implements UserService {
             fetched = userRepository.findByEmail(user.getEmail()).orElse(null);
             if(fetched != null && !fetched.getId().equals(user.getId()))
                 throw new ModifyException("User with that e-mail already exists.");
+            if (fetched != null) {
+                user.setEnabled(fetched.isEnabled());
+            }
             userRepository.save(user);
         } catch (final Exception e) {
             log.error("Error during saving User object, {}", e);
