@@ -6,6 +6,7 @@ import net.fp.backBook.exceptions.GetException;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.EmailVerificationToken;
 import net.fp.backBook.model.Role;
+import net.fp.backBook.model.User;
 import net.fp.backBook.repositories.EmailVerificationTokenRepository;
 import net.fp.backBook.repositories.RoleRepository;
 import org.junit.Assert;
@@ -17,7 +18,9 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.embedded.EmbeddedMongoAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
