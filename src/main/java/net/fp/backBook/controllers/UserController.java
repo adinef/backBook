@@ -1,11 +1,14 @@
 package net.fp.backBook.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import net.fp.backBook.dtos.PasswordChangeDto;
 import net.fp.backBook.dtos.UserDto;
 import net.fp.backBook.dtos.UserViewDto;
 import net.fp.backBook.exceptions.ModifyException;
 import net.fp.backBook.model.User;
 import net.fp.backBook.services.UserService;
+import org.apache.catalina.connector.Response;
+import org.bouncycastle.openssl.PasswordException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -81,6 +84,21 @@ public class UserController {
         User user = this.userService.getUserByEmail(email);
         return MapSingleToDto(user);
     }
+
+    @PutMapping(value = "/change_password/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public int changePassword(@PathVariable("id") String id, @RequestBody PasswordChangeDto passwordDto) {
+        User user = userService.getById(id);
+        if(passwordEncoder.matches(passwordDto.getOldPassword(), user.getPassword())) {
+            this.userService.updatePassword(id, this.passwordEncoder.encode(passwordDto.getNewPassword()));
+        } else {
+            throw new ModifyException("Can't change password, previous password doesn't match.");
+        }
+        return Response.SC_OK;
+    }
+
 
     @PostMapping(value = "",
             consumes = MediaType.APPLICATION_JSON_VALUE,

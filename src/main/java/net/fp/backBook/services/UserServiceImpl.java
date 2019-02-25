@@ -100,6 +100,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updatePassword(String userId, String newPassword) {
+        User fetchedUser;
+        if(userId == null)
+            throw new ModifyException("Id cannot be null for user to be modified.");
+        try {
+            fetchedUser = userRepository
+                    .findById(userId)
+                    .orElseThrow(() -> new ModifyException("No user to modify."));
+            fetchedUser.setPassword(newPassword);
+            userRepository.save(fetchedUser);
+        } catch (final Exception e) {
+            log.error("Error during saving of User object, {}", e);
+            throw new ModifyException(e.getMessage());
+        }
+        return fetchedUser;
+    }
+
+    @Override
     public User activate(String id) {
         User fetchedUser = null;
         if(id == null)

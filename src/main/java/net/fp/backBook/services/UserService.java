@@ -28,4 +28,6 @@ public interface UserService extends BasicCrudService<User, String> {
     User getUserByEmail(String email);
 
     Page<User> getUsersByPage(int page, int limit);
+
+    User updatePassword(String userId, String newPassword);
 }
